@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DANCE DETECTOR — Interactive Motion Gaming Experience</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0914;
+      --bg-gradient: radial-gradient(circle at 50% 20%, #1e1838 0%, #0a0914 85%);
+      --card-bg: rgba(22, 19, 40, 0.75);
+      --card-border: rgba(255, 255, 255, 0.1);
+      --accent: #ffd60a;
+      --accent-glow: rgba(255, 214, 10, 0.35);
+      --accent2: #00f5d4;
+      --accent2-glow: rgba(0, 245, 212, 0.35);
+      --danger: #ff4d6d;
+      --text: #f8f9fa;
+      --muted: #a09eb5;
+      --font-heading: 'Outfit', 'Prompt', sans-serif;
+      --font-body: 'Prompt', 'Outfit', sans-serif;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      background-image: var(--bg-gradient);
+      color: var(--text);
+      font-family: var(--font-body);
+      min-height: 100vh;
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    /* Header Bar */
+    .deck-header {
+      width: 100%;
+      max-width: 1200px;
+      padding: 20px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 10;
+    }
+
+    .brand-logo {
+      font-family: var(--font-heading);
+      font-weight: 900;
+      font-size: 1.3rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .brand-logo span { color: var(--accent); }
+
+    .slide-counter {
+      font-size: 0.9rem;
+      color: var(--muted);
+      background: rgba(255, 255, 255, 0.05);
+      padding: 6px 16px;
+      border-radius: 20px;
+      border: 1px solid var(--card-border);
+    }
+
+    /* Presentation Deck Viewport (Clean Square 16:9 Frame for Screenshot) */
+    .deck-viewport {
+      width: 100%;
+      max-width: 1360px;
+      aspect-ratio: 16 / 9;
+      height: auto;
+      min-height: 680px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #0d0a1a;
+      border: 2px solid rgba(255, 255, 255, 0.4);
+      border-radius: 0px;
+      overflow: hidden;
+      margin: 15px 0;
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 40px 60px;
+      box-sizing: border-box;
+      opacity: 0;
+      visibility: hidden;
+      transform: scale(0.96) translateY(15px);
+      transition: opacity 0.35s ease, transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.35s;
+    }
+
+    .slide.active {
+      opacity: 1;
+      visibility: visible;
+      transform: scale(1) translateY(0);
+    }
+
+    /* Badges & Headers */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(0, 245, 212, 0.1);
+      border: 1px solid var(--accent2);
+      color: var(--accent2);
+      padding: 6px 18px;
+      border-radius: 30px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 18px;
+      box-shadow: 0 0 20px var(--accent2-glow);
+    }
+
+    h1.slide-title {
+      font-family: var(--font-heading);
+      font-size: clamp(2rem, 3.8vw, 3.4rem);
+      font-weight: 900;
+      line-height: 1.2;
+      margin-bottom: 14px;
+      text-transform: uppercase;
+      background: linear-gradient(135deg, #ffffff 40%, #c4c1e0 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .accent-text {
+      background: linear-gradient(135deg, var(--accent) 0%, #ff9e00 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .accent2-text {
+      background: linear-gradient(135deg, var(--accent2) 0%, #00bbf9 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    p.slide-desc {
+      font-size: clamp(0.95rem, 1.3vw, 1.2rem);
+      color: var(--muted);
+      max-width: 800px;
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+
+    /* Grids & Cards */
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      width: 100%;
+      text-align: left;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+      width: 100%;
+      text-align: left;
+    }
+
+    .card {
+      background: var(--card-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 24px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+      transition: transform 0.3s ease, border-color 0.3s ease;
+      position: relative;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(255, 255, 255, 0.25);
+    }
+
+    .card.border-cyan {
+      border: 1.5px solid #00f5d4;
+      background: rgba(0, 245, 212, 0.05);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), inset 0 0 15px rgba(0, 245, 212, 0.05);
+    }
+
+    .card.border-yellow {
+      border: 1.5px solid #ffd60a;
+      background: rgba(255, 214, 10, 0.05);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), inset 0 0 15px rgba(255, 214, 10, 0.05);
+    }
+
+    .card.border-pink {
+      border: 1.5px solid #ff4d6d;
+      background: rgba(255, 77, 109, 0.05);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), inset 0 0 15px rgba(255, 77, 109, 0.05);
+    }
+
+    .card.border-purple {
+      border: 1.5px solid #b5179e;
+      background: rgba(181, 23, 158, 0.05);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), inset 0 0 15px rgba(181, 23, 158, 0.05);
+    }
+
+    .card.border-blue {
+      border: 1.5px solid #4cc9f0;
+      background: rgba(76, 201, 240, 0.05);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), inset 0 0 15px rgba(76, 201, 240, 0.05);
+    }
+
+    .card.border-green {
+      border: 1.5px solid #52b788;
+      background: rgba(82, 183, 136, 0.05);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), inset 0 0 15px rgba(82, 183, 136, 0.05);
+    }
+
+    .card-icon {
+      font-size: 2rem;
+      margin-bottom: 12px;
+      display: inline-block;
+    }
+
+    .card h3 {
+      font-size: 1.25rem;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+
+    .card p {
+      font-size: 0.92rem;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .pill-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 12px;
+    }
+
+    .tech-pill {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      padding: 4px 10px;
+      border-radius: 10px;
+      font-size: 0.78rem;
+      color: var(--accent2);
+      font-weight: 500;
+    }
+
+    .metric-val {
+      font-family: var(--font-heading);
+      font-size: 2.8rem;
+      font-weight: 900;
+      color: var(--accent);
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    /* Navigation Footer */
+    .deck-footer {
+      width: 100%;
+      max-width: 1200px;
+      padding: 20px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 10;
+    }
+
+    .nav-controls {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: rgba(22, 19, 40, 0.85);
+      border: 1px solid var(--card-border);
+      padding: 8px 18px;
+      border-radius: 40px;
+      backdrop-filter: blur(12px);
+    }
+
+    .btn-nav {
+      background: none;
+      border: none;
+      color: var(--text);
+      font-size: 1.2rem;
+      cursor: pointer;
+      padding: 6px 12px;
+      border-radius: 20px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-nav:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--accent);
+    }
+
+    .dots-list {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.2);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .dot.active {
+      background: var(--accent);
+      width: 26px;
+      border-radius: 12px;
+      box-shadow: 0 0 12px var(--accent-glow);
+    }
+
+    .btn-play-now {
+      background: linear-gradient(135deg, var(--accent) 0%, #ff9e00 100%);
+      color: #000;
+      font-weight: 700;
+      padding: 10px 22px;
+      border-radius: 12px;
+      text-decoration: none;
+      font-size: 0.95rem;
+      box-shadow: 0 4px 15px var(--accent-glow);
+      transition: transform 0.2s ease;
+    }
+
+    .btn-play-now:hover { transform: translateY(-2px); }
+
+    @media (max-width: 900px) {
+      .grid-3 { grid-template-columns: 1fr; }
+      .grid-2 { grid-template-columns: 1fr; }
+      .deck-viewport { height: auto; min-height: 600px; }
+      .slide { position: relative; display: none; }
+      .slide.active { display: flex; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOP HEADER -->
+  <header class="deck-header">
+    <div class="brand-logo">DANCE <span>DETECTOR</span></div>
+    <div class="slide-counter" id="slide-indicator">Slide 1 / 5</div>
+  </header>
+
+  <!-- MAIN SLIDES VIEWPORT -->
+  <main class="deck-viewport">
+
+    <!-- SLIDE 1: INTRODUCTION & OVERVIEW -->
+    <section class="slide active" id="slide-1">
+      <div class="badge">อุตสาหกรรมสื่อบันเทิงดิจิทัล (DIGITAL ENTERTAINMENT MEDIA)</div>
+      <h1 class="slide-title">DANCE <span class="accent-text">DETECTOR</span></h1>
+      <p class="slide-desc">
+        นวัตกรรมเว็บเกมใน<strong>อุตสาหกรรมสื่อบันเทิงดิจิทัล</strong> ที่ใช้ AI ตรวจจับท่าทางแบบเรียลไทม์ผ่านกล้อง<br />
+        <!-- เปิดประสบการณ์ความบันเทิงยุคใหม่ เล่นง่ายผ่านเว็บเบราว์เซอร์ 100% ไม่ต้องติดตั้งแอป -->
+      </p>
+      <div class="pill-container" style="justify-content: center; margin-top: 10px;">
+        <span class="tech-pill">🌐 Browser-Native AI</span>
+        <span class="tech-pill">🔒 Zero-Server Privacy</span>
+        <span class="tech-pill">⚡ 60 FPS Real-time</span>
+        <span class="tech-pill">⏱️ 20s Arcade Mode</span>
+      </div>
+    </section>
+
+    <!-- SLIDE 2: ENTERTAINMENT & PRIVACY VALUE -->
+    <section class="slide" id="slide-2">
+      <div class="badge">สื่อบันเทิงเพื่อความสนุกและปลอดภัย</div>
+      <h1 class="slide-title">มิติใหม่ของ <span class="accent2-text">สื่อบันเทิงที่ปลอดภัย ไร้กังวล</span></h1>
+      <p class="slide-desc">สื่อบันเทิงดิจิทัลที่สร้างขึ้นเพื่อความสนุกสนานโดยเคารพความเป็นส่วนตัวของผู้เล่น 100%</p>
+      
+      <div class="grid-3">
+        <div class="card border-cyan">
+          <div class="card-icon">🔒</div>
+          <h3>ปลอดภัย 100% ไม่เก็บภาพ</h3>
+          <p>เล่นได้อย่างสบายใจ <strong>ไม่มีการบันทึกภาพ อัดวิดีโอ หรือส่งข้อมูลกล้องออกจากเครื่องเด็ดขาด</strong> ทุกอย่างประมวลผลจบในเบราว์เซอร์ของคุณทันที</p>
+        </div>
+        <div class="card border-yellow">
+          <div class="card-icon">⚡</div>
+          <h3>เล่นง่าย จบไวใน 20 วินาที</h3>
+          <p>เข้าเว็บแล้วกดเริ่มเล่นได้เลยทันที ไม่ต้องโหลดแอป ไม่ต้องสมัครสมาชิกก่อน เหมาะสำหรับเล่นคลายเครียด ขยับร่างกาย หรือแข่งชาเลนจ์สนุกๆ กับเพื่อน</p>
+        </div>
+        <div class="card border-pink">
+          <div class="card-icon">🎉</div>
+          <h3>สร้างสีสันและความสนุก</h3>
+          <p>นำท่ามีมฮิตๆ และกระแสไวรัลมาเปลี่ยนเป็นเกมแข่งขันอาร์เคดสุดมันส์ ให้ทุกคนได้หัวเราะ ขยับตัว และท้าดวลอันดับคะแนนกันอย่างสนุกสนาน</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 3: TECH STACK ARCHITECTURE -->
+    <section class="slide" id="slide-3">
+      <div class="badge">CORE TECH STACK</div>
+      <h1 class="slide-title">สถาปัตยกรรม <span class="accent-text">เทคโนโลยีระดับโปรดักชัน</span></h1>
+      <p class="slide-desc">ผสมผสาน Computer Vision บนเบราว์เซอร์เข้ากับระบบ Backend ประสิทธิภาพสูง</p>
+      
+      <div class="grid-3">
+        <div class="card border-blue">
+          <div class="card-icon">📱</div>
+          <h3>Frontend Engine</h3>
+          <p>พัฒนาด้วย Pure Web Standards ไร้ Overhead กราฟิกลื่นไหล 60 FPS บนทุกอุปกรณ์</p>
+          <div class="pill-container">
+            <span class="tech-pill">HTML5</span>
+            <span class="tech-pill">JS</span>
+            <span class="tech-pill">CSS</span>
+          </div>
+        </div>
+        <div class="card border-yellow">
+          <div class="card-icon">🧠</div>
+          <h3>AI & Computer Vision</h3>
+          <p>ตรวจจับจุดข้อต่อร่างกาย 33 จุด (Landmarks) แบบ Client-side ประมวลผลบนเครื่องผู้ใช้ 100%</p>
+          <div class="pill-container">
+            <span class="tech-pill">MediaPipe Pose</span>
+            <span class="tech-pill">WebAssembly (WASM)</span>
+            <span class="tech-pill">Mathematical Scoring</span>
+          </div>
+        </div>
+        <div class="card border-purple">
+          <div class="card-icon">⚙️</div>
+          <h3>Backend & Database</h3>
+          <p>บริการ API Leaderboard, User Auth (Guest/Member) และ Admin Dashboard สำหรับควบคุมระบบ</p>
+          <div class="pill-container">
+            <span class="tech-pill">FastAPI (Python)</span>
+            <span class="tech-pill">MySQL</span>
+            <span class="tech-pill">JWT + Bcrypt</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 4: RESULTS & PROJECT OUTCOMES -->
+    <section class="slide" id="slide-4">
+      <div class="badge">RESULTS & OUTCOMES</div>
+      <h1 class="slide-title">ผลลัพธ์ที่ได้จากการสร้าง <span class="accent2-text">DANCE DETECTOR</span></h1>
+      <p class="slide-desc">ความสำเร็จและประโยชน์ที่ได้รับจากการพัฒนาระบบ</p>
+      
+      <div class="grid-2">
+        <div class="card border-cyan">
+          <div class="metric-val" style="color: #00f5d4;">60 FPS</div>
+          <h3>ความแม่นยำและการตรวจจับสด</h3>
+          <p>ระบบตรวจจับท่า Dab ได้อย่างเที่ยงตรงด้วยสูตรคณิตศาสตร์ 5 เกณฑ์ (มุมศอก, ความสูงแขน, ระยะมือ-จมูก) พร้อม State Machine กันโกง</p>
+        </div>
+        <div class="card border-yellow">
+          <div class="metric-val" style="color: #ffd60a;">0 Friction</div>
+          <h3>เข้าถึงง่ายที่สุด (Zero Barriers)</h3>
+          <p>ผู้เล่นเปิดเว็บแล้วกดเล่นได้ทันที ไม่ต้องโหลด App ไม่ต้องสมัครสมาชิกก่อนเล่น (Guest Fast-Play) ช่วยสร้าง Conversion สูงสุด</p>
+        </div>
+        <div class="card border-green">
+          <div class="metric-val" style="color: #52b788;">100%</div>
+          <h3>Privacy-First (ปลอดภัยเรื่องข้อมูล)</h3>
+          <p>ผู้เล่นสบายใจไร้กังวลเพราะภาพจากกล้องไม่ถูกส่งหรือบันทึกออกนอกเครื่อง ตอบโจทย์มาตรฐานความเป็นส่วนตัวระดับสากล</p>
+        </div>
+        <div class="card border-purple">
+          <div class="metric-val" style="color: #b5179e;">Full Control</div>
+          <h3>ระบบจัดการหลังบ้าน (Admin System)</h3>
+          <p>มีระบบจัดการผู้ใช้และคะแนน พร้อมรองรับการขยายฐานข้อมูล MySQL และต่อยอดท่าเต้นใหม่ๆ ได้อย่างยืดหยุ่น</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 5: FUTURE ROADMAP -->
+    <section class="slide" id="slide-5">
+      <div class="badge">FUTURE ROADMAP</div>
+      <h1 class="slide-title">ก้าวต่อไปของ <span class="accent-text">DANCE DETECTOR</span></h1>
+      <p class="slide-desc">แผนการขยายขีดความสามารถสู่แพลตฟอร์ม Motion Entertainment เต็มรูปแบบ</p>
+      
+      <div class="grid-3">
+        <div class="card border-pink">
+          <div class="card-icon">🎯</div>
+          <h3>1. Multi-Pose & Modes</h3>
+          <p>เพิ่มคลังท่าเต้นมีมและ Challenge ใหม่ๆ เช่น ท่าฮิตจาก TikTok / K-Pop พร้อมระบบปรับ Parameter ความยากง่าย</p>
+        </div>
+        <div class="card border-yellow">
+          <div class="card-icon">⚔️</div>
+          <h3>2. Multiplayer 1v1 Battle</h3>
+          <p>ระบบแข่งขันออนไลน์ 1 ต่อ 1 แบบสดๆ ดวลความเป๊ะและความเร็วกับเพื่อนหรือผู้เล่นอื่นแบบ Real-time Matchmaking</p>
+        </div>
+        <div class="card border-cyan">
+          <div class="card-icon">☁️</div>
+          <h3>3. Cloud Deployment</h3>
+          <p>เตรียมนำระบบขึ้นรันบน Cloud Server พร้อมระบบฐานข้อมูล MySQL เต็มรูปแบบ เพื่อรองรับผู้เล่นจากทั่วโลกได้ตลอด 24 ชั่วโมง</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 6: THANK YOU -->
+    <section class="slide" id="slide-6">
+      <h1 class="slide-title" style="font-size: clamp(2.5rem, 5vw, 4.5rem); margin-bottom: 20px;">
+        THANK YOU <br /><span class="accent-text">FOR YOUR ATTENTION</span>
+      </h1>
+    </section>
+
+  </main>
+
+  <!-- FOOTER NAVIGATION -->
+  <footer class="deck-footer">
+    <a href="../pages/play.html" class="btn-play-now" target="_blank">🎮 ลองเล่นเกมจริง</a>
+    <div class="nav-controls">
+      <button class="btn-nav" id="btn-prev">❮ ก่อนหน้า</button>
+      <div class="dots-list" id="dots-list"></div>
+      <button class="btn-nav" id="btn-next">ถัดไป ❯</button>
+    </div>
+    <div style="font-size: 0.85rem; color: var(--muted);">ใช้ลูกศร ◀ / ▶ บนคีย์บอร์ดได้</div>
+  </footer>
+
+  <script>
+    const slides = document.querySelectorAll('.slide');
+    const dotsList = document.getElementById('dots-list');
+    const btnPrev = document.getElementById('btn-prev');
+    const btnNext = document.getElementById('btn-next');
+    const slideIndicator = document.getElementById('slide-indicator');
+    let currentIdx = 0;
+
+    // Create Navigation Dots
+    slides.forEach((_, idx) => {
+      const dot = document.createElement('div');
+      dot.classList.add('dot');
+      if (idx === 0) dot.classList.add('active');
+      dot.addEventListener('click', () => goToSlide(idx));
+      dotsList.appendChild(dot);
+    });
+
+    const dots = document.querySelectorAll('.dot');
+
+    function goToSlide(index) {
+      if (index < 0) index = slides.length - 1;
+      if (index >= slides.length) index = 0;
+
+      slides[currentIdx].classList.remove('active');
+      dots[currentIdx].classList.remove('active');
+
+      currentIdx = index;
+
+      slides[currentIdx].classList.add('active');
+      dots[currentIdx].classList.add('active');
+      slideIndicator.textContent = `Slide ${currentIdx + 1} / ${slides.length}`;
+    }
+
+    btnPrev.addEventListener('click', () => goToSlide(currentIdx - 1));
+    btnNext.addEventListener('click', () => goToSlide(currentIdx + 1));
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === 'Space') goToSlide(currentIdx + 1);
+      if (e.key === 'ArrowLeft') goToSlide(currentIdx - 1);
+    });
+  </script>
+</body>
+</html>

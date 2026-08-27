@@ -763,3 +763,59 @@ table.board .score-col {
   font-size: 1rem;
 }
 
+/* ═══ Auth Modal Tabs & Links ═══ */
+.auth-tabs {
+  display: flex;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 4px;
+  margin-bottom: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  gap: 4px;
+}
+.auth-tab {
+  flex: 1;
+  padding: 10px 14px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--muted);
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+.auth-tab:hover {
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.04);
+}
+.auth-tab.active {
+  background: var(--card-bg, #1a162b);
+  color: var(--accent);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 214, 10, 0.35);
+}
+.auth-switch-prompt {
+  margin-top: 14px;
+  font-size: 0.88rem;
+  color: var(--muted);
+  text-align: center;
+}
+.auth-switch-prompt a {
+  color: var(--accent2);
+  text-decoration: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: color 0.2s ease, text-shadow 0.2s ease;
+}
+.auth-switch-prompt a:hover {
+  color: #fff;
+  text-shadow: 0 0 8px var(--accent2-glow);
+  text-decoration: underline;
+}
+
+

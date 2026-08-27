@@ -13,10 +13,11 @@
       
       <div id="user-session-bar">
         <div id="session-logged-out">
-          <button class="btn btn-secondary" id="btn-show-login" style="padding:6px 14px; font-size:0.85rem;">🔑 เข้าสู่ระบบ</button>
+          <button class="btn btn-secondary" id="btn-show-login" style="padding:6px 14px; font-size:0.85rem;">🔑 เข้าสู่ระบบ / สมัครสมาชิก</button>
         </div>
         <div id="session-logged-in" class="hidden" style="display:flex; align-items:center; gap:8px;">
           <span style="font-size:0.88rem; color:var(--text);">👤 สวัสดี, <strong id="logged-user-name" style="color:var(--accent);">User</strong></span>
+          <button class="btn btn-secondary" id="btn-edit-profile" title="แก้ไขชื่อ Display Name" style="padding:4px 8px; font-size:0.75rem; border-color:var(--accent2); color:var(--accent2);">✏️ แก้ไขชื่อ</button>
           <button class="btn btn-secondary" id="btn-logout" style="padding:4px 8px; font-size:0.75rem; background:rgba(239, 68, 68, 0.2); color:#ef4444; border-color:#ef4444;">ออกจากระบบ</button>
         </div>
       </div>
@@ -34,6 +35,7 @@
     <div style="margin: 20px 0; display: flex; flex-direction: column; gap: 12px; align-items: center;">
       <a class="btn btn-primary" href="pages/play.html" style="width: 100%; max-width: 340px;">🎮 เริ่มเล่นเกม</a>
       <a class="btn btn-secondary" href="pages/leaderboard.html" style="width: 100%; max-width: 340px;">🏆 ดูอันดับทั้งหมด</a>
+      <a class="btn btn-secondary" href="pages/presentation.html" style="width: 100%; max-width: 340px; border-color: var(--accent2); color: var(--accent2);">📊 ดูสไลด์นำเสนอโปรเจกต์</a>
     </div>
 
     <!-- กระดานอันดับ 4 ตาราง บนหน้า Index -->
@@ -46,31 +48,94 @@
     </div>
   </div>
 
-  <!-- ═══ Modal เข้าสู่ระบบ (Login) ═══ -->
+  <!-- ═══ Modal เข้าสู่ระบบ & สมัครสมาชิก (Auth Modal) ═══ -->
   <div id="modal-login" class="modal-backdrop hidden">
-    <div class="modal-card" style="max-width: 400px;">
-      <h2 class="modal-title">🔑 เข้าสู่ระบบ</h2>
-      <p class="modal-subtitle">กรอก Username และ Password เพื่อเข้าสู่ระบบ</p>
-      <form id="form-login" onsubmit="return false;">
+    <div class="modal-card" style="max-width: 420px;">
+      <!-- Auth Mode Tabs -->
+      <div class="auth-tabs">
+        <button type="button" class="auth-tab active" id="tab-login">🔑 เข้าสู่ระบบ</button>
+        <button type="button" class="auth-tab" id="tab-register">📝 สมัครสมาชิก</button>
+      </div>
+
+      <!-- ─── Form เข้าสู่ระบบ (Login) ─── -->
+      <div id="auth-pane-login">
+        <h2 class="modal-title" style="font-size: 1.6rem;">🔑 เข้าสู่ระบบ</h2>
+        <p class="modal-subtitle" style="margin-bottom: 16px;">กรอก Username และ Password เพื่อเข้าสู่ระบบ</p>
+        <form id="form-login" onsubmit="return false;">
+          <div class="input-group" style="text-align: left;">
+            <label for="login-username">👤 Username / ไอดีล็อกอิน</label>
+            <input type="text" id="login-username" placeholder="ใส่ Username เช่น dab_king" required autocomplete="username" />
+          </div>
+          <div class="input-group" style="text-align: left; margin-top: 10px;">
+            <label for="login-password">🔑 Password / รหัสผ่าน</label>
+            <input type="password" id="login-password" placeholder="ใส่รหัสผ่าน" required autocomplete="current-password" />
+          </div>
+          <div id="login-msg" class="notice" style="margin-top: 8px;"></div>
+          <div class="modal-actions" style="margin-top: 16px;">
+            <button type="submit" class="btn btn-primary" id="btn-submit-login" style="width: 100%;">เข้าสู่ระบบ</button>
+            <button type="button" class="btn btn-secondary btn-close-auth">ยกเลิก</button>
+          </div>
+          <div class="auth-switch-prompt">
+            ยังไม่มีบัญชีใช่ไหม? <a href="javascript:void(0)" id="link-goto-register">สมัครสมาชิกใหม่ที่นี่</a>
+          </div>
+        </form>
+      </div>
+
+      <!-- ─── Form สมัครสมาชิก (Register) ─── -->
+      <div id="auth-pane-register" class="hidden">
+        <h2 class="modal-title" style="font-size: 1.6rem;">📝 สมัครสมาชิก</h2>
+        <p class="modal-subtitle" style="margin-bottom: 16px;">สร้างบัญชีเพื่อสะสมคะแนนและโชว์ชื่อบนกระดานผู้นำ</p>
+        <form id="form-register" onsubmit="return false;">
+          <div class="input-group" style="text-align: left;">
+            <label for="reg-displayname">🏷️ ชื่อที่แสดง / Display Name <small style="color:var(--accent);">(ภาษาไทยหรืออังกฤษ)</small></label>
+            <input type="text" id="reg-displayname" placeholder="เช่น น้องแดบสายฟ้า, Master_Dab" required maxlength="30" />
+          </div>
+          <div class="input-group" style="text-align: left; margin-top: 10px;">
+            <label for="reg-username">👤 Username / ไอดีล็อกอิน <small style="color:#ef4444;">(ภาษาอังกฤษ/ตัวเลข)</small></label>
+            <input type="text" id="reg-username" placeholder="เช่น dab_master99" required autocomplete="username" />
+          </div>
+          <div class="input-group" style="text-align: left; margin-top: 10px;">
+            <label for="reg-password">🔑 Password / รหัสผ่าน <small style="color:var(--muted);">(อย่างน้อย 6 ตัวอักษร)</small></label>
+            <input type="password" id="reg-password" placeholder="ตั้งรหัสผ่าน 6 ตัวขึ้นไป" required minlength="6" autocomplete="new-password" />
+          </div>
+          <div class="input-group" style="text-align: left; margin-top: 10px;">
+            <label for="reg-email">📧 Email / อีเมล <small style="color:var(--muted);">(ไม่บังคับ)</small></label>
+            <input type="email" id="reg-email" placeholder="เช่น user@example.com" autocomplete="email" />
+          </div>
+          <div id="reg-msg" class="notice" style="margin-top: 8px;"></div>
+          <div class="modal-actions" style="margin-top: 16px;">
+            <button type="submit" class="btn btn-primary" id="btn-submit-register" style="width: 100%;">สมัครสมาชิก & เข้าสู่ระบบ</button>
+            <button type="button" class="btn btn-secondary btn-close-auth">ยกเลิก</button>
+          </div>
+          <div class="auth-switch-prompt">
+            มีบัญชีอยู่แล้วใช่ไหม? <a href="javascript:void(0)" id="link-goto-login">เข้าสู่ระบบที่นี่</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ Modal แก้ไขชื่อ Display Name ═══ -->
+  <div id="modal-edit-profile" class="modal-backdrop hidden">
+    <div class="modal-card" style="max-width: 380px;">
+      <h2 class="modal-title" style="font-size: 1.5rem;">✏️ แก้ไขชื่อที่แสดง</h2>
+      <p class="modal-subtitle" style="margin-bottom: 16px;">เปลี่ยนชื่อหรือฉายาที่โชว์บน Leaderboard</p>
+      <form id="form-edit-profile" onsubmit="return false;">
         <div class="input-group" style="text-align: left;">
-          <label for="login-username">👤 Username / ไอดีล็อกอิน</label>
-          <input type="text" id="login-username" placeholder="ใส่ Username" required />
+          <label for="edit-display-name">🏷️ ชื่อ Display Name ใหม่</label>
+          <input type="text" id="edit-display-name" placeholder="ใส่ชื่อใหม่ เช่น Master_Dab" required maxlength="30" />
         </div>
-        <div class="input-group" style="text-align: left; margin-top: 10px;">
-          <label for="login-password">🔑 Password / รหัสผ่าน</label>
-          <input type="password" id="login-password" placeholder="ใส่รหัสผ่าน" required />
-        </div>
-        <div id="login-msg" class="notice" style="margin-top: 8px;"></div>
+        <div id="edit-profile-msg" class="notice" style="margin-top: 8px;"></div>
         <div class="modal-actions" style="margin-top: 16px;">
-          <button type="submit" class="btn btn-primary" id="btn-submit-login" style="width: 100%;">เข้าสู่ระบบ</button>
-          <button type="button" class="btn btn-secondary" id="btn-close-login">ยกเลิก</button>
+          <button type="submit" class="btn btn-primary" id="btn-submit-edit-profile" style="width: 100%;">บันทึกชื่อใหม่</button>
+          <button type="button" class="btn btn-secondary" id="btn-close-edit-profile">ยกเลิก</button>
         </div>
       </form>
     </div>
   </div>
 
   <script type="module">
-    import { fetchLeaderboards, loginUser, getSavedSession, clearSession } from "./js/api.js";
+    import { fetchLeaderboards, loginUser, registerUser, updateUserProfile, getSavedSession, clearSession } from "./js/api.js";
     import { preloadModel } from "./js/pose.js";
 
     const $ = (id) => document.getElementById(id);
@@ -87,10 +152,81 @@
       }
     }
 
-    $("btn-show-login")?.addEventListener("click", () => $("modal-login")?.classList.remove("hidden"));
-    $("btn-close-login")?.addEventListener("click", () => $("modal-login")?.classList.add("hidden"));
+    // Modal Control & Tab Switching
+    function setAuthTab(tab) {
+      if (tab === "register") {
+        $("tab-login")?.classList.remove("active");
+        $("tab-register")?.classList.add("active");
+        $("auth-pane-login")?.classList.add("hidden");
+        $("auth-pane-register")?.classList.remove("hidden");
+      } else {
+        $("tab-register")?.classList.remove("active");
+        $("tab-login")?.classList.add("active");
+        $("auth-pane-register")?.classList.add("hidden");
+        $("auth-pane-login")?.classList.remove("hidden");
+      }
+      if ($("login-msg")) $("login-msg").textContent = "";
+      if ($("reg-msg")) $("reg-msg").textContent = "";
+    }
+
+    function openAuthModal(tab = "login") {
+      setAuthTab(tab);
+      $("modal-login")?.classList.remove("hidden");
+    }
+
+    function closeAuthModal() {
+      $("modal-login")?.classList.add("hidden");
+      if ($("login-msg")) $("login-msg").textContent = "";
+      if ($("reg-msg")) $("reg-msg").textContent = "";
+      if ($("btn-submit-login")) $("btn-submit-login").disabled = false;
+      if ($("btn-submit-register")) $("btn-submit-register").disabled = false;
+    }
+
+    $("btn-show-login")?.addEventListener("click", () => openAuthModal("login"));
+    document.querySelectorAll(".btn-close-auth").forEach(btn => btn.addEventListener("click", closeAuthModal));
+    $("tab-login")?.addEventListener("click", () => setAuthTab("login"));
+    $("tab-register")?.addEventListener("click", () => setAuthTab("register"));
+    $("link-goto-register")?.addEventListener("click", (e) => { e.preventDefault(); setAuthTab("register"); });
+    $("link-goto-login")?.addEventListener("click", (e) => { e.preventDefault(); setAuthTab("login"); });
     $("btn-logout")?.addEventListener("click", () => { clearSession(); updateAuthUI(); });
 
+    // Edit Profile Modal
+    $("btn-edit-profile")?.addEventListener("click", () => {
+      const session = getSavedSession();
+      if (!session || !session.user) return;
+      if ($("edit-display-name")) $("edit-display-name").value = session.user.display_name || "";
+      if ($("edit-profile-msg")) $("edit-profile-msg").textContent = "";
+      $("modal-edit-profile")?.classList.remove("hidden");
+    });
+    $("btn-close-edit-profile")?.addEventListener("click", () => {
+      $("modal-edit-profile")?.classList.add("hidden");
+    });
+
+    $("form-edit-profile")?.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const session = getSavedSession();
+      if (!session || !session.user) return;
+      const newName = $("edit-display-name")?.value?.trim();
+      if (!newName) return;
+
+      $("edit-profile-msg").textContent = "⏳ กำลังบันทึกชื่อใหม่…";
+      $("btn-submit-edit-profile").disabled = true;
+
+      try {
+        await updateUserProfile(session.user.id, { display_name: newName });
+        $("edit-profile-msg").textContent = "✅ เปลี่ยนชื่อสำเร็จ!";
+        updateAuthUI();
+        setTimeout(() => {
+          $("modal-edit-profile")?.classList.add("hidden");
+          $("btn-submit-edit-profile").disabled = false;
+        }, 600);
+      } catch (err) {
+        $("edit-profile-msg").textContent = `❌ ${err.message}`;
+        $("btn-submit-edit-profile").disabled = false;
+      }
+    });
+
+    // Submit Login
     $("form-login")?.addEventListener("submit", async (e) => {
       e.preventDefault();
       const uname = $("login-username")?.value?.trim();
@@ -105,13 +241,44 @@
         $("login-msg").textContent = "✅ เข้าสู่ระบบสำเร็จ!";
         updateAuthUI();
         setTimeout(() => {
-          $("modal-login")?.classList.add("hidden");
-          $("login-msg").textContent = "";
-          $("btn-submit-login").disabled = false;
+          closeAuthModal();
+          $("form-login")?.reset();
         }, 600);
       } catch (err) {
         $("login-msg").textContent = `❌ ${err.message}`;
         $("btn-submit-login").disabled = false;
+      }
+    });
+
+    // Submit Register
+    $("form-register")?.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const displayName = $("reg-displayname")?.value?.trim();
+      const rawUname = $("reg-username")?.value?.trim();
+      const pass = $("reg-password")?.value?.trim();
+      const email = $("reg-email")?.value?.trim() || null;
+
+      if (!displayName || !rawUname || !pass) {
+        $("reg-msg").textContent = "❌ กรุณากรอกข้อมูลที่จำเป็นให้ครบถ้วน";
+        return;
+      }
+
+      const cleanUname = rawUname.toLowerCase().replace(/\s+/g, "");
+
+      $("reg-msg").textContent = "⏳ กำลังลงทะเบียนและเข้าสู่ระบบ…";
+      $("btn-submit-register").disabled = true;
+
+      try {
+        await registerUser(cleanUname, pass, displayName, email);
+        $("reg-msg").textContent = "✅ สมัครสมาชิกและเข้าสู่ระบบสำเร็จ!";
+        updateAuthUI();
+        setTimeout(() => {
+          closeAuthModal();
+          $("form-register")?.reset();
+        }, 700);
+      } catch (err) {
+        $("reg-msg").textContent = `❌ ${err.message}`;
+        $("btn-submit-register").disabled = false;
       }
     });
 

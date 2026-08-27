@@ -4,8 +4,8 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-DB_TYPE = os.getenv("DB_TYPE", "postgres").strip().lower()
 in_docker = os.path.exists("/.dockerenv") or os.getenv("IS_DOCKER", "false").lower() == "true"
+DB_TYPE = os.getenv("DB_TYPE", "postgres" if in_docker else "mysql").strip().lower()
 
 # Auto-detect DB_TYPE if not explicitly configured
 if not DB_TYPE:
@@ -46,7 +46,8 @@ else:
     raw_user = os.getenv("DB_USER", "").strip()
     DB_USER = raw_user if raw_user else "root"
 
-    DB_PASSWORD = os.getenv("DB_PASSWORD", "rootpassword")
+    default_pw = "rootpassword" if in_docker else ""
+    DB_PASSWORD = os.getenv("DB_PASSWORD", default_pw)
     password_part = f":{DB_PASSWORD}" if DB_PASSWORD else ""
     DATABASE_URL = f"mysql+pymysql://{DB_USER}{password_part}@{DB_HOST}:{DB_PORT}/{DB_NAME}?charset=utf8mb4"
     engine_kwargs = {
