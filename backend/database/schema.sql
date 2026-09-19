@@ -16,6 +16,8 @@ CREATE TABLE IF NOT EXISTS `users` (
   `display_name` VARCHAR(50) NOT NULL,
   `role` ENUM('player', 'admin') NOT NULL DEFAULT 'player',
   `is_guest` TINYINT(1) NOT NULL DEFAULT 1,
+  `weight` FLOAT NOT NULL DEFAULT 65.0,
+  `height` FLOAT NOT NULL DEFAULT 170.0,
   `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   INDEX `idx_role` (`role`),
   INDEX `idx_is_guest` (`is_guest`)

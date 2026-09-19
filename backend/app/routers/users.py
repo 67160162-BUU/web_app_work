@@ -16,6 +16,8 @@ class UserUpdateRequest(BaseModel):
     email: Optional[EmailStr] = None
     role: Optional[str] = None
     password: Optional[str] = None
+    weight: Optional[float] = None
+    height: Optional[float] = None
 
 class UserDetailResponse(BaseModel):
     id: int
@@ -24,6 +26,8 @@ class UserDetailResponse(BaseModel):
     display_name: str
     role: str
     is_guest: bool
+    weight: Optional[float] = 65.0
+    height: Optional[float] = 170.0
     created_at: str
 
     class Config:
@@ -101,6 +105,8 @@ def get_user_by_id(
         "display_name": user.display_name,
         "role": str(user.role.value if hasattr(user.role, 'value') else user.role),
         "is_guest": user.is_guest,
+        "weight": getattr(user, 'weight', 65.0),
+        "height": getattr(user, 'height', 170.0),
         "created_at": user.created_at.strftime("%Y-%m-%d %H:%M:%S") if user.created_at else ""
     }
 
@@ -142,6 +148,12 @@ def update_user(
         user.password_hash = get_password_hash(req.password.strip())
         user.is_guest = False
 
+    if req.weight is not None and 20 <= req.weight <= 300:
+        user.weight = float(req.weight)
+
+    if req.height is not None and 80 <= req.height <= 260:
+        user.height = float(req.height)
+
     db.commit()
     db.refresh(user)
 
@@ -153,7 +165,9 @@ def update_user(
             "email": user.email,
             "display_name": user.display_name,
             "role": str(user.role.value if hasattr(user.role, 'value') else user.role),
-            "is_guest": user.is_guest
+            "is_guest": user.is_guest,
+            "weight": user.weight,
+            "height": user.height
         }
     }
 

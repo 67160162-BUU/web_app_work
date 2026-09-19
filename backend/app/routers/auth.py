@@ -11,12 +11,16 @@ router = APIRouter()
 
 class GuestRegisterRequest(BaseModel):
     display_name: str
+    weight: Optional[float] = 65.0
+    height: Optional[float] = 170.0
 
 class RegisterRequest(BaseModel):
     username: str
     email: Optional[EmailStr] = None
     password: str
     display_name: str
+    weight: Optional[float] = 65.0
+    height: Optional[float] = 170.0
 
 class LoginRequest(BaseModel):
     username: str
@@ -29,6 +33,8 @@ class UserResponse(BaseModel):
     display_name: str
     role: str
     is_guest: bool
+    weight: Optional[float] = 65.0
+    height: Optional[float] = 170.0
 
     class Config:
         from_attributes = True
@@ -45,10 +51,14 @@ class ChangePasswordRequest(BaseModel):
 @router.post("/guest", response_model=TokenResponse)
 def create_guest_user(req: GuestRegisterRequest, db: Session = Depends(get_db)):
     """สร้าง Guest User สำหรับเริ่มจำ session การเล่น"""
+    w = float(req.weight) if req.weight and 20 <= req.weight <= 300 else 65.0
+    h = float(req.height) if req.height and 80 <= req.height <= 260 else 170.0
     user = User(
         display_name=req.display_name.strip(),
         role=UserRole.PLAYER,
-        is_guest=True
+        is_guest=True,
+        weight=w,
+        height=h
     )
     db.add(user)
     db.commit()
@@ -71,6 +81,8 @@ def register(req: RegisterRequest, db: Session = Depends(get_db)):
     if req.email and db.query(User).filter(User.email == req.email).first():
         raise HTTPException(status_code=400, detail="Email already exists")
 
+    w = float(req.weight) if req.weight and 20 <= req.weight <= 300 else 65.0
+    h = float(req.height) if req.height and 80 <= req.height <= 260 else 170.0
     hashed_pw = get_password_hash(req.password)
     user = User(
         username=clean_uname,
@@ -78,7 +90,9 @@ def register(req: RegisterRequest, db: Session = Depends(get_db)):
         password_hash=hashed_pw,
         display_name=req.display_name.strip(),
         role="player",
-        is_guest=False
+        is_guest=False,
+        weight=w,
+        height=h
     )
     db.add(user)
     db.commit()

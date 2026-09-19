@@ -3,169 +3,335 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>เล่น — DANCE DETECTOR</title>
+  <title>ฝึกซ้อม — SMART AI FITNESS</title>
   <link rel="stylesheet" href="../css/style.css" />
 </head>
 <body>
   <div class="container container-wide">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-      <h1 style="font-size:1.5rem; margin:0;">DANCE <span class="accent">DETECTOR</span></h1>
+      <h1 style="font-size:1.6rem; margin:0;">SMART AI <span class="accent">FITNESS</span></h1>
       
       <div id="user-session-bar">
         <div id="session-logged-out">
           <button class="btn btn-secondary" id="btn-show-login" style="padding:6px 14px; font-size:0.85rem;">🔑 เข้าสู่ระบบ / สมัครสมาชิก</button>
         </div>
-        <div id="session-logged-in" class="hidden" style="display:flex; align-items:center; gap:8px;">
-          <span style="font-size:0.88rem; color:var(--text);">👤 สวัสดี, <strong id="logged-user-name" style="color:var(--accent);">User</strong></span>
-          <button class="btn btn-secondary" id="btn-edit-profile" title="แก้ไขชื่อ Display Name" style="padding:4px 8px; font-size:0.75rem; border-color:var(--accent2); color:var(--accent2);">✏️ แก้ไขชื่อ</button>
+        <div id="session-logged-in" class="hidden" style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+          <span style="font-size:0.88rem; color:var(--text);">
+            👤 สวัสดี, <strong id="logged-user-name" style="color:var(--accent);">User</strong>
+            <span id="logged-user-stats" style="font-size:0.8rem; color:var(--muted); margin-left:4px;"></span>
+          </span>
+          <button class="btn btn-secondary" id="btn-edit-profile" title="แก้ไขโปรไฟล์และข้อมูลสรีระ" style="padding:4px 8px; font-size:0.75rem; border-color:var(--accent2); color:var(--accent2);">⚙️ โปรไฟล์</button>
           <button class="btn btn-secondary" id="btn-logout" style="padding:4px 8px; font-size:0.75rem; background:rgba(239, 68, 68, 0.2); color:#ef4444; border-color:#ef4444;">ออกจากระบบ</button>
         </div>
       </div>
     </div>
 
-    <!-- ═══ สถานะ 1: ก่อนขอกล้อง — ข้อความความเป็นส่วนตัวต้องเห็นก่อนกด ═══ -->
+    <!-- ═══ สถานะ 1: ก่อนขอกล้อง — เลือกคอร์สและตั้งค่าน้ำหนักตัว ═══ -->
     <section id="s-consent">
-      <div class="privacy-note">
-        🔒 ภาพจากกล้องประมวลผลบนเครื่องของคุณทั้งหมด<br />
-        <strong>ไม่มีการบันทึกหรือส่งวิดีโอออกจากเครื่องเด็ดขาด</strong>
-      </div>
-      <div class="card" style="margin: 16px 0; padding: 14px 16px; text-align: left;">
-        <label for="pose-select-init" style="font-size:0.9rem; font-weight:700; color:var(--accent); display:block; margin-bottom:6px;">🎯 เลือกท่าทางที่ต้องการเล่น:</label>
-        <select id="pose-select-init" style="width:100%; padding:10px 12px; border-radius:8px; border:2px solid var(--accent); background:var(--card-bg); color:var(--text); font-size:1rem; font-weight:700; cursor:pointer;">
-          <option value="dab">🙅 Dab Challenge</option>
-          <option value="six_seven">🔢 Six-Seven Dance</option>
-          <option value="scuba">🤿 Scuba Diver</option>
+      <div class="card" style="margin: 16px 0; padding: 18px 20px; text-align: left;">
+        <label for="course-select" style="font-size:1rem; font-weight:700; color:var(--accent); display:block; margin-bottom:8px;">
+          เลือกแผนการฝึกซ้อม (Workout Course):
+        </label>
+        <select id="course-select" style="width:100%; padding:12px 14px; border-radius:10px; border:2px solid var(--accent); background:var(--input-bg); color:var(--text); font-size:1.05rem; font-weight:700; cursor:pointer;">
+          <option value="beginner_fullbody">🟢 Beginner Full Body Burn (เบิร์นทั้งตัว - ไม่ใช้อุปกรณ์)</option>
+          <option value="adv_upper_body">🟣 Advanced Upper Body Sculpt (แขน & ไหล่ - ใช้ดัมเบล)</option>
+          <option value="adv_lower_power">🔴 Advanced Leg & Glute Power (ขา & ก้น - ดัมเบล/Bodyweight)</option>
+          <option value="adv_core_abs">🔵 Standing Core Shredder (แกนกลาง & หน้าท้อง - ไม่ใช้อุปกรณ์)</option>
         </select>
+
+        <div id="course-preview-box" style="margin-top:14px; padding:12px 16px; background:var(--input-bg); border-radius:10px; border:1px solid var(--border);">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px;">
+            <span id="preview-category" style="font-size:0.85rem; color:var(--accent2-hover); font-weight:700;">Full Body</span>
+            <span id="preview-equipment" style="font-size:0.8rem; background:var(--card-border); color:var(--text); padding:2px 8px; border-radius:4px; font-weight:600;">Bodyweight</span>
+          </div>
+          <p id="preview-desc" style="font-size:0.9rem; color:var(--muted); margin:8px 0 6px;">คอร์สปลุกพลังเผาผลาญไขมันทั่วร่างกาย</p>
+          <div id="preview-exercises-chips" style="display:flex; flex-wrap:wrap; gap:6px; margin-top:8px;">
+            <!-- รายชื่อท่าในคอร์ส -->
+          </div>
+        </div>
+
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-top:16px; padding-top:14px; border-top:1px solid var(--border); flex-wrap:wrap; gap:14px;">
+          <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+            <div style="display:flex; align-items:center; gap:10px; background:var(--card); padding:8px 14px; border-radius:12px; border:1px solid var(--card-border);">
+              <span style="font-size:1.1rem;">👤</span>
+              <div>
+                <div style="font-size:0.75rem; color:var(--muted); font-weight:600;">ข้อมูลสรีระของคุณ</div>
+                <div style="font-size:0.92rem; font-weight:700; color:var(--text);">
+                  น้ำหนัก <span id="display-user-weight" style="color:var(--accent);">65</span> กก. · ส่วนสูง <span id="display-user-height" style="color:var(--accent);">170</span> ซม.
+                </div>
+              </div>
+              <button type="button" class="btn btn-secondary" id="btn-quick-edit-profile" style="padding:4px 10px; font-size:0.75rem; border-radius:8px; margin-left:6px;" title="แก้ไขน้ำหนัก/ส่วนสูง">⚙️ แก้ไข</button>
+            </div>
+
+            <div id="bmi-display-pill" style="padding:8px 14px; border-radius:12px; font-size:0.85rem; font-weight:700; background:#ecfdf5; color:#059669; border:1px solid #a7f3d0;">
+              BMI: 22.5 (สมส่วน)
+            </div>
+          </div>
+
+          <div style="text-align:right;">
+            <span style="font-size:0.8rem; color:var(--muted);">เป้าหมายเผาผลาญประมาณ:</span>
+            <div id="preview-target-cal" style="font-size:1.2rem; font-weight:800; color:#ff9800;">🔥 ~45 kcal</div>
+          </div>
+        </div>
       </div>
+
       <p class="notice" id="mobile-hint" style="display:none">
-        📱 วางมือถือพิงอะไรสักอย่าง แล้วถอยห่างประมาณ 2 เมตร ให้เห็นตัวครึ่งบนขึ้นไป
+        📱 วางมือถือพิงสิ่งของ แล้วถอยห่างประมาณ 2 เมตร เพื่อให้กล้องจับได้เต็มตัว
       </p>
-      <p style="margin:18px 0">
-        <button class="btn btn-primary" id="btn-start-camera">เปิดกล้อง</button>
-      </p>
-      <p><a class="btn btn-secondary" href="../index.html">กลับหน้าแรก</a></p>
+
+      <div style="margin:20px 0; display:flex; justify-content:center; gap:12px;">
+        <button class="btn btn-primary" id="btn-start-camera" style="font-size:1.1rem; padding:12px 28px;">📷 เปิดกล้องและเริ่มฝึก</button>
+        <a class="btn btn-secondary" href="../index.html">กลับหน้าแรก</a>
+      </div>
     </section>
 
-    <!-- ═══ สถานะ 2: กำลังโหลด ═══ -->
+    <!-- ═══ สถานะ 2: กำลังโหลดโมเดล ═══ -->
     <section id="s-loading" class="hidden">
       <div class="spinner"></div>
-      <p id="loading-msg">กำลังโหลดโมเดล AI (ครั้งแรกอาจใช้ 2-5 วินาที)…</p>
+      <p id="loading-msg">กำลังโหลดโมเดล AI Vision (ครั้งแรกอาจใช้ 2-4 วินาที)…</p>
     </section>
 
-    <!-- ═══ สถานะ 3: กล้องใช้ไม่ได้ — ห้ามจอขาว (Edge Case 1, 2) ═══ -->
+    <!-- ═══ สถานะ 3: กล้องใช้ไม่ได้ ═══ -->
     <section id="s-error" class="hidden">
       <div class="card error-box">
         <h2 id="err-title">เปิดกล้องไม่ได้</h2>
         <p id="err-detail"></p>
         <ol id="err-steps"></ol>
-        <p style="margin-top:12px">
-          <button class="btn btn-primary" id="btn-retry">ลองใหม่</button>
-          <a class="btn btn-secondary" href="leaderboard.html">ดูอันดับอย่างเดียว</a>
+        <p style="margin-top:16px">
+          <button class="btn btn-primary" id="btn-retry">ลองใหม่อีกครั้ง</button>
+          <a class="btn btn-secondary" href="leaderboard.html">ดูอันดับคะแนน</a>
         </p>
       </div>
     </section>
 
-    <!-- ═══ สถานะ 4: กล้องทำงาน — โครงกระดูก + ตรวจ Dab สด ═══ -->
+    <!-- ═══ สถานะ 4: ออกกำลังกายจริง (Active Stage + Live HUD) ═══ -->
     <section id="s-play" class="hidden">
       <div class="play-layout">
-        <!-- ฝั่งซ้าย: หน้าจอแสดงผลกล้องและกระดูก -->
+        <!-- ฝั่งซ้าย: Stage กล้อง + โครงกระดูก + HUD โอเวอร์เลย์ -->
         <div class="play-main">
           <div class="stage">
             <video id="video" playsinline muted autoplay></video>
             <canvas id="canvas"></canvas>
 
-            <!-- Countdown Overlay ก่อนเริ่มเกม -->
+            <!-- Countdown Overlay 3-2-1 GO -->
             <div id="countdown-overlay" class="countdown-overlay hidden">
               <span id="countdown-num">3</span>
             </div>
 
-            <!-- ป้ายคำแนะนำและข้อมูลที่ทับอยู่บนหน้าจอ -->
-            <div class="overlay top">
-              <span class="badge" id="status-badge">ยืนให้เห็นตัวครึ่งบนในเฟรม</span>
+            <!-- Rest Interval Overlay (พักระหว่างเซ็ต) -->
+            <div id="rest-overlay" class="rest-overlay hidden">
+              <span class="rest-title">💧 พักเหนื่อย ดื่มน้ำ</span>
+              <p style="color:var(--muted); font-size:0.9rem; margin-top:2px;">ผ่อนคลายกล้ามเนื้อ หายใจเข้าลึกๆ</p>
+              
+              <div class="rest-ring-wrapper">
+                <svg class="rest-ring-svg" viewBox="0 0 100 100">
+                  <circle class="rest-ring-bg" cx="50" cy="50" r="42" />
+                  <circle class="rest-ring-fill" id="rest-ring-fill" cx="50" cy="50" r="42" stroke-dasharray="264" stroke-dashoffset="0" />
+                </svg>
+                <span class="rest-countdown-number" id="rest-timer-val">20</span>
+              </div>
+
+              <div class="rest-next-box">
+                <div class="rest-next-label">ต่อไป (Next Set):</div>
+                <div class="rest-next-name" id="rest-next-desc">Bodyweight Squats (Set 2/2)</div>
+              </div>
+
+              <button class="btn btn-secondary" id="btn-skip-rest" style="padding:8px 20px; font-size:0.9rem; border-color:var(--accent2); color:var(--accent2);">
+                ⏩ ข้ามเวลาพัก (เริ่มทันที)
+              </button>
+            </div>
+
+            <!-- Live HUD Overlays ทับบนหน้าจอกล้อง -->
+            <div class="overlay top" style="left:14px; top:14px; right:auto;">
+              <div style="display:flex; align-items:center; gap:8px;">
+                <span class="badge" id="hud-exercise-badge">ท่า: เตรียมตัว</span>
+                <span class="badge" id="hud-set-badge" style="background:rgba(139, 92, 246, 0.25); border-color:#8b5cf6; color:#c4b5fd;">Set 1/1</span>
+              </div>
             </div>
             
-            <div class="overlay top-right">
+            <div class="overlay top-right" style="right:14px; top:14px;">
               <div class="live-score-pill">
-                <span class="pill-label">คะแนนท่า</span>
-                <span class="live-score" id="live-score">0</span>
+                <span class="pill-label">ฟอร์ม</span>
+                <span class="live-score" id="live-score">0</span><span style="font-size:0.9rem; font-weight:700; color:var(--muted);">%</span>
               </div>
+            </div>
+
+            <!-- Live Calories HUD (Bottom Left) -->
+            <div style="position:absolute; bottom:14px; left:14px; z-index:20;">
+              <div class="calorie-pill">
+                <span class="calorie-flame">🔥</span>
+                <span class="calorie-val" id="live-calories">0.0</span>
+                <span style="font-size:0.8rem; font-weight:700; color:var(--muted);">kcal</span>
+              </div>
+            </div>
+
+            <!-- Live Reps HUD (Bottom Right) -->
+            <div style="position:absolute; bottom:14px; right:14px; z-index:20;">
+              <div class="badge ok" style="font-size:1.1rem; padding:6px 14px; background:rgba(0,0,0,0.6); backdrop-filter:blur(8px); border-color:var(--accent);">
+                ⚡ <span id="hud-reps-current">0</span> / <span id="hud-reps-target">10</span> ครั้ง
+              </div>
+            </div>
+
+            <!-- Real-time Form Feedback Toast -->
+            <div id="form-feedback-toast" class="form-feedback-pill hidden">
+              ย่อตัวลงไปอีก!
             </div>
           </div>
         </div>
 
-        <!-- ฝั่งขวา: การแสดงผลการนับแต้ม จับเวลา และปุ่มควบคุม -->
+        <!-- ฝั่งขวา: แผงควบคุม คอร์ส และสถิติการเล่น -->
         <div class="play-sidebar">
-          <!-- เลือกท่าทางที่ต้องการเล่น -->
-          <div class="card" style="margin-bottom: 12px; padding: 12px 16px;">
-            <label for="pose-select" style="font-size:0.85rem; font-weight:700; color:var(--accent); display:block; margin-bottom:6px;">🎯 ท่าทางที่ต้องการเล่น:</label>
-            <select id="pose-select" style="width:100%; padding:10px 12px; border-radius:8px; border:2px solid var(--accent); background:var(--card-bg); color:var(--text); font-size:1rem; font-weight:700; cursor:pointer;">
-              <option value="dab">🙅 Dab Challenge</option>
-              <option value="six_seven">🔢 Six-Seven Dance</option>
-              <option value="scuba">🤿 Scuba Diver</option>
-            </select>
-            <div id="pose-active-tag" style="margin-top:8px; padding:6px 10px; background:rgba(16, 185, 129, 0.15); border:1px solid #10b981; border-radius:6px; font-size:0.85rem; color:#10b981; font-weight:bold; text-align:center;">
-              📌 กำลังเล่นท่า: <span id="pose-active-name">Dab Challenge</span> (<span id="pose-active-key">dab</span>)
+          <!-- Course Card Summary -->
+          <div class="card" style="margin-bottom:12px; padding:14px 16px; text-align:left;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <span id="side-course-category" style="font-size:0.75rem; font-weight:700; color:var(--accent2-hover); text-transform:uppercase;">FULL BODY</span>
+              <span id="side-course-equip" style="font-size:0.75rem; background:var(--border); color:var(--text); padding:2px 6px; border-radius:4px; font-weight:600;">Bodyweight</span>
+            </div>
+            <h3 id="side-course-title" style="font-size:1.15rem; margin:4px 0 2px; color:var(--text);">Beginner Full Body Burn</h3>
+            
+            <!-- Set Indicator Dots -->
+            <div style="margin-top:8px;">
+              <div style="display:flex; justify-content:space-between; font-size:0.8rem; color:var(--muted); margin-bottom:4px;">
+                <span>ความคืบหน้าเซ็ต</span>
+                <span id="side-set-text">Set 1 จาก 2</span>
+              </div>
+              <div class="set-dots-container" id="side-set-dots">
+                <div class="set-dot active"></div>
+                <div class="set-dot"></div>
+              </div>
             </div>
           </div>
 
+          <!-- Counter Box & Big Rep Ring -->
           <div class="card status-card">
-            <!-- Game Timer Bar -->
-            <div class="timer-container">
-              <div class="timer-header">
-                <span class="timer-label">⏱️ เวลาเหลือ</span>
-                <span class="timer-seconds" id="timer-seconds">20s</span>
-              </div>
-              <div class="timer-bar-bg">
-                <div class="timer-bar-fill" id="timer-bar-fill"></div>
-              </div>
+            <div style="display:flex; justify-content:space-between; align-items:center; width:100%; margin-bottom:4px;">
+              <span style="font-size:0.85rem; color:var(--muted);">⏱️ เวลาออกกำลังกาย</span>
+              <span id="side-duration-text" style="font-size:0.95rem; font-weight:700; color:var(--text);">00:00</span>
             </div>
 
-            <div class="counter-display" style="margin-top: 16px;">
-              <span class="counter-label">นับได้</span>
+            <div class="counter-display" style="margin-top:6px;">
+              <span class="counter-label" id="side-exercise-name">Bodyweight Squats</span>
               <div class="counter-number-wrapper">
-                <span class="counter-number" id="dab-count">0</span>
+                <span class="counter-number" id="rep-count-display">0</span>
               </div>
-              <span class="counter-label">ครั้ง</span>
+              <span class="counter-label">เป้าหมาย: <strong id="rep-target-display" style="color:var(--accent);">10</strong> ครั้ง</span>
             </div>
-            <button class="btn btn-primary" id="btn-start-game" style="width: 100%; margin-top: 8px;">🔥 เริ่มเล่น (20 วินาที)</button>
-            <p class="notice play-instructions" id="play-instructions">กดปุ่มเริ่มเล่นเพื่อเริ่มนับถอยหลังและจับเวลา</p>
+
+            <button class="btn btn-primary" id="btn-start-workout" style="width:100%; margin-top:10px; font-size:1.05rem;">
+              🚀 เริ่มออกกำลังกาย
+            </button>
+            <p class="notice play-instructions" id="play-instructions" style="margin-top:8px;">
+              กดปุ่มเพื่อเริ่มนับถอยหลังและฝึกซ้อม
+            </p>
           </div>
 
-          <!-- แถวปุ่มควบคุม -->
-          <div class="controls-card">
-            <button class="btn btn-toggle-debug" id="btn-toggle-debug">⚙️ แสดงดีบั๊ก</button>
-            <a class="btn btn-quit-game" href="../index.html" id="btn-quit">ออก</a>
+          <!-- Exercise Routine List in Course -->
+          <div class="card" style="margin-top:12px; padding:14px 16px;">
+            <h4 style="font-size:0.88rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:8px; text-align:left;">
+              📋 ท่าทั้งหมดในคอร์สนี้:
+            </h4>
+            <div class="exercise-routine-list" id="routine-list-container">
+              <!-- Rendered via JS -->
+            </div>
           </div>
 
-          <!-- แผงดีบั๊กแบบพับได้ (ซ่อนเป็นค่าเริ่มต้น) -->
+          <!-- Buttons Row -->
+          <div class="controls-card" style="margin-top:12px;">
+            <button class="btn btn-toggle-debug" id="btn-toggle-debug">⚙️ ดีบั๊ก</button>
+            <a class="btn btn-quit-game" href="../index.html" id="btn-quit">ออกจากการฝึก</a>
+          </div>
+
+          <!-- Collapsible Debug Panel -->
           <div class="debug-panel hidden-debug" id="debug-panel">
             <div class="debug-header">
-              <h4>DEBUG LOG</h4>
-              <button id="btn-save-pose" class="btn-mini">💾 บันทึกท่า (.json)</button>
+              <h4>AI DETECTION DEBUG</h4>
+              <button id="btn-save-pose" class="btn-mini">💾 บันทึก JSON</button>
             </div>
-            <div id="dbg-body" class="debug-body">รอ landmark…</div>
+            <div id="dbg-body" class="debug-body">รอ landmark จากกล้อง…</div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- ═══ Modal เข้าสู่ระบบ & สมัครสมาชิก (Auth Modal) ═══ -->
+    <!-- ═══ Modal สรุปผลเมื่อจบคอร์สการฝึก ═══ -->
+    <div id="modal-summary" class="modal-backdrop hidden">
+      <div class="modal-card" style="max-width: 480px;">
+        <h2 class="modal-title" style="font-size:1.8rem;">🎉 จบคอร์สยอดเยี่ยม! 🎉</h2>
+        <p class="modal-subtitle" id="summary-course-name">Beginner Full Body Burn</p>
+
+        <div class="summary-stats" style="grid-template-columns: repeat(2, 1fr); gap:12px; margin:16px 0;">
+          <div class="stat-box accent">
+            <span class="stat-value" id="res-calories" style="color:#ff9800;">0.0</span>
+            <span class="stat-label">🔥 แคลอรี่ที่เผาผลาญ (kcal)</span>
+          </div>
+          <div class="stat-box">
+            <span class="stat-value" id="res-accuracy">0%</span>
+            <span class="stat-label">🎯 ฟอร์มเฉลี่ย</span>
+          </div>
+          <div class="stat-box">
+            <span class="stat-value" id="res-total-reps">0</span>
+            <span class="stat-label">⚡ จำนวนครั้งทั้งหมด</span>
+          </div>
+          <div class="stat-box">
+            <span class="stat-value" id="res-time">00:00</span>
+            <span class="stat-label">⏱️ เวลาที่ใช้</span>
+          </div>
+        </div>
+
+        <div class="save-score-section">
+          <h3>🏆 บันทึกสถิติเข้าสู่ Leaderboard</h3>
+          <form id="form-save-score" onsubmit="return false;">
+            <div id="logged-in-notice" class="hidden" style="margin-bottom:12px; padding:10px; background:rgba(16, 185, 129, 0.15); border:1px solid #10b981; border-radius:8px; font-size:0.88rem; color:#10b981; font-weight:bold; text-align:center;">
+              🟢 ล็อกอินบันทึกสถิติในชื่อ: <span id="logged-in-user-tag">User</span>
+            </div>
+
+            <div class="input-group">
+              <label for="input-display-name">🏷️ ชื่อบน Leaderboard / Display Name</label>
+              <input type="text" id="input-display-name" placeholder="ใส่ชื่อหรือฉายาของคุณ" required maxlength="30" />
+            </div>
+
+            <div class="auth-optional-box" id="auth-optional-box">
+              <label class="checkbox-label">
+                <input type="checkbox" id="chk-upgrade-account" />
+                🔑 สมัครสมาชิกถาวรด้วย Username & Password
+              </label>
+              <div id="password-field-group" class="input-group hidden" style="margin-top:10px;">
+                <label for="input-username" style="font-size:0.8rem; font-weight:bold; color:var(--text-muted); display:block; margin-bottom:4px;">👤 Username / ไอดีล็อกอิน</label>
+                <input type="text" id="input-username" placeholder="เช่น fitness_pro99" style="margin-bottom:8px;" />
+                
+                <label for="input-password" style="font-size:0.8rem; font-weight:bold; color:var(--text-muted); display:block; margin-bottom:4px;">🔑 Password / รหัสผ่าน</label>
+                <input type="password" id="input-password" placeholder="อย่างน้อย 6 ตัวอักษร" minlength="6" style="margin-bottom:8px;" />
+                
+                <label for="input-email" style="font-size:0.8rem; font-weight:bold; color:var(--text-muted); display:block; margin-bottom:4px;">📧 Email / อีเมล (ไม่บังคับ)</label>
+                <input type="email" id="input-email" placeholder="user@example.com" />
+              </div>
+            </div>
+
+            <div class="modal-actions" style="margin-top:16px;">
+              <button type="submit" class="btn btn-primary" id="btn-submit-score">💾 บันทึกสถิติ</button>
+              <button type="button" class="btn btn-secondary" id="btn-replay">🔄 เล่นอีกครั้ง</button>
+            </div>
+          </form>
+          <div id="save-status-msg" class="notice" style="margin-top:10px;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ Modal Auth (Login/Register) ═══ -->
     <div id="modal-login" class="modal-backdrop hidden">
       <div class="modal-card" style="max-width: 420px;">
-        <!-- Auth Mode Tabs -->
         <div class="auth-tabs">
           <button type="button" class="auth-tab active" id="tab-login">🔑 เข้าสู่ระบบ</button>
           <button type="button" class="auth-tab" id="tab-register">📝 สมัครสมาชิก</button>
         </div>
 
-        <!-- ─── Form เข้าสู่ระบบ (Login) ─── -->
         <div id="auth-pane-login">
           <h2 class="modal-title" style="font-size: 1.6rem;">🔑 เข้าสู่ระบบ</h2>
           <p class="modal-subtitle" style="margin-bottom: 16px;">กรอก Username และ Password เพื่อใช้งานบัญชีเดิม</p>
           <form id="form-login" onsubmit="return false;">
             <div class="input-group" style="text-align: left;">
               <label for="login-username">👤 Username / ไอดีล็อกอิน</label>
-              <input type="text" id="login-username" placeholder="ใส่ Username เช่น dab_king" required autocomplete="username" />
+              <input type="text" id="login-username" placeholder="ใส่ Username" required autocomplete="username" />
             </div>
             <div class="input-group" style="text-align: left; margin-top: 10px;">
               <label for="login-password">🔑 Password / รหัสผ่าน</label>
@@ -182,30 +348,39 @@
           </form>
         </div>
 
-        <!-- ─── Form สมัครสมาชิก (Register) ─── -->
         <div id="auth-pane-register" class="hidden">
           <h2 class="modal-title" style="font-size: 1.6rem;">📝 สมัครสมาชิก</h2>
-          <p class="modal-subtitle" style="margin-bottom: 16px;">สร้างบัญชีเพื่อสะสมคะแนนและโชว์ชื่อบนกระดานผู้นำ</p>
+          <p class="modal-subtitle" style="margin-bottom: 16px;">สร้างบัญชีเพื่อสะสมแคลอรี่และโชว์ชื่อบนกระดานผู้นำ</p>
           <form id="form-register" onsubmit="return false;">
             <div class="input-group" style="text-align: left;">
-              <label for="reg-displayname">🏷️ ชื่อที่แสดง / Display Name <small style="color:var(--accent);">(ภาษาไทยหรืออังกฤษ)</small></label>
-              <input type="text" id="reg-displayname" placeholder="เช่น น้องแดบสายฟ้า, Master_Dab" required maxlength="30" />
+              <label for="reg-displayname">🏷️ ชื่อที่แสดง / Display Name</label>
+              <input type="text" id="reg-displayname" placeholder="เช่น ปาล์ม สายฟิต" required maxlength="30" />
             </div>
             <div class="input-group" style="text-align: left; margin-top: 10px;">
-              <label for="reg-username">👤 Username / ไอดีล็อกอิน <small style="color:#ef4444;">(ภาษาอังกฤษ/ตัวเลข)</small></label>
-              <input type="text" id="reg-username" placeholder="เช่น dab_master99" required autocomplete="username" />
+              <label for="reg-username">👤 Username / ไอดีล็อกอิน</label>
+              <input type="text" id="reg-username" placeholder="เช่น palm_fit99" required autocomplete="username" />
             </div>
             <div class="input-group" style="text-align: left; margin-top: 10px;">
-              <label for="reg-password">🔑 Password / รหัสผ่าน <small style="color:var(--muted);">(อย่างน้อย 6 ตัวอักษร)</small></label>
+              <label for="reg-password">🔑 Password / รหัสผ่าน</label>
               <input type="password" id="reg-password" placeholder="ตั้งรหัสผ่าน 6 ตัวขึ้นไป" required minlength="6" autocomplete="new-password" />
             </div>
             <div class="input-group" style="text-align: left; margin-top: 10px;">
-              <label for="reg-email">📧 Email / อีเมล <small style="color:var(--muted);">(ไม่บังคับ)</small></label>
-              <input type="email" id="reg-email" placeholder="เช่น user@example.com" autocomplete="email" />
+              <label for="reg-email">📧 Email / อีเมล (ไม่บังคับ)</label>
+              <input type="email" id="reg-email" placeholder="user@example.com" autocomplete="email" />
+            </div>
+            <div style="display:flex; gap:10px; margin-top:10px;">
+              <div class="input-group" style="flex:1; text-align:left;">
+                <label for="reg-weight">⚖️ น้ำหนัก (กก.)</label>
+                <input type="number" id="reg-weight" min="30" max="250" value="65" />
+              </div>
+              <div class="input-group" style="flex:1; text-align:left;">
+                <label for="reg-height">📏 ส่วนสูง (ซม.)</label>
+                <input type="number" id="reg-height" min="100" max="250" value="170" />
+              </div>
             </div>
             <div id="reg-msg" class="notice" style="margin-top: 8px;"></div>
             <div class="modal-actions" style="margin-top: 16px;">
-              <button type="submit" class="btn btn-primary" id="btn-submit-register" style="width: 100%;">สมัครสมาชิก & เข้าสู่ระบบ</button>
+              <button type="submit" class="btn btn-primary" id="btn-submit-register" style="width: 100%;">สมัครสมาชิก</button>
               <button type="button" class="btn btn-secondary btn-close-auth">ยกเลิก</button>
             </div>
             <div class="auth-switch-prompt">
@@ -216,92 +391,100 @@
       </div>
     </div>
 
-    <!-- ═══ Modal แก้ไขชื่อ Display Name ═══ -->
+    <!-- ═══ Modal Edit Profile (Linked with Database) ═══ -->
     <div id="modal-edit-profile" class="modal-backdrop hidden">
-      <div class="modal-card" style="max-width: 380px;">
-        <h2 class="modal-title" style="font-size: 1.5rem;">✏️ แก้ไขชื่อที่แสดง</h2>
-        <p class="modal-subtitle" style="margin-bottom: 16px;">เปลี่ยนชื่อหรือฉายาที่โชว์บน Leaderboard</p>
+      <div class="modal-card" style="max-width: 420px;">
+        <h2 class="modal-title" style="font-size: 1.5rem;">👤 จัดการโปรไฟล์</h2>
+        <p class="modal-subtitle" style="margin-bottom: 14px;">บันทึกน้ำหนักและส่วนสูงเพื่อคำนวณแคลอรี่และ BMI</p>
         <form id="form-edit-profile" onsubmit="return false;">
           <div class="input-group" style="text-align: left;">
-            <label for="edit-display-name">🏷️ ชื่อ Display Name ใหม่</label>
-            <input type="text" id="edit-display-name" placeholder="ใส่ชื่อใหม่ เช่น Master_Dab" required maxlength="30" />
+            <label for="edit-display-name">ชื่อ Display Name</label>
+            <input type="text" id="edit-display-name" placeholder="ใส่ชื่อใหม่" required maxlength="30" />
           </div>
+          <div style="display:flex; gap:10px; margin-top:10px;">
+            <div class="input-group" style="flex:1; text-align:left;">
+              <label for="edit-weight">น้ำหนักตัว (กก.)</label>
+              <input type="number" id="edit-weight" min="20" max="250" step="0.5" required />
+            </div>
+            <div class="input-group" style="flex:1; text-align:left;">
+              <label for="edit-height">ส่วนสูง (ซม.)</label>
+              <input type="number" id="edit-height" min="80" max="250" step="0.5" required />
+            </div>
+          </div>
+
+          <div id="modal-bmi-pill" style="margin-top:12px; padding:8px 12px; border-radius:10px; font-size:0.85rem; font-weight:700; background:#ecfdf5; color:#059669; border:1px solid #a7f3d0; text-align:center;">
+            BMI: 22.5 (สมส่วน / สุขภาพดี)
+          </div>
+
           <div id="edit-profile-msg" class="notice" style="margin-top: 8px;"></div>
           <div class="modal-actions" style="margin-top: 16px;">
-            <button type="submit" class="btn btn-primary" id="btn-submit-edit-profile" style="width: 100%;">บันทึกชื่อใหม่</button>
+            <button type="submit" class="btn btn-primary" id="btn-submit-edit-profile" style="width: 100%;">บันทึก</button>
             <button type="button" class="btn btn-secondary" id="btn-close-edit-profile">ยกเลิก</button>
           </div>
         </form>
       </div>
     </div>
 
-    <!-- ═══ Modal สรุปผลคะแนนเมื่อจบเกม ═══ -->
-    <div id="modal-summary" class="modal-backdrop hidden">
-      <div class="modal-card">
-        <h2 class="modal-title">🎉 หมดเวลา! 🎉</h2>
-        <p class="modal-subtitle">สรุปผลการเล่นของคุณ</p>
+    <!-- ═══ Modal Exercise Demo (Real Human GIF Demonstration & Form Guide) ═══ -->
+    <div id="modal-exercise-demo" class="modal-backdrop hidden">
+      <div class="modal-card" style="max-width: 580px; width: 94%; max-height: 90vh; overflow-y: auto; text-align: left;">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom: 12px; gap: 10px;">
+          <div>
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span id="demo-modal-icon" style="font-size:1.6rem;">⭐</span>
+              <h2 id="demo-modal-title" style="font-size: 1.35rem; color:var(--text); margin:0;">Jumping Jacks</h2>
+            </div>
+            <div id="demo-modal-badges" style="display:flex; gap:6px; flex-wrap:wrap; margin-top:6px;">
+              <span id="demo-badge-area" class="meta-tag" style="background:rgba(16, 185, 129, 0.15); color:#059669; font-weight:700; border:1px solid rgba(16, 185, 129, 0.3);">คาร์ดิโอทั้งตัว</span>
+              <span id="demo-badge-equip" class="meta-tag" style="background:#f1f5f9; color:#475569;">Bodyweight</span>
+              <span id="demo-badge-met" class="meta-tag" style="background:#fff7ed; color:#ea580c; font-weight:700;">🔥 8.0 MET</span>
+            </div>
+          </div>
+          <button type="button" class="btn btn-secondary" id="btn-close-demo-x" style="padding:4px 10px; font-size:1rem; border-radius:8px; line-height:1;" title="ปิดหน้าต่าง">✕</button>
+        </div>
 
-        <div class="summary-stats">
-          <div class="stat-box">
-            <span class="stat-value" id="res-count">0</span>
-            <span class="stat-label">จำนวนครั้ง</span>
-          </div>
-          <div class="stat-box accent">
-            <span class="stat-value" id="res-score">0</span>
-            <span class="stat-label">คะแนนรวม</span>
-          </div>
-          <div class="stat-box">
-            <span class="stat-value" id="res-avg">0</span>
-            <span class="stat-label">คะแนนเฉลี่ย/ครั้ง</span>
+        <!-- Real Human GIF Video Container -->
+        <div style="position:relative; width:100%; height:280px; border-radius:14px; overflow:hidden; background:#0f172a; display:flex; justify-content:center; align-items:center; box-shadow: 0 4px 16px rgba(0,0,0,0.15); margin-bottom:14px;">
+          <img id="demo-modal-gif" src="" alt="Exercise Demo" style="max-width:100%; max-height:100%; object-fit:contain; display:block;" />
+          <div style="position:absolute; bottom:8px; right:10px; background:rgba(15, 23, 42, 0.75); color:#ffffff; font-size:0.75rem; padding:3px 10px; border-radius:6px; backdrop-filter:blur(4px); font-weight:600;">
+            🎥 ตัวอย่างการฝึกคนจริง
           </div>
         </div>
 
-        <div class="save-score-section">
-          <h3>🏆 บันทึกคะแนนเข้า Leaderboard</h3>
-          <form id="form-save-score" onsubmit="return false;">
-            <div id="logged-in-notice" class="hidden" style="margin-bottom: 12px; padding: 10px; background: rgba(16, 185, 129, 0.15); border: 1px solid #10b981; border-radius: 8px; font-size: 0.88rem; color: #10b981; font-weight: bold; text-align: center;">
-              🟢 ล็อกอินบันทึกคะแนนอัตโนมัติในชื่อ: <span id="logged-in-user-tag">User</span>
-            </div>
+        <!-- Instructions & Steps -->
+        <div style="margin-bottom:12px;">
+          <h4 style="margin:0 0 6px; font-size:0.92rem; color:var(--text); font-weight:700;">📋 วิธีฝึกที่ถูกต้อง:</h4>
+          <div id="demo-modal-steps" style="display:flex; flex-direction:column; gap:6px; font-size:0.86rem; color:var(--text); line-height:1.5;">
+          </div>
+        </div>
 
-            <div class="input-group">
-              <label for="input-display-name">🏷️ ชื่อโชว์บน Leaderboard / Display Name <small style="color:var(--accent);">(เปลี่ยนได้ตลอดเวลา)</small></label>
-              <input type="text" id="input-display-name" placeholder="ใส่ชื่อหรือฉายาที่ต้องการโชว์ในตาราง" required maxlength="30" />
-            </div>
+        <!-- Mistakes to Avoid -->
+        <div id="demo-mistakes-box" style="margin-bottom:12px; background:#fff1f2; border:1px solid #fecdd3; border-radius:10px; padding:10px 12px;">
+          <h4 style="margin:0 0 4px; font-size:0.88rem; color:#e11d48; font-weight:700;">💡 ข้อควรระวังในการจัดฟอร์ม:</h4>
+          <ul id="demo-modal-mistakes" style="margin:0; padding-left:18px; font-size:0.84rem; color:#9f1239; line-height:1.5;">
+          </ul>
+        </div>
 
-            <!-- ตัวเลือกในการล็อกอินหรือลงทะเบียนถ้าต้องการ -->
-            <div class="auth-optional-box" id="auth-optional-box">
-              <label class="checkbox-label">
-                <input type="checkbox" id="chk-upgrade-account" />
-                🔑 สมัครสมาชิกถาวรด้วย Username & Password
-              </label>
-              <div id="password-field-group" class="input-group hidden" style="margin-top: 10px;">
-                <label for="input-username" style="font-size:0.8rem; font-weight:bold; color:var(--text-muted); display:block; margin-bottom:4px;">👤 Username / ไอดีล็อกอิน <small style="color:#ef4444;">(ภาษาอังกฤษ/ตัวเลข — ตั้งแล้วเปลี่ยนไม่ได้)</small></label>
-                <input type="text" id="input-username" placeholder="ตั้งชื่อ Username เช่น john_doe99" style="margin-bottom: 8px;" />
-                
-                <label for="input-password" style="font-size:0.8rem; font-weight:bold; color:var(--text-muted); display:block; margin-bottom:4px;">🔑 Password / รหัสผ่าน</label>
-                <input type="password" id="input-password" placeholder="ตั้งรหัสผ่าน (อย่างน้อย 6 ตัวอักษร)" minlength="6" style="margin-bottom: 8px;" />
-                
-                <label for="input-email" style="font-size:0.8rem; font-weight:bold; color:var(--text-muted); display:block; margin-bottom:4px;">📧 Email / อีเมล <small>(ไม่บังคับ)</small></label>
-                <input type="email" id="input-email" placeholder="อีเมล เช่น user@example.com" />
-              </div>
-            </div>
+        <!-- AI Tip -->
+        <div id="demo-modal-aitip" style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:10px; padding:8px 12px; font-size:0.84rem; color:#1d4ed8; margin-bottom:16px;">
+          📷 ถอยห่างจากกล้อง 2-2.5 เมตร ให้กล้องมองเห็นสะโพก เข่า และข้อเท้า
+        </div>
 
-            <div class="modal-actions">
-              <button type="submit" class="btn btn-primary" id="btn-submit-score">💾 บันทึกคะแนน</button>
-              <button type="button" class="btn btn-secondary" id="btn-replay">🔄 เล่นอีกครั้ง</button>
-            </div>
-          </form>
-          <div id="save-status-msg" class="notice" style="margin-top: 10px;"></div>
+        <!-- Actions -->
+        <div class="modal-actions" style="margin-top: 14px;">
+          <button type="button" class="btn btn-primary" id="btn-close-demo-modal" style="width: 100%;">✅ เข้าใจแล้ว ปิดหน้าต่าง</button>
         </div>
       </div>
     </div>
   </div>
 
   <script type="module">
-    import { CFG } from "../js/config.js";
+    import { CFG, WORKOUT_COURSES, EXERCISES } from "../js/config.js";
     import { preloadModel, startCamera, stopCamera, startDetectLoop, drawSkeleton } from "../js/pose.js";
-    import { createSmoother, angle, dist } from "../js/dab.js";
-    import { evaluatePose, createPoseCounter, LM } from "../js/poses.js";
+    import { createSmoother, angle, dist } from "../js/exercises/common.js";
+    import { evaluatePose, LM } from "../js/poses.js";
+    import { WorkoutRoutineManager } from "../js/workout_manager.js";
+    import { getUserWeight, setUserWeight, getUserHeight, setUserHeight, calculateBMI } from "../js/calories.js";
     import { submitScore, registerUser, loginUser, updateUserProfile, getSavedSession, saveSession, clearSession } from "../js/api.js";
 
     const $ = (id) => document.getElementById(id);
@@ -315,7 +498,144 @@
     const canvas = $("canvas");
     let stopLoop = null;
     let lastLandmarks = null;
-    let currentPoseKey = $("pose-select")?.value || $("pose-select-init")?.value || "dab";
+
+    // ตรวจสอบคอร์สจาก URL Parameters เช่น play.html?course=adv_upper_body
+    const urlParams = new URLSearchParams(window.location.search);
+    const initialCourseParam = urlParams.get("course");
+    if (initialCourseParam && WORKOUT_COURSES[initialCourseParam] && $("course-select")) {
+      $("course-select").value = initialCourseParam;
+    }
+
+    // น้ำหนักตัวและส่วนสูงผู้ใช้ + คำนวณ BMI (ดึงจากบัญชีอัตโนมัติ)
+    function updateBMIUI() {
+      const session = getSavedSession();
+      const u = session?.user;
+      const w = (u && u.weight) ? u.weight : getUserWeight();
+      const h = (u && u.height) ? u.height : getUserHeight();
+
+      if ($("display-user-weight")) $("display-user-weight").textContent = w;
+      if ($("display-user-height")) $("display-user-height").textContent = h;
+
+      const res = calculateBMI(w, h);
+      const pill = $("bmi-display-pill");
+      if (pill) {
+        pill.textContent = `BMI: ${res.bmi} (${res.category})`;
+        pill.style.color = res.color;
+        pill.style.background = res.bg;
+        pill.style.borderColor = res.border;
+      }
+    }
+
+    updateBMIUI();
+
+    function updateModalBMI() {
+      const w = parseFloat($("edit-weight")?.value) || getUserWeight();
+      const h = parseFloat($("edit-height")?.value) || getUserHeight();
+      const res = calculateBMI(w, h);
+      const pill = $("modal-bmi-pill");
+      if (pill) {
+        pill.textContent = `BMI: ${res.bmi} (${res.category})`;
+        pill.style.color = res.color;
+        pill.style.background = res.bg;
+        pill.style.borderColor = res.border;
+      }
+    }
+    $("edit-weight")?.addEventListener("input", updateModalBMI);
+    $("edit-height")?.addEventListener("input", updateModalBMI);
+
+    // สร้าง Workout Routine Manager
+    let workout = null;
+    let workoutSummaryData = null;
+
+    // ── Exercise Demo Modal ──
+    function openExerciseDemoModal(poseKey) {
+      const ex = EXERCISES[poseKey];
+      if (!ex) return;
+
+      if ($("demo-modal-icon")) $("demo-modal-icon").textContent = ex.icon || "⚡";
+      if ($("demo-modal-title")) $("demo-modal-title").textContent = ex.name || poseKey;
+      if ($("demo-badge-area")) $("demo-badge-area").textContent = ex.targetArea || "กล้ามเนื้อ";
+      if ($("demo-badge-equip")) $("demo-badge-equip").textContent = ex.equipment || "Bodyweight";
+      if ($("demo-badge-met")) $("demo-badge-met").textContent = `🔥 ${ex.met || 6.0} MET`;
+
+      // Resolve GIF path
+      const gifSrc = ex.gif ? (ex.gif.startsWith("assets/") ? `../${ex.gif}` : ex.gif) : "";
+      const gifEl = $("demo-modal-gif");
+      if (gifEl) {
+        gifEl.src = gifSrc;
+        gifEl.alt = ex.name;
+      }
+
+      // Steps
+      const stepsEl = $("demo-modal-steps");
+      if (stepsEl) {
+        if (ex.steps && ex.steps.length > 0) {
+          stepsEl.innerHTML = ex.steps.map(s => `<div style="background:var(--input-bg); padding:8px 12px; border-radius:8px; border:1px solid var(--border); font-size:0.86rem; color:var(--text);">${s}</div>`).join("");
+        } else {
+          stepsEl.innerHTML = `<div style="background:var(--input-bg); padding:8px 12px; border-radius:8px; border:1px solid var(--border); font-size:0.86rem;">${ex.instructions || ""}</div>`;
+        }
+      }
+
+      // Mistakes
+      const mistakesBox = $("demo-mistakes-box");
+      const mistakesEl = $("demo-modal-mistakes");
+      if (ex.mistakes && ex.mistakes.length > 0) {
+        mistakesBox?.classList.remove("hidden");
+        if (mistakesEl) mistakesEl.innerHTML = ex.mistakes.map(m => `<li>${m}</li>`).join("");
+      } else {
+        mistakesBox?.classList.add("hidden");
+      }
+
+      // AI Tip
+      const aiTipEl = $("demo-modal-aitip");
+      if (aiTipEl) {
+        aiTipEl.textContent = ex.aiTip || "📷 ถอยห่างจากกล้อง 2 เมตร เพื่อให้ AI ตรวจจับได้อย่างแม่นยำ";
+      }
+
+      $("modal-exercise-demo")?.classList.remove("hidden");
+    }
+
+    $("btn-close-demo-x")?.addEventListener("click", () => {
+      $("modal-exercise-demo")?.classList.add("hidden");
+    });
+    $("btn-close-demo-modal")?.addEventListener("click", () => {
+      $("modal-exercise-demo")?.classList.add("hidden");
+    });
+
+    function renderCoursePreview(courseId) {
+      const course = WORKOUT_COURSES[courseId] || WORKOUT_COURSES.beginner_fullbody;
+      if ($("preview-category")) $("preview-category").textContent = course.category;
+      if ($("preview-equipment")) $("preview-equipment").textContent = course.equipment;
+      if ($("preview-desc")) $("preview-desc").textContent = course.description;
+      if ($("preview-target-cal")) $("preview-target-cal").textContent = `🔥 ~${course.target_calories_est} kcal`;
+
+      const chipsEl = $("preview-exercises-chips");
+      if (chipsEl) {
+        chipsEl.innerHTML = course.exercises.map(ex => {
+          const def = EXERCISES[ex.pose_key];
+          return `<button type="button" class="exercise-chip-btn" data-pose="${ex.pose_key}" style="border:1px solid #10b981; background:#ecfdf5; color:#065f46; border-radius:999px; padding:6px 14px; font-size:0.84rem; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:8px; transition:all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1); box-shadow:0 2px 6px rgba(16, 185, 129, 0.15);" title="คลิกเพื่อดูวิดีโอตัวอย่างคนจริงและวิธีจัดฟอร์ม">
+            <span>${def?.icon || "⚡"}</span>
+            <span>${ex.name} (${ex.target_reps} ครั้ง x ${ex.sets} เซ็ต)</span>
+            <span style="font-size:0.75rem; background:#10b981; color:#ffffff; padding:2px 7px; border-radius:999px; font-weight:600; display:inline-flex; align-items:center; gap:3px;">
+              👁️ ดูตัวอย่าง
+            </span>
+          </button>`;
+        }).join("");
+
+        chipsEl.querySelectorAll(".exercise-chip-btn").forEach(btn => {
+          btn.addEventListener("click", (e) => {
+            e.preventDefault();
+            const poseKey = btn.dataset.pose;
+            openExerciseDemoModal(poseKey);
+          });
+        });
+      }
+    }
+
+    $("course-select")?.addEventListener("change", (e) => {
+      renderCoursePreview(e.target.value);
+    });
+    renderCoursePreview($("course-select")?.value || "beginner_fullbody");
 
     // ── Auth & Session Management ──
     function updateAuthUI() {
@@ -324,7 +644,19 @@
         if ($("session-logged-out")) $("session-logged-out").classList.add("hidden");
         if ($("session-logged-in")) {
           $("session-logged-in").classList.remove("hidden");
-          if ($("logged-user-name")) $("logged-user-name").textContent = session.user.display_name || session.user.username;
+          const u = session.user;
+          if ($("logged-user-name")) $("logged-user-name").textContent = u.display_name || u.username;
+          if ($("logged-user-stats")) {
+            const w = u.weight || getUserWeight();
+            const h = u.height || getUserHeight();
+            const bmi = calculateBMI(w, h);
+            $("logged-user-stats").textContent = `(${w}กก. · ${h}ซม. · BMI ${bmi.bmi})`;
+            $("logged-user-stats").title = `เกณฑ์: ${bmi.category}`;
+          }
+          // Sync profile weight and height
+          if (u.weight) setUserWeight(u.weight);
+          if (u.height) setUserHeight(u.height);
+          updateBMIUI();
         }
         if ($("input-display-name") && !$("input-display-name").value) {
           $("input-display-name").value = session.user.display_name || "";
@@ -332,7 +664,11 @@
         if ($("auth-optional-box")) $("auth-optional-box").classList.add("hidden");
         if ($("logged-in-notice")) {
           $("logged-in-notice").classList.remove("hidden");
-          if ($("logged-in-user-tag")) $("logged-in-user-tag").textContent = `${session.user.display_name || session.user.username} (@${session.user.username})`;
+          if ($("logged-player-name")) {
+            $("logged-player-name").textContent = session.user.display_name || session.user.username;
+          } else if ($("logged-in-user-tag")) {
+            $("logged-in-user-tag").textContent = session.user.display_name || session.user.username;
+          }
         }
       } else {
         if ($("session-logged-out")) $("session-logged-out").classList.remove("hidden");
@@ -342,7 +678,6 @@
       }
     }
 
-    // Modal Control & Tab Switching
     function setAuthTab(tab) {
       if (tab === "register") {
         $("tab-login")?.classList.remove("active");
@@ -355,39 +690,39 @@
         $("auth-pane-register")?.classList.add("hidden");
         $("auth-pane-login")?.classList.remove("hidden");
       }
-      if ($("login-msg")) $("login-msg").textContent = "";
-      if ($("reg-msg")) $("reg-msg").textContent = "";
     }
 
-    function openAuthModal(tab = "login") {
-      setAuthTab(tab);
+    $("btn-show-login")?.addEventListener("click", () => {
+      setAuthTab("login");
       $("modal-login")?.classList.remove("hidden");
-    }
-
-    function closeAuthModal() {
+    });
+    document.querySelectorAll(".btn-close-auth").forEach(btn => btn.addEventListener("click", () => {
       $("modal-login")?.classList.add("hidden");
-      if ($("login-msg")) $("login-msg").textContent = "";
-      if ($("reg-msg")) $("reg-msg").textContent = "";
-      if ($("btn-submit-login")) $("btn-submit-login").disabled = false;
-      if ($("btn-submit-register")) $("btn-submit-register").disabled = false;
-    }
-
-    $("btn-show-login")?.addEventListener("click", () => openAuthModal("login"));
-    document.querySelectorAll(".btn-close-auth").forEach(btn => btn.addEventListener("click", closeAuthModal));
+    }));
     $("tab-login")?.addEventListener("click", () => setAuthTab("login"));
     $("tab-register")?.addEventListener("click", () => setAuthTab("register"));
-    $("link-goto-register")?.addEventListener("click", (e) => { e.preventDefault(); setAuthTab("register"); });
-    $("link-goto-login")?.addEventListener("click", (e) => { e.preventDefault(); setAuthTab("login"); });
-    $("btn-logout")?.addEventListener("click", () => { clearSession(); updateAuthUI(); });
+    $("link-goto-register")?.addEventListener("click", () => setAuthTab("register"));
+    $("link-goto-login")?.addEventListener("click", () => setAuthTab("login"));
+    $("btn-logout")?.addEventListener("click", () => { clearSession(); updateAuthUI(); updateBMIUI(); });
 
     // Edit Profile Modal
-    $("btn-edit-profile")?.addEventListener("click", () => {
+    function openEditProfileModal() {
       const session = getSavedSession();
-      if (!session || !session.user) return;
-      if ($("edit-display-name")) $("edit-display-name").value = session.user.display_name || "";
-      if ($("edit-profile-msg")) $("edit-profile-msg").textContent = "";
+      if (!session || !session.user) {
+        setAuthTab("login");
+        $("modal-login")?.classList.remove("hidden");
+        return;
+      }
+      const u = session.user;
+      if ($("edit-display-name")) $("edit-display-name").value = u.display_name || "";
+      if ($("edit-weight")) $("edit-weight").value = u.weight || getUserWeight();
+      if ($("edit-height")) $("edit-height").value = u.height || getUserHeight();
+      updateModalBMI();
       $("modal-edit-profile")?.classList.remove("hidden");
-    });
+    }
+
+    $("btn-edit-profile")?.addEventListener("click", openEditProfileModal);
+    $("btn-quick-edit-profile")?.addEventListener("click", openEditProfileModal);
     $("btn-close-edit-profile")?.addEventListener("click", () => {
       $("modal-edit-profile")?.classList.add("hidden");
     });
@@ -397,253 +732,254 @@
       const session = getSavedSession();
       if (!session || !session.user) return;
       const newName = $("edit-display-name")?.value?.trim();
+      const newWeight = parseFloat($("edit-weight")?.value) || 65;
+      const newHeight = parseFloat($("edit-height")?.value) || 170;
       if (!newName) return;
-
-      $("edit-profile-msg").textContent = "⏳ กำลังบันทึกชื่อใหม่…";
       $("btn-submit-edit-profile").disabled = true;
-
       try {
-        await updateUserProfile(session.user.id, { display_name: newName });
-        $("edit-profile-msg").textContent = "✅ เปลี่ยนชื่อสำเร็จ!";
+        await updateUserProfile(session.user.id, { 
+          display_name: newName,
+          weight: newWeight,
+          height: newHeight
+        });
+        setUserWeight(newWeight);
+        setUserHeight(newHeight);
         updateAuthUI();
-        setTimeout(() => {
-          $("modal-edit-profile")?.classList.add("hidden");
-          $("btn-submit-edit-profile").disabled = false;
-        }, 600);
+        updateBMIUI();
+        $("modal-edit-profile")?.classList.add("hidden");
       } catch (err) {
-        $("edit-profile-msg").textContent = `❌ ${err.message}`;
+        alert(err.message);
+      } finally {
         $("btn-submit-edit-profile").disabled = false;
       }
     });
 
-    // Submit Login
+    // Form Login
     $("form-login")?.addEventListener("submit", async (e) => {
       e.preventDefault();
       const uname = $("login-username")?.value?.trim();
       const pass = $("login-password")?.value?.trim();
       if (!uname || !pass) return;
-
-      $("login-msg").textContent = "⏳ กำลังเข้าสู่ระบบ…";
       $("btn-submit-login").disabled = true;
-
       try {
         await loginUser(uname, pass);
-        $("login-msg").textContent = "✅ เข้าสู่ระบบสำเร็จ!";
         updateAuthUI();
-        setTimeout(() => {
-          closeAuthModal();
-          $("form-login")?.reset();
-        }, 600);
+        $("modal-login")?.classList.add("hidden");
+        $("form-login")?.reset();
       } catch (err) {
         $("login-msg").textContent = `❌ ${err.message}`;
+      } finally {
         $("btn-submit-login").disabled = false;
       }
     });
 
-    // Submit Register
+    // Form Register
     $("form-register")?.addEventListener("submit", async (e) => {
       e.preventDefault();
-      const displayName = $("reg-displayname")?.value?.trim();
-      const rawUname = $("reg-username")?.value?.trim();
+      const dName = $("reg-displayname")?.value?.trim();
+      const uName = $("reg-username")?.value?.trim();
       const pass = $("reg-password")?.value?.trim();
       const email = $("reg-email")?.value?.trim() || null;
-
-      if (!displayName || !rawUname || !pass) {
-        $("reg-msg").textContent = "❌ กรุณากรอกข้อมูลที่จำเป็นให้ครบถ้วน";
-        return;
-      }
-
-      const cleanUname = rawUname.toLowerCase().replace(/\s+/g, "");
-
-      $("reg-msg").textContent = "⏳ กำลังลงทะเบียนและเข้าสู่ระบบ…";
+      const weight = parseFloat($("reg-weight")?.value) || 65;
+      const height = parseFloat($("reg-height")?.value) || 170;
+      if (!dName || !uName || !pass) return;
       $("btn-submit-register").disabled = true;
-
       try {
-        await registerUser(cleanUname, pass, displayName, email);
-        $("reg-msg").textContent = "✅ สมัครสมาชิกและเข้าสู่ระบบสำเร็จ!";
+        await registerUser(uName.toLowerCase().replace(/\s+/g, ""), pass, dName, email, weight, height);
         updateAuthUI();
-        setTimeout(() => {
-          closeAuthModal();
-          $("form-register")?.reset();
-        }, 700);
+        $("modal-login")?.classList.add("hidden");
+        $("form-register")?.reset();
       } catch (err) {
         $("reg-msg").textContent = `❌ ${err.message}`;
+      } finally {
         $("btn-submit-register").disabled = false;
       }
     });
 
     updateAuthUI();
 
-    // ── Game State Variables ──
-    let isGameRunning = false;
-    let gameTimer = null;
-    let timeLeft = 20;
-    let currentDabCount = 0;
-    let scoreHistory = [];
-
-    // ── แปลง error ของ getUserMedia เป็นข้อความที่คนทั่วไปเข้าใจ ──
-    const ERROR_TEXT = {
-      NotAllowedError: {
-        title: "ไม่อนุญาตให้ใช้กล้อง",
-        detail: "เบราว์เซอร์ถูกปฏิเสธการเข้าถึงกล้อง",
-        steps: ["กดรูปแม่กุญแจ 🔒 หน้า URL แล้วเลือก 'อนุญาตใช้กล้อง'", "รีเฟรชหน้าเว็บ"],
-      },
-      NotFoundError: {
-        title: "ไม่พบกล้องในเครื่อง",
-        detail: "ระบบไม่พบอุปกรณ์กล้องเว็บบอร์ดหรือกล้องมือถือ",
-        steps: ["เสียบกล้องให้เรียบร้อย", "ลองกดเปลี่ยนกล้องในเมนูตั้งค่าเบราว์เซอร์"],
-      },
-      NotReadableError: {
-        title: "กล้องถูกโปรแกรมอื่นใช้งานอยู่",
-        detail: "มีแอปอื่น (เช่น Zoom, Meet) กำลังใช้กล้องอยู่",
-        steps: ["ปิดโปรแกรมที่ใช้กล้องอยู่", "กดปุ่มลองใหม่"],
-      },
-    };
+    // ── ข้อผิดพลาดกล้อง ──
     function showError(err) {
-      const t = ERROR_TEXT[err.name] ?? {
-        title: "เกิดข้อผิดพลาด", detail: String(err.message ?? err), steps: ["กดปุ่มลองใหม่"],
-      };
-      $("err-title").textContent = t.title;
-      $("err-detail").textContent = t.detail;
-      $("err-steps").innerHTML = t.steps.map((s) => `<li>${s}</li>`).join("");
+      $("err-title").textContent = "เปิดกล้องไม่ได้";
+      $("err-detail").textContent = String(err.message || err);
+      $("err-steps").innerHTML = "<li>กดรูปแม่กุญแจ 🔒 ที่หน้า URL แล้วอนุญาตให้ใช้กล้อง</li><li>รีเฟรชหน้าเว็บและลองใหม่</li>";
       show("s-error");
     }
 
-    function switchPose(newKey) {
-      currentPoseKey = newKey || $("pose-select")?.value || $("pose-select-init")?.value || "dab";
-      
-      // Sync ค่าทั้งสอง Dropdown ให้ตรงกันเสมอ
-      if ($("pose-select") && $("pose-select").value !== currentPoseKey) {
-        $("pose-select").value = currentPoseKey;
-      }
-      if ($("pose-select-init") && $("pose-select-init").value !== currentPoseKey) {
-        $("pose-select-init").value = currentPoseKey;
-      }
-
-      const poseObj = CFG.POSES?.[currentPoseKey];
-      const poseName = poseObj?.name ?? currentPoseKey;
-
-      console.log("🔄 [Pose Switch Triggered] Key:", currentPoseKey, "| Name:", poseName);
-
-      // อัปเดตแท็กแสดงผลบน UI สดๆ ทันที
-      if ($("pose-active-name")) $("pose-active-name").textContent = poseName;
-      if ($("pose-active-key")) $("pose-active-key").textContent = currentPoseKey;
-      if ($("play-instructions")) $("play-instructions").textContent = `🔥 ทำท่า ${poseName} ให้เร็วและต่อเนื่องที่สุด!`;
-
-      if (stopLoop) {
-        stopLoop();
-        runDetection();
-      }
-    }
-
-    // ── เริ่มกล้อง + โมเดล (เรียกหลังกดปุ่มเท่านั้น) ──
+    // ── เริ่มต้นระบบกล้องและคอร์ส ──
     async function boot() {
       show("s-loading");
       try {
-        const initKey = $("pose-select-init")?.value || $("pose-select")?.value || "dab";
-        console.log("🎥 [Camera Booting] Selected pose key:", initKey);
-        switchPose(initKey);
-        $("loading-msg").textContent = "กำลังโหลดโมเดล AI…";
+        const courseKey = $("course-select")?.value || "beginner_fullbody";
+        const session = getSavedSession();
+        const weightVal = session?.user?.weight || getUserWeight();
+        setUserWeight(weightVal);
+
+        $("loading-msg").textContent = "กำลังโหลดโมเดล AI Vision…";
         const { delegate } = await preloadModel();
-        $("loading-msg").textContent = "กำลังเปิดกล้อง…";
+
+        $("loading-msg").textContent = "กำลังเปิดกล้องเว็บแคม…";
         await startCamera(video);
         canvas.width = video.videoWidth;
         canvas.height = video.videoHeight;
         show("s-play");
-        if (delegate === "CPU") {
-          $("status-badge").textContent = "โหมดประหยัด (CPU)";
-        }
-        runDetection();
+
+        initWorkoutSession(courseKey);
+        startMediaPipeLoop();
       } catch (err) {
         showError(err);
       }
     }
+
     $("btn-start-camera").addEventListener("click", boot);
     $("btn-retry").addEventListener("click", boot);
-    $("btn-quit").addEventListener("click", () => stop());
-    window.addEventListener("pagehide", () => stop());
-    function stop() { stopGameTimer(); stopLoop?.(); stopCamera(video); }
+    $("btn-quit").addEventListener("click", () => stopAll());
+    window.addEventListener("pagehide", () => stopAll());
 
-    // ── สลับท่าทางเมื่อเปลี่ยน Dropdown (รองรับทั้ง 2 จุด) ──
-    $("pose-select-init")?.addEventListener("change", (e) => {
-      console.log("🎯 [Initial Dropdown Change] User selected:", e.target.value);
-      switchPose(e.target.value);
-    });
-
-    $("pose-select")?.addEventListener("change", (e) => {
-      console.log("🎯 [Sidebar Dropdown Change] User selected:", e.target.value);
-      switchPose(e.target.value);
-    });
-
-    // ── เปิด/ปิด Debug Panel ──
-    const btnToggleDebug = $("btn-toggle-debug");
-    if (btnToggleDebug) {
-      btnToggleDebug.addEventListener("click", () => {
-        const isHidden = $("debug-panel").classList.toggle("hidden-debug");
-        btnToggleDebug.classList.toggle("active", !isHidden);
-      });
+    function stopAll() {
+      if (workout) workout.destroy();
+      if (stopLoop) stopLoop();
+      stopCamera(video);
     }
 
-    // ── UI Checkbox Upgrade Account Toggle ──
-    $("chk-upgrade-account")?.addEventListener("change", (e) => {
-      $("password-field-group")?.classList.toggle("hidden", !e.target.checked);
-    });
-
-    let activeCounter = null;
-
-    // ── ลูปตรวจจับ + ให้คะแนน + นับครั้ง ──
-    function runDetection() {
-      const smooth = createSmoother();
-      activeCounter = createPoseCounter(currentPoseKey);
-      const poseCfg = CFG.POSES?.[currentPoseKey] ?? CFG.POSES?.dab ?? { enterScore: 75, name: "Pose" };
-
-      stopLoop = startDetectLoop(video, (lm, fps) => {
-        lastLandmarks = lm;
-        if (!lm) {
-          drawSkeleton(canvas, null);
-          $("status-badge").textContent = "ไม่เห็นตัวคุณ — ขยับให้อยู่ในเฟรม";
-          $("status-badge").className = "badge warn";
-          return;
-        }
-
-        const result = evaluatePose(currentPoseKey, lm);
-        const smoothed = smooth(result.valid ? result.total : 0);
-
-        drawSkeleton(canvas, lm, smoothed);
-        $("live-score").textContent = Math.round(smoothed);
-
-        // นับครั้งเฉพาะตอนที่อยู่ในโหมดเล่นเกมจริง (isGameRunning)
-        if (isGameRunning && activeCounter) {
-          const { count, counted } = activeCounter.update(smoothed, result);
-          currentDabCount = count;
-          const countEl = $("dab-count");
-          countEl.textContent = count;
-          if (counted) {
-            scoreHistory.push(Math.round(smoothed));
-            countEl.classList.remove("pulse-active");
-            void countEl.offsetWidth; // trigger reflow
-            countEl.classList.add("pulse-active");
-          }
-        }
-
-        if (!result.valid) {
-          $("status-badge").textContent = "ขยับให้เห็นตัวมากขึ้น / เพิ่มแสง";
-          $("status-badge").className = "badge warn";
-        } else if (smoothed >= poseCfg.enterScore) {
-          $("status-badge").textContent = `${poseCfg.name}! 🔥`;
-          $("status-badge").className = "badge ok";
-        } else {
-          $("status-badge").textContent = isGameRunning ? `ลุยเลย! ทำท่า ${poseCfg.name} ให้เร็วที่สุด` : "พร้อมแล้ว กดปุ่ม 'เริ่มเล่น'";
-          $("status-badge").className = "badge";
-        }
-
-        updateDebug(lm, result, fps, currentPoseKey);
+    // ── การตั้งค่า Workout Manager ──
+    function initWorkoutSession(courseKey) {
+      workout = new WorkoutRoutineManager({
+        onStateChange: (state, data) => handleStateChange(state, data),
+        onRep: (repData) => handleRepCounted(repData),
+        onRestTick: (seconds) => updateRestTimerUI(seconds),
+        onCaloriesUpdate: (cal) => {
+          $("live-calories").textContent = cal.toFixed(1);
+        },
+        onFeedback: (feedbackText) => showFormFeedback(feedbackText),
+        onComplete: (summary) => showWorkoutSummary(summary),
       });
+
+      workout.loadCourse(courseKey);
+      renderSidebarRoutineList();
     }
 
-    // ── GAME LOOP: นับถอยหลัง 3-2-1 และจับเวลา 20 วินาที ──
-    $("btn-start-game").addEventListener("click", () => {
-      if (isGameRunning) return;
+    function renderSidebarRoutineList() {
+      if (!workout || !workout.course) return;
+      const c = workout.course;
+      $("side-course-title").textContent = c.name;
+      $("side-course-category").textContent = c.category;
+      $("side-course-equip").textContent = c.equipment;
+
+      const container = $("routine-list-container");
+      container.innerHTML = c.exercises.map((ex, idx) => {
+        const def = EXERCISES[ex.pose_key];
+        const isCurrent = idx === workout.currentExIndex;
+        const isDone = idx < workout.currentExIndex;
+        return `
+          <div class="routine-step-item ${isCurrent ? 'active' : ''} ${isDone ? 'completed' : ''}" id="routine-item-${idx}">
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span>${def?.icon || '⚡'}</span>
+              <div>
+                <strong style="color:${isCurrent ? 'var(--accent2-hover)' : 'var(--text)'}; font-size:0.85rem;">${ex.name}</strong>
+                <div style="font-size:0.75rem; color:var(--muted);">${ex.target_reps} ครั้ง / ${ex.sets} เซ็ต</div>
+              </div>
+            </div>
+            <span style="font-size:0.8rem; font-weight:bold; color:${isDone ? '#10b981' : isCurrent ? 'var(--accent-hover)' : 'var(--muted)'};">
+              ${isDone ? '✓ จบแล้ว' : isCurrent ? 'กำลังฝึก 🔥' : 'รอคิว'}
+            </span>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function updateSetDotsUI() {
+      if (!workout) return;
+      const ex = workout.getCurrentExercise();
+      if (!ex) return;
+      $("side-set-text").textContent = `Set ${workout.currentSet} จาก ${ex.sets}`;
+      $("hud-set-badge").textContent = `Set ${workout.currentSet}/${ex.sets}`;
+
+      const dotsContainer = $("side-set-dots");
+      dotsContainer.innerHTML = Array.from({ length: ex.sets }).map((_, i) => {
+        const dotNum = i + 1;
+        const cls = dotNum < workout.currentSet ? 'set-dot completed' : dotNum === workout.currentSet ? 'set-dot active' : 'set-dot';
+        return `<div class="${cls}"></div>`;
+      }).join("");
+    }
+
+    let feedbackTimeout = null;
+    function showFormFeedback(text) {
+      const toast = $("form-feedback-toast");
+      if (!toast) return;
+      toast.textContent = text;
+      toast.classList.remove("hidden");
+      if (text.includes("เยี่ยม") || text.includes("เป๊ะ")) {
+        toast.classList.remove("warn");
+      } else {
+        toast.classList.add("warn");
+      }
+      clearTimeout(feedbackTimeout);
+      feedbackTimeout = setTimeout(() => {
+        toast.classList.add("hidden");
+      }, 1500);
+    }
+
+    function handleStateChange(state, data) {
+      const ex = data.exercise;
+      const exDef = data.exerciseDef;
+
+      if (ex) {
+        $("hud-exercise-badge").textContent = `${exDef?.icon || '⚡'} ${ex.name}`;
+        $("side-exercise-name").textContent = ex.name;
+        $("rep-target-display").textContent = ex.target_reps;
+        $("hud-reps-target").textContent = ex.target_reps;
+        $("hud-reps-current").textContent = data.currentReps;
+        $("rep-count-display").textContent = data.currentReps;
+      }
+
+      updateSetDotsUI();
+      renderSidebarRoutineList();
+
+      if (state === "REST_INTERVAL") {
+        $("rest-overlay").classList.remove("hidden");
+        const nextExName = data.nextExercise?.name || "เซ็ตถัดไป";
+        const nextSetNum = data.nextSet || 1;
+        const totalSets = data.nextExercise?.sets || 1;
+        $("rest-next-desc").textContent = `${nextExName} (Set ${nextSetNum}/${totalSets})`;
+        updateRestTimerUI(data.restSeconds || 20);
+      } else {
+        $("rest-overlay").classList.add("hidden");
+      }
+
+      if (state === "ACTIVE_SET") {
+        $("btn-start-workout").disabled = true;
+        $("btn-start-workout").textContent = "กำลังฝึกซ้อม…";
+        $("play-instructions").textContent = exDef?.instructions || "ทำท่าให้ถูกต้องและเต็มองศาการเคลื่อนไหว";
+      }
+    }
+
+    function handleRepCounted(repData) {
+      $("rep-count-display").textContent = repData.currentReps;
+      $("hud-reps-current").textContent = repData.currentReps;
+      $("live-calories").textContent = repData.calories.toFixed(1);
+
+      const countEl = $("rep-count-display");
+      countEl.classList.remove("pulse-active");
+      void countEl.offsetWidth;
+      countEl.classList.add("pulse-active");
+    }
+
+    function updateRestTimerUI(seconds) {
+      $("rest-timer-val").textContent = seconds;
+      const currentEx = workout?.getCurrentExercise();
+      const totalRest = (currentEx?.rest_seconds || 20);
+      const strokePct = (seconds / totalRest) * 264;
+      const fillEl = $("rest-ring-fill");
+      if (fillEl) fillEl.style.strokeDashoffset = (264 - strokePct).toString();
+    }
+
+    $("btn-skip-rest")?.addEventListener("click", () => {
+      workout?.skipRest();
+    });
+
+    // ── เริ่มต้นรอบการออกกำลังกาย ──
+    $("btn-start-workout").addEventListener("click", () => {
       startCountdown();
     });
 
@@ -654,84 +990,83 @@
       let count = 3;
       numEl.textContent = count;
 
-      const cdInterval = setInterval(() => {
+      const cd = setInterval(() => {
         count--;
         if (count > 0) {
           numEl.textContent = count;
         } else if (count === 0) {
           numEl.textContent = "GO!";
         } else {
-          clearInterval(cdInterval);
+          clearInterval(cd);
           overlay.classList.add("hidden");
-          startGameLoop();
+          workout?.start();
         }
       }, 1000);
     }
 
-    function startGameLoop() {
-      currentPoseKey = $("pose-select")?.value || currentPoseKey || "dab";
-      console.log("🎮 [Start Game Loop] Active pose key:", currentPoseKey);
-      isGameRunning = true;
-      timeLeft = 20;
-      currentDabCount = 0;
-      scoreHistory = [];
-      if ($("pose-select")) $("pose-select").disabled = true;
-      if (activeCounter && typeof activeCounter.reset === "function") {
-        activeCounter.reset();
+    // เวลาออกกำลังกายสะสม
+    setInterval(() => {
+      if (workout && workout.state === "ACTIVE_SET") {
+        const secs = workout.activeDurationSeconds;
+        const m = String(Math.floor(secs / 60)).padStart(2, "0");
+        const s = String(secs % 60).padStart(2, "0");
+        $("side-duration-text").textContent = `${m}:${s}`;
       }
-      $("dab-count").textContent = "0";
-      $("btn-start-game").disabled = true;
-      $("btn-start-game").textContent = "กำลังเล่น…";
-      $("play-instructions").textContent = `🔥 ทำท่า ${CFG.POSES?.[currentPoseKey]?.name ?? "เต้น"} ให้เร็วและต่อเนื่องที่สุด!`;
+    }, 1000);
 
-      updateTimerUI();
+    // ── ลูปตรวจจับเฟรมกล้อง MediaPipe ──
+    function startMediaPipeLoop() {
+      const smooth = createSmoother();
 
-      gameTimer = setInterval(() => {
-        timeLeft--;
-        updateTimerUI();
-        if (timeLeft <= 0) {
-          endGame();
+      stopLoop = startDetectLoop(video, (lm, fps) => {
+        lastLandmarks = lm;
+        if (!lm) {
+          drawSkeleton(canvas, null);
+          $("live-score").textContent = "0";
+          return;
         }
-      }, 1000);
+
+        const currentEx = workout?.getCurrentExercise();
+        const poseKey = currentEx?.pose_key || "squats";
+        const result = evaluatePose(poseKey, lm);
+        const smoothed = smooth(result.valid ? result.total : 0);
+
+        drawSkeleton(canvas, lm, smoothed);
+        $("live-score").textContent = Math.round(smoothed);
+
+        if (workout && workout.state === "ACTIVE_SET") {
+          workout.processPose(lm, smoothed);
+        }
+
+        updateDebug(lm, result, fps, poseKey);
+      });
     }
 
-    function updateTimerUI() {
-      $("timer-seconds").textContent = `${timeLeft}s`;
-      const fillPct = (timeLeft / 20) * 100;
-      const fillEl = $("timer-bar-fill");
-      fillEl.style.width = `${fillPct}%`;
-      fillEl.classList.toggle("warning", timeLeft <= 5);
-    }
-
-    function stopGameTimer() {
-      if (gameTimer) clearInterval(gameTimer);
-      isGameRunning = false;
-      if ($("pose-select")) $("pose-select").disabled = false;
-      $("btn-start-game").disabled = false;
-      $("btn-start-game").textContent = "🔥 เริ่มเล่นอีกครั้ง (20 วินาที)";
-    }
-
-    function endGame() {
-      stopGameTimer();
+    // ── แสดงผล Modal จบคอร์ส ──
+    function showWorkoutSummary(summary) {
+      workoutSummaryData = summary;
       updateAuthUI();
-      
-      // คำนวณคะแนนรวมและเฉลี่ย
-      const totalScore = scoreHistory.reduce((a, b) => a + b, 0);
-      const avgScore = currentDabCount > 0 ? Math.round(totalScore / currentDabCount) : 0;
 
-      $("res-count").textContent = currentDabCount;
-      $("res-score").textContent = totalScore;
-      $("res-avg").textContent = avgScore;
+      $("summary-course-name").textContent = summary.courseName;
+      $("res-calories").textContent = summary.totalCalories.toFixed(1);
+      $("res-accuracy").textContent = `${summary.avgAccuracy}%`;
+      $("res-total-reps").textContent = summary.totalReps;
 
-      // แสดง Modal สรุปผล
+      const m = String(Math.floor(summary.durationSeconds / 60)).padStart(2, "0");
+      const s = String(summary.durationSeconds % 60).padStart(2, "0");
+      $("res-time").textContent = `${m}:${s}`;
+
       $("modal-summary").classList.remove("hidden");
     }
 
     $("btn-replay").addEventListener("click", () => {
       $("modal-summary").classList.add("hidden");
+      const cKey = $("course-select")?.value || "beginner_fullbody";
+      workout?.loadCourse(cKey);
       startCountdown();
     });
 
+    // ── บันทึกสถิติการออกกำลังกาย ──
     $("form-save-score").addEventListener("submit", async (e) => {
       e.preventDefault();
       const session = getSavedSession();
@@ -743,35 +1078,35 @@
       const password = session ? null : $("input-password")?.value?.trim();
       const email = session ? session.user.email : ($("input-email")?.value?.trim() || null);
 
-      const totalScore = scoreHistory.reduce((a, b) => a + b, 0);
-      const activePoseKey = $("pose-select")?.value || currentPoseKey || "dab";
+      const summary = workoutSummaryData || (workout ? workout.getSummary() : {});
       const cleanUsername = rawUsername ? rawUsername.toLowerCase().replace(/\s+/g, "") : null;
 
-      console.log("📤 [Form Submit Score] Submitting score for pose:", activePoseKey, "| Player:", displayName, "| Username:", cleanUsername, "| Email:", email);
-
-      $("save-status-msg").textContent = "⏳ กำลังบันทึกคะแนนเข้าสู่ระบบ…";
+      $("save-status-msg").textContent = "⏳ กำลังบันทึกสถิติการออกกำลังกาย…";
       $("btn-submit-score").disabled = true;
-      
+
       try {
         if (isUpgrade && password) {
-          if (!cleanUsername) {
-            throw new Error("กรุณากรอก Username สำหรับสมัครสมาชิกถาวร");
-          }
+          if (!cleanUsername) throw new Error("กรุณากรอก Username สำหรับสมัครสมาชิก");
           await registerUser(cleanUsername, password, displayName, email);
         }
-
-        const totalScoreRounded = Math.round(totalScore);
-        const avgScore = currentDabCount > 0 ? Math.round(totalScore / currentDabCount) : 0;
 
         const res = await submitScore({
           display_name: displayName,
           username: cleanUsername,
           email: email,
-          score: totalScoreRounded,
-          count: currentDabCount,
-          pose_key: activePoseKey,
-          pose_accuracy_details: { avg_accuracy: avgScore },
-          password: (isUpgrade && password) ? password : null
+          score: Math.round(summary.totalCalories * 10), // คะแนนสะสมอิงตามแคลอรี่และฟอร์ม
+          count: summary.totalReps,
+          pose_key: summary.courseId || "fitness_course",
+          course_key: summary.courseId,
+          calories_burned: summary.totalCalories,
+          pose_accuracy_details: {
+            avg_accuracy: summary.avgAccuracy,
+            calories_burned: summary.totalCalories,
+            duration_seconds: summary.durationSeconds,
+            completed_sets: summary.completedSets,
+            total_sets: summary.totalSets,
+          },
+          password: (isUpgrade && password) ? password : null,
         });
 
         if (session && session.user && displayName !== session.user.display_name) {
@@ -779,9 +1114,7 @@
           saveSession(session.user, session.token);
         }
 
-        sessionStorage.setItem("myScoreId", res.id);
-        $("save-status-msg").textContent = "✅ บันทึกคะแนนสำเร็จ!";
-        
+        $("save-status-msg").textContent = "✅ บันทึกสถิติสำเร็จ!";
         setTimeout(() => {
           window.location.href = "leaderboard.html";
         }, 1000);
@@ -791,36 +1124,35 @@
       }
     });
 
-    // ── Debug Panel: ค่าจริงที่ใช้จูน config.js ──
-    function updateDebug(lm, result, fps, poseKey = "dab") {
-      const sw = dist(lm[LM.L_SHOULDER], lm[LM.R_SHOULDER]);
-      const elbowL = angle(lm[LM.L_SHOULDER], lm[LM.L_ELBOW], lm[LM.L_WRIST]);
-      const elbowR = angle(lm[LM.R_SHOULDER], lm[LM.R_ELBOW], lm[LM.R_WRIST]);
-      const noseL = dist(lm[LM.L_WRIST], lm[LM.NOSE]) / sw;
-      const noseR = dist(lm[LM.R_WRIST], lm[LM.NOSE]) / sw;
-      const p = result.parts;
-      const poseName = CFG.POSES[poseKey]?.name ?? poseKey;
+    // ── Debug Panel & Controls ──
+    $("btn-toggle-debug")?.addEventListener("click", () => {
+      const isHidden = $("debug-panel").classList.toggle("hidden-debug");
+      $("btn-toggle-debug").classList.toggle("active", !isHidden);
+    });
 
+    $("chk-upgrade-account")?.addEventListener("change", (e) => {
+      $("password-field-group")?.classList.toggle("hidden", !e.target.checked);
+    });
+
+    function updateDebug(lm, result, fps, poseKey) {
+      if (!result || !result.valid) {
+        $("dbg-body").innerHTML = `ตรวจจับ: กำลังค้นหาตำแหน่งตัว | FPS: ${fps}`;
+        return;
+      }
       const lines = [
-        `<strong>ท่าปัจจุบัน:</strong> ${poseName}`,
-        `ศอก L: ${elbowL.toFixed(0)}° | R: ${elbowR.toFixed(0)}°`,
-        `มือ-จมูก/ไหล่ L: ${noseL.toFixed(2)} | R: ${noseR.toFixed(2)}`,
-        p ? `คะแนนย่อย: ${Object.entries(p).map(([k, v]) => `${k}:${(v*100).toFixed(0)}%`).join(" ")}` : "คะแนนย่อย: -",
-        `ฝั่งที่ตรวจจับได้: ${result.side ?? "-"} | FPS: ${fps}`,
+        `<strong>ท่า:</strong> ${poseKey}`,
+        `คะแนนฟอร์ม: ${result.total}% | Stage: ${result.stage || result.activeSide || '-'}`,
+        `FPS: ${fps} | ข้อมูลย่อย: ${result.parts ? JSON.stringify(result.parts) : '-'}`,
       ];
-
       $("dbg-body").innerHTML = lines.join("<br/>");
     }
 
-    // ── ปุ่มบันทึก landmark เป็น JSON ──
-    $("btn-save-pose").addEventListener("click", () => {
+    $("btn-save-pose")?.addEventListener("click", () => {
       if (!lastLandmarks) return alert("ยังไม่มี landmark");
-      const data = JSON.stringify(
-        lastLandmarks.map(({ x, y, z, visibility }) => ({ x, y, z, visibility }))
-      );
+      const data = JSON.stringify(lastLandmarks.map(({ x, y, z, visibility }) => ({ x, y, z, visibility })));
       const a = document.createElement("a");
       a.href = URL.createObjectURL(new Blob([data], { type: "application/json" }));
-      a.download = `pose-${Date.now()}.json`;
+      a.download = `workout-pose-${Date.now()}.json`;
       a.click();
     });
   </script>

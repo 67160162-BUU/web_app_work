@@ -1,5 +1,5 @@
 from datetime import datetime
-from sqlalchemy import Column, Integer, String, Boolean, DateTime, ForeignKey, Enum, Text, JSON
+from sqlalchemy import Column, Integer, String, Boolean, DateTime, ForeignKey, Enum, Text, JSON, Float
 from sqlalchemy.orm import relationship
 import enum
 
@@ -19,6 +19,8 @@ class User(Base):
     display_name = Column(String(50), nullable=False)
     role = Column(String(20), default="player", nullable=False)
     is_guest = Column(Boolean, default=True, nullable=False)
+    weight = Column(Float, default=65.0, nullable=False)
+    height = Column(Float, default=170.0, nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
 
     scores = relationship("Score", back_populates="user", cascade="all, delete-orphan")

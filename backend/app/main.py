@@ -24,6 +24,16 @@ for attempt in range(1, 15):
                 conn.commit()
             except Exception:
                 pass
+            try:
+                conn.execute(text("ALTER TABLE users ADD COLUMN weight FLOAT NOT NULL DEFAULT 65.0;"))
+                conn.commit()
+            except Exception:
+                pass
+            try:
+                conn.execute(text("ALTER TABLE users ADD COLUMN height FLOAT NOT NULL DEFAULT 170.0;"))
+                conn.commit()
+            except Exception:
+                pass
 
         # Auto-seed initial admin and demo players if empty or fix invalid hashes
         from app.models import User, Score

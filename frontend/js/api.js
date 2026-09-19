@@ -29,10 +29,12 @@ function saveLocalScore(scoreData) {
     id: newId,
     user_id: newId,
     nickname: scoreData.display_name || "Guest",
-    pose_key: scoreData.pose_key || "dab",
+    pose_key: scoreData.pose_key || "squats",
+    course_key: scoreData.course_key || null,
+    calories_burned: Number(scoreData.calories_burned) || (scoreData.pose_accuracy_details?.calories_burned ? Number(scoreData.pose_accuracy_details.calories_burned) : 0),
     score: Number(scoreData.score) || 0,
-    dab_count: Number(scoreData.count) || 0,
     count: Number(scoreData.count) || 0,
+    pose_accuracy_details: scoreData.pose_accuracy_details || null,
     created_at: new Date().toISOString().replace("T", " ").substring(0, 19)
   };
   scores.push(newEntry);
@@ -74,6 +76,8 @@ export function saveSession(user, token) {
     const sessionObj = { token: token || getAuthToken(), user };
     localStorage.setItem("dd_user_session", JSON.stringify(sessionObj));
     localStorage.setItem("dd_current_user", JSON.stringify(user));
+    if (user.weight) localStorage.setItem("dd_user_weight", user.weight.toString());
+    if (user.height) localStorage.setItem("dd_user_height", user.height.toString());
   }
 }
 
@@ -178,19 +182,27 @@ export async function fetchLeaderboards(limit = 10) {
 
   return {
     overall: getBoard(null, "score"),
+    squats: getBoard("squats", "count"),
+    jumping_jacks: getBoard("jumping_jacks", "count"),
+    high_knees: getBoard("high_knees", "count"),
+    bicep_curls: getBoard("bicep_curls", "count"),
+    shoulder_press: getBoard("shoulder_press", "count"),
+    standing_crunches: getBoard("standing_crunches", "count"),
+    // Fallback
     dab: getBoard("dab", "count"),
-    six_seven: getBoard("six_seven", "count"),
-    scuba: getBoard("scuba", "count"),
   };
 }
 
 export async function submitScore(scoreData) {
   const payload = {
     ...scoreData,
-    score: Math.round(Number(scoreData.score) || 0)
+    score: Math.round(Number(scoreData.score) || 0),
+    count: Number(scoreData.count) || 0,
+    calories_burned: Number(scoreData.calories_burned) || (scoreData.pose_accuracy_details?.calories_burned ? Number(scoreData.pose_accuracy_details.calories_burned) : 0),
+    course_key: scoreData.course_key || null
   };
 
-  // 1. ส่งบันทึกเข้า MySQL Database โดยตรงเป็นหลัก
+  // 1. ส่งบันทึกเข้า Database โดยตรงเป็นหลัก
   try {
     const res = await fetch(`${BASE}/scores/`, {
       method: "POST",
@@ -199,13 +211,13 @@ export async function submitScore(scoreData) {
     });
     if (res.ok) {
       const dbResult = await res.json();
-      console.log("✅ Saved successfully to MySQL Database:", dbResult);
+      console.log("✅ Saved successfully to Database:", dbResult);
       return dbResult;
     } else {
-      console.warn("⚠️ MySQL DB API returned non-OK status:", res.status, await res.text());
+      console.warn("⚠️ DB API returned non-OK status:", res.status, await res.text());
     }
   } catch (err) {
-    console.warn("⚠️ Cannot connect to MySQL DB Server, using LocalStorage fallback:", err);
+    console.warn("⚠️ Cannot connect to DB Server, using LocalStorage fallback:", err);
   }
 
   // 2. สำรองลง LocalStorage เฉพาะกรณี DB หลุดหรือเชื่อมต่อไม่ได้เท่านั้น
@@ -215,6 +227,8 @@ export async function submitScore(scoreData) {
     user_id: saved.user_id,
     display_name: saved.nickname,
     pose_key: saved.pose_key,
+    course_key: saved.course_key,
+    calories_burned: saved.calories_burned,
     score: saved.score,
     count: saved.count,
     created_at: saved.created_at
@@ -259,13 +273,22 @@ export async function loginUser(username, password) {
   }
 }
 
-export async function registerUser(username, password, displayName, email = null) {
+export async function registerUser(username, password, displayName, email = null, weight = 65, height = 170) {
   const cleanUname = username.trim().toLowerCase();
+  const numWeight = parseFloat(weight) || 65;
+  const numHeight = parseFloat(height) || 170;
   try {
     const res = await fetch(`${BASE}/auth/register`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username: cleanUname, password, display_name: displayName, email: email || null }),
+      body: JSON.stringify({ 
+        username: cleanUname, 
+        password, 
+        display_name: displayName, 
+        email: email || null,
+        weight: numWeight,
+        height: numHeight
+      }),
     });
 
     if (res.ok) {
@@ -275,7 +298,7 @@ export async function registerUser(username, password, displayName, email = null
     } else {
       if (res.status === 404) {
         console.warn("⚠️ Auth API returned 404, using local session fallback");
-        const localUser = { id: Date.now(), username: cleanUname, display_name: displayName, email: email || null, role: "player", is_guest: false };
+        const localUser = { id: Date.now(), username: cleanUname, display_name: displayName, email: email || null, weight: numWeight, height: numHeight, role: "player", is_guest: false };
         const localToken = "offline-token-" + Date.now();
         saveSession(localUser, localToken);
         return { user: localUser, access_token: localToken };
@@ -287,7 +310,7 @@ export async function registerUser(username, password, displayName, email = null
     if (err.name === "TypeError" && (err.message.includes("fetch") || err.message.includes("Failed"))) {
       // Fallback สำหรับกรณีรันแบบ Offline โดยไม่ได้เปิด Backend FastAPI
       console.warn("⚠️ Backend Server offline, registering local offline user");
-      const localUser = { id: Date.now(), username: cleanUname, display_name: displayName, email: email || null, role: "player", is_guest: false };
+      const localUser = { id: Date.now(), username: cleanUname, display_name: displayName, email: email || null, weight: numWeight, height: numHeight, role: "player", is_guest: false };
       const localToken = "offline-token-" + Date.now();
       saveSession(localUser, localToken);
       return { user: localUser, access_token: localToken };
@@ -321,7 +344,8 @@ export async function updateUserProfile(userId, updateData) {
       body: JSON.stringify(updateData),
     });
     if (res.ok) {
-      const updatedUser = await res.json();
+      const resp = await res.json();
+      const updatedUser = resp.user || resp;
       const session = getSavedSession();
       if (session) {
         session.user = { ...session.user, ...updatedUser };
@@ -337,6 +361,8 @@ export async function updateUserProfile(userId, updateData) {
   if (session && session.user) {
     if (updateData.display_name) session.user.display_name = updateData.display_name;
     if (updateData.email) session.user.email = updateData.email;
+    if (updateData.weight !== undefined) session.user.weight = parseFloat(updateData.weight);
+    if (updateData.height !== undefined) session.user.height = parseFloat(updateData.height);
     saveSession(session.user, session.token);
     return session.user;
   }

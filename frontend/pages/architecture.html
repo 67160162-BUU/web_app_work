@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Architecture & Tech Stack — SMART AI FITNESS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Prompt:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <style>
+    :root {
+      --bg: #0b0c16;
+      --bg-card: rgba(23, 25, 44, 0.85);
+      --card-border: rgba(255, 255, 255, 0.12);
+      --accent: #3b82f6;
+      --accent-glow: rgba(59, 130, 246, 0.4);
+      --accent2: #10b981;
+      --accent2-glow: rgba(16, 185, 129, 0.35);
+      --warning: #f59e0b;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: var(--bg);
+      background-image: 
+        radial-gradient(circle at 20% 15%, rgba(59, 130, 246, 0.12) 0%, transparent 45%),
+        radial-gradient(circle at 80% 80%, rgba(16, 185, 129, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 50% 50%, #0d0f1d 0%, #070810 100%);
+      color: var(--text);
+      font-family: 'Prompt', -apple-system, BlinkMacSystemFont, sans-serif;
+      min-height: 100vh;
+      padding-bottom: 80px;
+    }
+
+    /* Top Navigation Header */
+    .top-nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(11, 12, 22, 0.88);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--card-border);
+      padding: 12px 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 900;
+      font-size: 1.25rem;
+      letter-spacing: 1px;
+      text-decoration: none;
+      color: #fff;
+    }
+
+    .brand span {
+      background: linear-gradient(135deg, #3b82f6, #60a5fa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .nav-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      border-radius: 10px;
+      font-size: 0.88rem;
+      font-weight: 500;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .nav-btn-secondary {
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--text);
+      border: 1px solid var(--card-border);
+    }
+    .nav-btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(255, 255, 255, 0.25);
+    }
+
+    .nav-btn-primary {
+      background: linear-gradient(135deg, #2563eb, #3b82f6);
+      color: #fff;
+      border: none;
+      box-shadow: 0 4px 12px var(--accent-glow);
+    }
+    .nav-btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px var(--accent-glow);
+    }
+
+    /* Container */
+    .container {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 30px 24px;
+    }
+
+    /* Header Section */
+    .header-hero {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .badge-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(59, 130, 246, 0.12);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      color: #60a5fa;
+      padding: 6px 16px;
+      border-radius: 30px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      margin-bottom: 14px;
+      letter-spacing: 0.5px;
+    }
+
+    h1.page-title {
+      font-family: 'Outfit', 'Prompt', sans-serif;
+      font-size: clamp(2rem, 3.5vw, 2.8rem);
+      font-weight: 900;
+      margin-bottom: 12px;
+      letter-spacing: -0.5px;
+      background: linear-gradient(135deg, #ffffff 60%, #94a3b8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    p.page-subtitle {
+      color: var(--muted);
+      font-size: 1.05rem;
+      max-width: 840px;
+      margin: 0 auto 20px;
+      line-height: 1.6;
+    }
+
+    /* Quick Jump Navigation */
+    .quick-jump-bar {
+      display: inline-flex;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--card-border);
+      padding: 6px;
+      border-radius: 14px;
+      gap: 6px;
+      margin-bottom: 36px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .jump-btn {
+      padding: 8px 18px;
+      border-radius: 10px;
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--text);
+      font-family: 'Prompt', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .jump-btn:hover {
+      background: rgba(59, 130, 246, 0.15);
+      border-color: rgba(59, 130, 246, 0.4);
+      color: #93c5fd;
+    }
+
+    /* Diagram Card Frame */
+    .diagram-section {
+      margin-bottom: 48px;
+      scroll-margin-top: 80px;
+    }
+
+    .diagram-card {
+      background: var(--bg-card);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      position: relative;
+    }
+
+    .diagram-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-bottom: 24px;
+      border-bottom: 1px solid var(--card-border);
+      padding-bottom: 16px;
+    }
+
+    .diagram-title {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .diagram-tools {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn-tool {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--card-border);
+      color: var(--text);
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-tool:hover {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(255, 255, 255, 0.25);
+    }
+
+    /* Mermaid Canvas Area */
+    .mermaid-wrapper {
+      background: #090a14;
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      border-radius: 14px;
+      padding: 24px 16px;
+      overflow-x: auto;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 400px;
+    }
+
+    .mermaid {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+    }
+
+    .mermaid svg {
+      max-width: 100% !important;
+      height: auto !important;
+    }
+
+    /* Info Grid */
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+      margin-top: 24px;
+      text-align: left;
+    }
+
+    .info-box {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 20px;
+      transition: border-color 0.2s ease;
+    }
+
+    .info-box:hover {
+      border-color: rgba(255, 255, 255, 0.25);
+    }
+
+    .info-box h4 {
+      font-size: 1.08rem;
+      color: #fff;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .info-box p {
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .pill-tag {
+      display: inline-block;
+      background: rgba(59, 130, 246, 0.15);
+      color: #93c5fd;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      font-family: 'JetBrains Mono', monospace;
+      margin-top: 10px;
+    }
+
+    /* Table Styles */
+    .table-responsive {
+      overflow-x: auto;
+      margin-top: 10px;
+      border-radius: 12px;
+      border: 1px solid var(--card-border);
+    }
+
+    table.tech-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.92rem;
+      text-align: left;
+    }
+
+    table.tech-table th {
+      background: rgba(255, 255, 255, 0.05);
+      color: #fff;
+      padding: 14px 18px;
+      font-weight: 600;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    table.tech-table td {
+      padding: 12px 18px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      color: var(--text);
+    }
+
+    table.tech-table tr:hover td {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .layer-badge {
+      font-weight: 600;
+      color: #60a5fa;
+      white-space: nowrap;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navigation Header -->
+  <header class="top-nav">
+    <a href="../index.html" class="brand">
+      <span>SMART AI FITNESS</span> ARCHITECTURE
+    </a>
+    <div class="nav-links">
+      <a href="../index.html" class="nav-btn nav-btn-secondary">🏠 หน้าแรก</a>
+      <a href="play.html" class="nav-btn nav-btn-primary">⚡ เข้าสู่โหมดฝึกซ้อม</a>
+      <a href="presentation.html" class="nav-btn nav-btn-secondary">📑 สไลด์นำเสนอ</a>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="container">
+    <div class="header-hero">
+      <div class="badge-pill">🏛️ SYSTEM ARCHITECTURE & TECH STACK SPECIFICATION</div>
+      <h1 class="page-title">สถาปัตยกรรมระบบ & แผนผังเทคโนโลยี</h1>
+      <p class="page-subtitle">
+        โครงสร้างระบบ <strong>Smart AI Fitness Routine & Calorie Tracker</strong> ออกแบบตามแนวทาง 
+        <strong style="color:#60a5fa;">Decoupled Edge-AI & Microservices</strong> ประมวลผลภาพบนเบราว์เซอร์ 60 FPS ไร้กังวลเรื่องข้อมูลรั่วไหล
+      </p>
+
+      <!-- Quick Jump Navigation -->
+      <div class="quick-jump-bar">
+        <a href="#microservices" class="jump-btn">
+          <span>⚙️</span> 1. Microservices Architecture
+        </a>
+        <a href="#techstack" class="jump-btn">
+          <span>📦</span> 2. Technology Stack (6 Layers)
+        </a>
+        <a href="#spec" class="jump-btn">
+          <span>📋</span> 3. Technical Specification Table
+        </a>
+        <a href="#dataflow" class="jump-btn">
+          <span>🔄</span> 4. Real-time Data Flow
+        </a>
+        <a href="#evaluation" class="jump-btn" style="background:rgba(239, 68, 68, 0.15); border-color:#ef4444; color:#fca5a5;">
+          <span>⚠️</span> 5. รายงานประเมินสัปดาห์นี้
+        </a>
+      </div>
+    </div>
+
+    <!-- ═══ SECTION 1: MICROSERVICES ARCHITECTURE ═══ -->
+    <section id="microservices" class="diagram-section">
+      <div class="diagram-card">
+        <div class="diagram-header">
+          <div class="diagram-title">
+            <span>⚙️</span> 1. Microservices Architecture (Tier 1 – Tier 4)
+          </div>
+          <div class="diagram-tools">
+            <a href="../assets/architecture_diagram.png" download="smart_fitness_microservices_architecture.png" class="btn-tool" style="text-decoration:none; background:rgba(59, 130, 246, 0.2); border-color:#3b82f6; color:#93c5fd;">
+              📥 ดาวน์โหลดรูปภาพ PNG
+            </a>
+            <a href="../assets/architecture_diagram.png" target="_blank" class="btn-tool" style="text-decoration:none;">
+              🔍 ดูภาพขนาดเต็ม
+            </a>
+            <button class="btn-tool" onclick="window.print()">🖨️ พิมพ์ / PDF</button>
+          </div>
+        </div>
+
+        <!-- High-Resolution Rendered Diagram Image -->
+        <div style="text-align:center; margin-bottom:18px; border-radius:14px; overflow:hidden; border:2px solid rgba(255,255,255,0.25); background:#ffffff; padding:10px; box-shadow:0 12px 36px rgba(0,0,0,0.5);">
+          <img src="../assets/architecture_diagram.png" alt="Microservices Architecture Diagram" style="width:100%; max-width:1200px; height:auto; display:block; margin:0 auto;" />
+        </div>
+
+        <!-- Collapsible Mermaid Source -->
+        <details style="margin-top:14px; background:rgba(0,0,0,0.3); border-radius:10px; border:1px solid rgba(255,255,255,0.06); padding:10px 16px;">
+          <summary style="cursor:pointer; color:var(--muted); font-size:0.88rem; font-weight:600;">
+            📐 คลิกเพื่อดูผังไดอะแกรมแบบโค้ดดิบ (Mermaid Interactive Canvas)
+          </summary>
+          <div class="mermaid-wrapper" style="margin-top:12px;">
+            <div class="mermaid">
+graph TB
+    subgraph ClientTier ["💻 Tier 1: Client / Edge Device (Browser & Mobile)"]
+        direction TB
+        UI["🖥️ Presentation & UI Layer<br/>(HTML5 / Light Theme CSS / ES Modules)"]
+        EdgeAI["⚡ Edge AI Vision Service<br/>(MediaPipe Pose Landmark WASM/WebGL)"]
+        MathEngine["📐 Biomechanics & Angle Engine<br/>(Joint Angles, Form Accuracy Scoring)"]
+        WorkoutSM["⏱️ Workout Routine State Machine<br/>(Sets, Reps, Countdown & Rest Interval)"]
+        CalorieCalc["🔥 Real-time MET Calorie Tracker<br/>(Weight, Height, Duration & Cadence)"]
+        LocalCache["💾 Local Storage / Offline Cache<br/>(Session Tokens, Offline Score Queue)"]
+
+        UI <--> EdgeAI
+        EdgeAI --> MathEngine
+        MathEngine --> WorkoutSM
+        WorkoutSM --> CalorieCalc
+        UI <--> LocalCache
+    end
+
+    subgraph GatewayTier ["🌐 Tier 2: API Gateway & Static Delivery Layer"]
+        ReverseProxy["🔀 Web Server / API Gateway (Apache & Nginx)<br/>- Port 80 / 443 / 8080<br/>- Static Assets (HTML, CSS, JS, Demo GIFs)<br/>- CORS Policy & Reverse Proxy Routing"]
+    end
+
+    subgraph MicroservicesTier ["⚙️ Tier 3: Core Backend Microservices (FastAPI Async Engine)"]
+        direction TB
+        AuthService["🔐 Auth & Identity Service<br/>• JWT Bearer Token Issuer<br/>• Bcrypt Password Hashing<br/>• Guest & Player Registration"]
+        UserService["👤 User & Physical Profile Service<br/>• Weight & Height Biometrics<br/>• Real-time BMI Calculation<br/>• Profile & Display Name Update"]
+        WorkoutService["🏋️ Routine & Exercise Catalog Service<br/>• Course Configurations (Full Body, Upper, Lower, Core)<br/>• MET Constants & Exercise Metadata<br/>• Rep Goals & Rest Timers"]
+        ScoreService["📊 Score & Calorie Ingestion Service<br/>• Calories Burned Audit<br/>• Form Accuracy Aggregation<br/>• Duration & Set Verification"]
+        LeaderboardService["🏆 Leaderboard & Analytics Service<br/>• Global & Course-specific Rankings<br/>• Historical Progress Metrics<br/>• Top Performers Aggregator"]
+        AdminService["🛡️ Admin & System Oversight Service<br/>• User Account Management<br/>• Score Moderation & Auditing<br/>• System Health Monitoring"]
+    end
+
+    subgraph PersistenceTier ["🗄️ Tier 4: Data Persistence & Storage Layer"]
+        direction TB
+        RelationalDB[("🛢️ Primary Database Engine<br/>(MySQL 8.0 / MariaDB 10.4 / PostgreSQL 15)<br/>- users (id, username, weight, height...)<br/>- scores (user_id, calories, reps, form...)<br/>- courses & audit logs")]
+        PMA["🖥️ phpMyAdmin Admin Console<br/>(Database Management GUI)"]
+        DockerStorage["📦 Persistent Docker Volumes<br/>(mysql_data, pg_data)"]
+    end
+
+    subgraph ExternalAssets ["📦 Static Media & Model Repository"]
+        DemoAssets["🎥 Human Exercise GIF Demos<br/>(jumping_jacks, squats, high_knees...)"]
+        MediaPipeCDN["🤖 Google MediaPipe WASM Models<br/>(pose_landmarker.task)"]
+    end
+
+    %% Request flows
+    UI -- "HTTPS REST API (JSON)" --> ReverseProxy
+    ReverseProxy -- "/api/auth/*" --> AuthService
+    ReverseProxy -- "/api/users/*" --> UserService
+    ReverseProxy -- "/api/scores/submit" --> ScoreService
+    ReverseProxy -- "/api/scores/leaderboard" --> LeaderboardService
+    ReverseProxy -- "/api/admin/*" --> AdminService
+    ReverseProxy -- "/assets/*" --> DemoAssets
+
+    AuthService --> UserService
+    ScoreService --> LeaderboardService
+
+    AuthService <--> RelationalDB
+    UserService <--> RelationalDB
+    ScoreService <--> RelationalDB
+    LeaderboardService <--> RelationalDB
+    AdminService <--> RelationalDB
+    PMA <--> RelationalDB
+    RelationalDB --- DockerStorage
+    EdgeAI -. "Fetch WASM Model weights" .-> MediaPipeCDN
+            </div>
+          </div>
+        </details>
+
+        <!-- Explanatory Breakdown Grid -->
+        <div class="info-grid">
+          <div class="info-box">
+            <h4><span>💻</span> Tier 1: Client Edge AI</h4>
+            <p>ประมวลผลโมเดล MediaPipe Pose (33 จุด) บนเบราว์เซอร์ผ่าน WASM/WebGL 60 FPS ปราศจากการส่งภาพวิดีโอเข้าเซิร์ฟเวอร์ รักษาความเป็นส่วนตัวสูงสุด (Privacy-First)</p>
+            <span class="pill-tag">WASM • WebGL • Zero Video Upload</span>
+          </div>
+
+          <div class="info-box">
+            <h4><span>🌐</span> Tier 2: API Gateway & Static</h4>
+            <p>ทำหน้าที่ Reverse Proxy และจัดการ CORS ควบคุมการกระจายคำขอไปยัง Microservices พร้อมทั้งทำหน้าที่แคชและแจกจ่ายไฟล์ Static (HTML, CSS, JS และภาพ GIF ท่าตัวอย่าง)</p>
+            <span class="pill-tag">Apache 2.4 • Nginx • Reverse Proxy</span>
+          </div>
+
+          <div class="info-box">
+            <h4><span>⚙️</span> Tier 3: Core Microservices</h4>
+            <p>บริการ FastAPI แบบ Asynchronous ทำงานแยกโมดูลอย่างเป็นอิสระ (Auth, User Profile, Workout Routine, Score Verification, Leaderboard และ Admin)</p>
+            <span class="pill-tag">Python 3.10+ • FastAPI • JWT Auth</span>
+          </div>
+
+          <div class="info-box">
+            <h4><span>🗄️</span> Tier 4: Data Persistence</h4>
+            <p>รองรับฐานข้อมูลหลักทั้ง MariaDB/MySQL 8.0 (XAMPP) และ PostgreSQL 15 (Docker) พร้อมการเชื่อมต่อผ่าน SQLAlchemy Connection Pooling เพื่อรองรับ Concurrency สูง</p>
+            <span class="pill-tag">MySQL • PostgreSQL • SQLAlchemy</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ SECTION 2: TECHNOLOGY STACK (6 LAYERS) ═══ -->
+    <section id="techstack" class="diagram-section">
+      <div class="diagram-card">
+        <div class="diagram-header">
+          <div class="diagram-title">
+            <span>📦</span> 2. Technology Stack Diagram (6 Core Layers)
+          </div>
+          <div class="diagram-tools">
+            <a href="../assets/tech_stack_diagram.png" download="smart_fitness_tech_stack_architecture.png" class="btn-tool" style="text-decoration:none; background:rgba(16, 185, 129, 0.2); border-color:#10b981; color:#6ee7b7;">
+              📥 ดาวน์โหลดรูปภาพ PNG
+            </a>
+            <a href="../assets/tech_stack_diagram.png" target="_blank" class="btn-tool" style="text-decoration:none;">
+              🔍 ดูภาพขนาดเต็ม
+            </a>
+            <button class="btn-tool" onclick="window.print()">🖨️ พิมพ์ / PDF</button>
+          </div>
+        </div>
+
+        <!-- High-Resolution Rendered Tech Stack Image -->
+        <div style="text-align:center; margin-bottom:18px; border-radius:14px; overflow:hidden; border:2px solid rgba(255,255,255,0.25); background:#ffffff; padding:10px; box-shadow:0 12px 36px rgba(0,0,0,0.5);">
+          <img src="../assets/tech_stack_diagram.png" alt="Technology Stack Diagram" style="width:100%; max-width:1200px; height:auto; display:block; margin:0 auto;" />
+        </div>
+
+        <!-- Collapsible Mermaid Source -->
+        <details style="margin-top:14px; background:rgba(0,0,0,0.3); border-radius:10px; border:1px solid rgba(255,255,255,0.06); padding:10px 16px;">
+          <summary style="cursor:pointer; color:var(--muted); font-size:0.88rem; font-weight:600;">
+            📐 คลิกเพื่อดูผังไดอะแกรมแบบโค้ดดิบ (Mermaid Interactive Canvas)
+          </summary>
+          <div class="mermaid-wrapper" style="margin-top:12px;">
+            <div class="mermaid">
+graph LR
+    subgraph L1 ["1. Client & Presentation Layer"]
+        H5["📄 HTML5 (Semantic Structure)"]
+        CSS["🎨 Modern CSS3 (Custom Tokens, Light Theme)"]
+        JS["⚡ ES6+ Native JavaScript Modules"]
+        WebAudio["🔊 Web Audio API (Workout Sound Synthesizer)"]
+        CanvasAPI["🖌️ HTML5 Canvas 2D (Skeleton Overlay & Live HUD)"]
+    end
+
+    subgraph L2 ["2. Computer Vision & Edge AI Layer"]
+        MP["🤖 Google MediaPipe Pose Landmark API"]
+        WASM["⚡ WebAssembly (WASM Runtime)"]
+        WebGL["🎮 WebGL / GPU Hardware Acceleration"]
+        Math["📐 Vector Geometry & Trigonometric Angle Engine"]
+    end
+
+    subgraph L3 ["3. Gateway & Web Server Layer"]
+        Apache["🌐 Apache HTTP Server (XAMPP Port 80)"]
+        Uvicorn["🚀 Uvicorn ASGI Server (Port 8000)"]
+        CORS["🛡️ CORS & Security Middleware"]
+    end
+
+    subgraph L4 ["4. Application Backend Layer"]
+        Python["🐍 Python 3.10+"]
+        FastAPI["⚡ FastAPI Framework (Async RESTful API)"]
+        Pydantic["✅ Pydantic v2 (Data Validation & DTOs)"]
+        Passlib["🔑 Passlib / Bcrypt (Password Hashing)"]
+        PyJWT["🎟️ PyJWT (Stateless Bearer Tokens)"]
+        SQLA["🗃️ SQLAlchemy ORM & Connection Pooling"]
+    end
+
+    subgraph L5 ["5. Database & Persistence Layer"]
+        MySQL["🐬 MySQL 8.0 / MariaDB 10.4 (XAMPP Port 3306)"]
+        Postgres["🐘 PostgreSQL 15 Alpine (Docker Port 5432)"]
+        PMA_GUI["🖥️ phpMyAdmin GUI (Port 80 / 8080)"]
+    end
+
+    subgraph L6 ["6. DevOps & Infrastructure Layer"]
+        Docker["🐳 Docker Engine"]
+        Compose["🐙 Docker Compose (Multi-service Orchestration)"]
+        Git["🐙 Git & GitHub (Version Control)"]
+    end
+
+    L1 --> L2
+    L1 --> L3
+    L3 --> L4
+    L4 --> L5
+    L6 -. "Containerizes & Orchestrates" .-> L4
+    L6 -. "Containerizes & Orchestrates" .-> L5
+            </div>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <!-- ═══ SECTION 3: TECHNICAL SPECIFICATION ═══ -->
+    <section id="spec" class="diagram-section">
+      <div class="diagram-card">
+        <div class="diagram-header">
+          <div class="diagram-title">
+            <span>📋</span> 3. Technical Specification Table
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="tech-table">
+            <thead>
+              <tr>
+                <th>เลเยอร์ (Layer)</th>
+                <th>เทคโนโลยี / เครื่องมือ</th>
+                <th>บทบาทและวัตถุประสงค์ในระบบ</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="layer-badge">1. Frontend UI</td>
+                <td><strong>HTML5, Vanilla CSS3, ES6+ JS</strong></td>
+                <td>โครงสร้างหน้าเว็บดีไซน์ Clean Modern Light Theme โหลดเร็ว ไร้ Overhead เฟรมเวิร์ก เพื่อความเร็วสูงสุด</td>
+              </tr>
+              <tr>
+                <td class="layer-badge">2. Edge Vision AI</td>
+                <td><strong>Google MediaPipe Pose, WASM, WebGL</strong></td>
+                <td>ตรวจจับโครงสร้างร่างกาย 33 จุดแบบ Real-time 60 FPS บน Browser โดยตรง ไม่ส่งภาพวิดีโอเข้าเซิร์ฟเวอร์</td>
+              </tr>
+              <tr>
+                <td class="layer-badge">3. Audio & Graphics</td>
+                <td><strong>Web Audio API, Canvas 2D API</strong></td>
+                <td>สังเคราะห์เสียง Beep/Countdown ไร้ไฟล์ mp3 และวาดเส้นโครงกระดูกเรืองแสงตอบสนองความแม่นยำของฟอร์ม</td>
+              </tr>
+              <tr>
+                <td class="layer-badge">4. Web Server / Gateway</td>
+                <td><strong>Apache HTTP Server / Uvicorn ASGI</strong></td>
+                <td>ให้บริการ Static Assets (HTML, CSS, JS, GIFs) และทำหน้าที่ Reverse Proxy ไปยัง Python Backend API</td>
+              </tr>
+              <tr>
+                <td class="layer-badge">5. Backend Framework</td>
+                <td><strong>Python 3.10+, FastAPI, Pydantic v2</strong></td>
+                <td>บริการ Microservices API แบบ High-performance Asynchronous รองรับ Non-blocking I/O และ Validate ข้อมูล</td>
+              </tr>
+              <tr>
+                <td class="layer-badge">6. Security & Auth</td>
+                <td><strong>PyJWT, Passlib (Bcrypt)</strong></td>
+                <td>ระบบยืนยันตัวตนด้วย Stateless JWT Tokens และเข้ารหัสผ่านผู้ใช้ด้วย Salted Bcrypt ปลอดภัยตามมาตรฐาน</td>
+              </tr>
+              <tr>
+                <td class="layer-badge">7. Persistence & ORM</td>
+                <td><strong>SQLAlchemy, MySQL / MariaDB, PostgreSQL</strong></td>
+                <td>เชื่อมต่อฐานข้อมูลด้วย Connection Pooling รองรับทั้ง MariaDB บน XAMPP และ PostgreSQL บน Docker</td>
+              </tr>
+              <tr>
+                <td class="layer-badge">8. Database Admin</td>
+                <td><strong>phpMyAdmin Web GUI</strong></td>
+                <td>หน้าจอเว็บสำหรับจัดการฐานข้อมูล ดูและแก้ไขตาราง <code>users</code>, <code>scores</code> ได้สะดวกรวดเร็ว</td>
+              </tr>
+              <tr>
+                <td class="layer-badge">9. DevOps & Containers</td>
+                <td><strong>Docker, Docker Compose, Git</strong></td>
+                <td>จัดการสภาพแวดล้อมจำลอง (Containerization) รวม FastAPI, PostgreSQL และ phpMyAdmin ในคำสั่งเดียว</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ SECTION 4: DATA FLOW ═══ -->
+    <section id="dataflow" class="diagram-section">
+      <div class="diagram-card">
+        <div class="diagram-header">
+          <div class="diagram-title">
+            <span>🔄</span> 4. Privacy-First Edge Data Flow
+          </div>
+        </div>
+
+        <div class="info-grid">
+          <div class="info-box">
+            <h4><span>👤</span> 1. Ingestion Profile</h4>
+            <p>ผู้ใช้ล็อกอิน ระบบเรียก <code>GET /api/users/{id}</code> ดึงค่าน้ำหนักและส่วนสูงมาคำนวณ BMI และส่งต่อไปยัง MET Calorie Tracker อัตโนมัติ</p>
+          </div>
+          <div class="info-box">
+            <h4><span>⚡</span> 2. Edge Processing</h4>
+            <p>วิดีโอจากกล้องถูกประมวลผลบนเครื่อง (Client WASM) เพื่อหามุมข้อต่อและนับ Reps <strong>ไม่มีการส่งภาพออกจากเครื่องแม้แต่เฟรมเดียว</strong></p>
+          </div>
+          <div class="info-box">
+            <h4><span>📊</span> 3. Score Sync</h4>
+            <p>เมื่อออกกำลังกายเสร็จสิ้น ระบบส่งสถิติรวม (แคลอรี่, ความแม่นยำ, ระยะเวลา) ไปยัง <code>POST /api/scores/submit</code> เพื่อบันทึกและขึ้น Leaderboard</p>
+          </div>
+        </div>
+      </div>
+    <!-- ═══ SECTION 5: WEEKLY REPORT & EVALUATION ═══ -->
+    <section id="evaluation" class="diagram-section">
+      <div class="diagram-card" style="border-color: rgba(239, 68, 68, 0.4); background: radial-gradient(circle at top right, rgba(239, 68, 68, 0.08) 0%, rgba(23, 25, 44, 0.9) 60%);">
+        <div class="diagram-header" style="border-bottom-color: rgba(239, 68, 68, 0.2);">
+          <div class="diagram-title" style="color:#fca5a5;">
+            <span>⚠️</span> 5. รายงานสรุปการเปลี่ยนแปลง & ประเมินผลระบบประจำสัปดาห์
+          </div>
+          <span style="font-size:0.82rem; background:rgba(239, 68, 68, 0.2); color:#fca5a5; border:1px solid #ef4444; padding:4px 12px; border-radius:20px;">
+            Sprint Review & Evaluation
+          </span>
+        </div>
+
+        <!-- Weekly Changelog Summary -->
+        <h4 style="color:#fff; font-size:1.15rem; margin-bottom:14px; display:flex; align-items:center; gap:8px;">
+          <span>📋</span> สรุปรายการพัฒนาและการเปลี่ยนแปลงในสัปดาห์นี้
+        </h4>
+        <div class="info-grid" style="margin-top:0; margin-bottom:28px;">
+          <div class="info-box">
+            <h4><span>👤</span> User Profile & Biometrics Sync</h4>
+            <p>เชื่อมโยงค่าน้ำหนักและส่วนสูงจากฐานข้อมูล MySQL ไม่ต้องกรอกซ้ำ คำนวณ BMI และส่งต่อไปยัง Calorie Engine อัตโนมัติ</p>
+          </div>
+          <div class="info-box">
+            <h4><span>⏱️</span> Workout Routine & State Machine</h4>
+            <p>จัดระบบการฝึกเป็นคอร์ส มีการนับครั้ง (Reps), เซ็ต (Sets), และเวลาพัก (Rest Timer) พร้อมสังเคราะห์เสียงผ่าน Web Audio API</p>
+          </div>
+          <div class="info-box">
+            <h4><span>🎥</span> Human Exercise Demos (GIFs)</h4>
+            <p>เพิ่มตัวอย่างท่าทางจริง 6 ท่าแบบ GIF ใน Modal ให้ผู้ใช้คลิกดูท่าทางและฟอร์มที่ถูกต้องก่อนเริ่มออกกำลังกายจริง</p>
+          </div>
+          <div class="info-box">
+            <h4><span>🏛️</span> Microservices & Tech Stack Docs</h4>
+            <p>ออกแบบโครงสร้าง 4 Tiers และแผนผังสแต็ก 6 ชั้น พร้อมภาพประกอบความละเอียดสูงสำหรับงานนำเสนอและการพัฒนาต่อ</p>
+          </div>
+        </div>
+
+        <!-- Weekly System Evaluation Box -->
+        <div style="background:rgba(239, 68, 68, 0.1); border:1px solid rgba(239, 68, 68, 0.35); border-radius:14px; padding:22px; margin-bottom:24px;">
+          <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+            <span style="font-size:1.6rem;">🎯</span>
+            <h3 style="color:#fca5a5; font-size:1.2rem; margin:0;">ผลการประเมินประสิทธิภาพในสัปดาห์นี้ (Weekly Finding)</h3>
+          </div>
+          <p style="font-size:1.02rem; color:#f8fafc; font-weight:600; line-height:1.6; margin-bottom:14px;">
+            "ส่วนหน้า (UI/UX) และระบบฐานข้อมูลทำงานได้อย่างสมบูรณ์และเสถียร แต่ผลการทดสอบการตรวจจับท่าทางผ่านกล้องและโมเดล AI (MediaPipe Pose) <span style="color:#f87171; text-decoration:underline;">ยังไม่ค่อยแม่นยำ</span>"
+          </p>
+
+          <h5 style="color:#fca5a5; font-size:0.95rem; margin-bottom:10px; text-transform:uppercase; letter-spacing:0.5px;">
+            🔍 สาเหตุหลัก 4 ประการที่ทำให้โมเดลยังไม่แม่นยำ:
+          </h5>
+          <ol style="margin-left:22px; color:var(--text); font-size:0.92rem; line-height:1.7;">
+            <li><strong>ขอบเขตมุมมองกล้อง (Camera FOV & Distance):</strong> กล้องเว็บแคมมีมุมมองแคบ เมื่อผู้ใช้ยืนใกล้เกินไป ข้อเท้าหรือหัวเข่าจะหลุดเฟรม ทำให้ AI พยายามคาดเดาตำแหน่งผิดพลาด ส่งผลต่อการนับ Squats / High Knees</li>
+            <li><strong>แสงสว่างและฉากหลังรบกวน (Lighting & Background Clutter):</strong> ในสภาพแสงน้อยหรือแสงย้อน คอนทราสต์ต่ำ ทำให้จุด Landmark มีอาการสั่น (Jitter) ส่งผลให้การคำนวณมุมข้อต่อกระโดด</li>
+            <li><strong>ภาพเบลอจากการขยับเร็ว (Motion Blur):</strong> ในท่าที่ขยับไว เช่น กระโดดตบ (Jumping Jacks) อัตราจับภาพกล้องไม่ทัน ทำให้ AI หลุดเฟรมจุดพีก (Peak Extension)</li>
+            <li><strong>เฟรมเรตตกบนอุปกรณ์ที่ไม่มี GPU Acceleration:</strong> อัตราประมวลผลลดจาก 60 FPS เหลือ 15–20 FPS ทำให้การจับการเคลื่อนไหวขาดช่วง</li>
+          </ol>
+        </div>
+
+        <!-- Next Sprint Action Plan -->
+        <h4 style="color:#fff; font-size:1.1rem; margin-bottom:12px; display:flex; align-items:center; gap:8px;">
+          <span>🚀</span> แผนการปรับปรุงแก้ไขในสัปดาห์ถัดไป (Next Sprint Plan)
+        </h4>
+        <div class="info-grid" style="margin-top:0;">
+          <div class="info-box">
+            <h4><span>🛠️</span> 1. Landmark Smoothing Filter</h4>
+            <p>ใช้อัลกอริทึม One Euro Filter หรือ Exponential Smoothing กรอง Noise พิกัดข้อต่อเพื่อขจัดอาการกระตุกของจุด Landmark</p>
+          </div>
+          <div class="info-box">
+            <h4><span>📐</span> 2. Camera Framing Guide</h4>
+            <p>เพิ่มกรอบ Silhouette บนหน้าจอเพื่อเช็กว่าผู้ใช้ยืนถอยหลังจนเห็นทั้งตัวครบก่อนเริ่มนับครั้ง</p>
+          </div>
+          <div class="info-box">
+            <h4><span>⚙️</span> 3. Dynamic Angle Calibration</h4>
+            <p>ให้ระบบทำ Calibration สั้นๆ 3 วินาทีก่อนเริ่มคอร์สเพื่อปรับเกณฑ์องศาให้เข้ากับสรีระจริงของผู้ใช้แต่ละคน</p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    // Initialize Mermaid with Dark/Modern Theme
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'dark',
+      themeVariables: {
+        darkMode: true,
+        background: '#090a14',
+        primaryColor: '#1e3a8a',
+        primaryTextColor: '#f8fafc',
+        primaryBorderColor: '#3b82f6',
+        lineColor: '#60a5fa',
+        secondaryColor: '#064e3b',
+        tertiaryColor: '#172554',
+        fontSize: '14px',
+        fontFamily: 'Prompt, Outfit, sans-serif'
+      },
+      flowchart: {
+        curve: 'basis',
+        nodeSpacing: 45,
+        rankSpacing: 45
+      }
+    });
+  </script>
+</body>
+</html>

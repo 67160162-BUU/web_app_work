@@ -3,22 +3,22 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>กระดานอันดับ — DANCE DETECTOR</title>
+  <title>กระดานอันดับ — SMART AI FITNESS</title>
   <link rel="stylesheet" href="../css/style.css" />
 </head>
 <body>
-  <div class="container" style="max-width: 900px;">
-    <h1 style="font-size:1.8rem; margin-bottom: 6px;">🏆 กระดาน<span class="accent">อันดับ</span></h1>
-    <p class="tagline" style="margin-bottom: 20px;">อันดับคะแนนรวมและจำนวนครั้งสูงสุดในแต่ละท่าทางเต้น</p>
+  <div class="container" style="max-width: 960px;">
+    <h1 style="font-size:2rem; margin-bottom: 6px;">🏆 กระดาน<span class="accent">อันดับการฝึก</span></h1>
+    <p class="tagline" style="margin-bottom: 20px;">สถิติการออกกำลังกาย จำนวนครั้ง และแคลอรี่สะสมสูงสุด</p>
 
-    <!-- Grid 4 ตารางผู้นำ -->
-    <div id="leaderboards-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); gap: 16px;">
+    <!-- Grid ตารางผู้นำ -->
+    <div id="leaderboards-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px;">
       <div class="card"><div class="spinner"></div></div>
     </div>
 
-    <div style="margin: 24px 0; display: flex; flex-direction: column; gap: 12px; align-items: center;">
-      <a class="btn btn-primary" href="play.html" style="width: 100%; max-width: 320px;">🎮 เริ่มเล่นเกม</a>
-      <a class="btn btn-secondary" href="../index.html" style="width: 100%; max-width: 320px;">กลับหน้าแรก</a>
+    <div style="margin: 24px 0; display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;">
+      <a class="btn btn-primary" href="play.html" style="padding:10px 28px;">⚡ เข้าสู่โหมดฝึกซ้อม</a>
+      <a class="btn btn-secondary" href="../index.html" style="padding:10px 24px;">กลับหน้าแรก</a>
     </div>
   </div>
 
@@ -30,16 +30,16 @@
 
     function renderTable(list, type = "score") {
       if (!list || list.length === 0) {
-        return `<p class="notice" style="font-size:0.9rem; padding: 12px 0;">ยังไม่มีสถิติ — เป็นคนแรกเลยไหม? 😏</p>`;
+        return `<p class="notice" style="font-size:0.88rem; padding: 12px 0;">ยังไม่มีสถิติในหมวดนี้ — มาร่วมฝึกซ้อมคนแรกเลย! 💪</p>`;
       }
-      return `<table class="board">
-        <tr><th>#</th><th>ชื่อผู้เล่น</th><th style="text-align:right">${type === "score" ? "คะแนนรวม" : "จำนวนครั้ง"}</th></tr>
+      return `<table class="board" style="font-size:0.9rem;">
+        <tr><th>#</th><th>ชื่อผู้ออกกำลังกาย</th><th style="text-align:right">${type === "score" ? "คะแนนสะสม" : "จำนวนครั้ง"}</th></tr>
         ${list.map((s, i) => `
           <tr${s.id === myId ? ' style="outline:2px solid var(--accent);border-radius:6px;background:rgba(255,214,10,0.15)"' : ""}>
             <td>${["🥇","🥈","🥉"][i] ?? (i + 1)}</td>
             <td><strong>${s.nickname}</strong></td>
             <td style="text-align:right; font-weight:700; color:var(--accent)">
-              ${type === "score" ? Number(s.score).toFixed(0) : `${s.count ?? s.dab_count ?? 0} ครั้ง`}
+              ${type === "score" ? Number(s.score).toFixed(0) : `${s.count ?? 0} ครั้ง`}
             </td>
           </tr>`).join("")}
       </table>`;
@@ -50,34 +50,50 @@
       grid.innerHTML = `
         <!-- ตารางที่ 1: คะแนนรวมสูงสุด -->
         <div class="card" style="text-align:left;">
-          <h3 style="margin-bottom:12px; display:flex; align-items:center; gap:8px;">
-            <span>🏆</span> คะแนนรวมสูงสุด (Overall Top Scores)
+          <h3 style="margin-bottom:12px; display:flex; align-items:center; gap:8px; color:var(--accent);">
+            <span>🏆</span> คะแนนรวมและแคลอรี่สูงสุด (Overall Fitness Score)
           </h3>
           ${renderTable(data.overall, "score")}
         </div>
 
-        <!-- ตารางที่ 2: ท่า Dab (จำนวนครั้งสูงสุด) -->
+        <!-- ตารางที่ 2: ท่า Squats -->
         <div class="card" style="text-align:left;">
-          <h3 style="margin-bottom:12px; display:flex; align-items:center; gap:8px;">
-            <span>🙅</span> Dab Challenge (ครั้งสูงสุด)
+          <h3 style="margin-bottom:12px; display:flex; align-items:center; gap:8px; color:var(--accent2);">
+            <span>🦵</span> Bodyweight Squats (ครั้งสูงสุด)
           </h3>
-          ${renderTable(data.dab, "count")}
+          ${renderTable(data.squats || data.dab, "count")}
         </div>
 
-        <!-- ตารางที่ 3: ท่า Six-Seven (จำนวนครั้งสูงสุด) -->
+        <!-- ตารางที่ 3: ท่า Jumping Jacks -->
         <div class="card" style="text-align:left;">
-          <h3 style="margin-bottom:12px; display:flex; align-items:center; gap:8px;">
-            <span>🔢</span> Six-Seven Dance (ครั้งสูงสุด)
+          <h3 style="margin-bottom:12px; display:flex; align-items:center; gap:8px; color:#7c3aed;">
+            <span>⭐</span> Jumping Jacks (ครั้งสูงสุด)
           </h3>
-          ${renderTable(data.six_seven, "count")}
+          ${renderTable(data.jumping_jacks, "count")}
         </div>
 
-        <!-- ตารางที่ 4: ท่า Scuba Diver (จำนวนครั้งสูงสุด) -->
+        <!-- ตารางที่ 4: ท่า High Knees -->
         <div class="card" style="text-align:left;">
-          <h3 style="margin-bottom:12px; display:flex; align-items:center; gap:8px;">
-            <span>🤿</span> Scuba Diver (ครั้งสูงสุด)
+          <h3 style="margin-bottom:12px; display:flex; align-items:center; gap:8px; color:#db2777;">
+            <span>🏃</span> High Knees (ครั้งสูงสุด)
           </h3>
-          ${renderTable(data.scuba, "count")}
+          ${renderTable(data.high_knees, "count")}
+        </div>
+
+        <!-- ตารางที่ 5: ท่า Bicep Curls -->
+        <div class="card" style="text-align:left;">
+          <h3 style="margin-bottom:12px; display:flex; align-items:center; gap:8px; color:#0284c7;">
+            <span>💪</span> Dumbbell Bicep Curls (ครั้งสูงสุด)
+          </h3>
+          ${renderTable(data.bicep_curls, "count")}
+        </div>
+
+        <!-- ตารางที่ 6: ท่า Shoulder Press -->
+        <div class="card" style="text-align:left;">
+          <h3 style="margin-bottom:12px; display:flex; align-items:center; gap:8px; color:#d97706;">
+            <span>🏋️</span> Dumbbell Shoulder Press (ครั้งสูงสุด)
+          </h3>
+          ${renderTable(data.shoulder_press, "count")}
         </div>
       `;
     } catch {

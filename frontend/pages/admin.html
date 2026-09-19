@@ -9,11 +9,11 @@
     .admin-container { max-width: 1000px; }
     .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; text-align: left; }
     .admin-table { width: 100%; margin-top: 16px; border-collapse: collapse; }
-    .admin-table th, .admin-table td { padding: 12px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.08); font-size: 0.9rem; }
-    .admin-table th { color: var(--accent); background: rgba(0,0,0,0.3); }
+    .admin-table th, .admin-table td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+    .admin-table th { color: var(--accent-hover); background: var(--input-bg); font-weight: 700; }
     .badge-role { padding: 4px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: bold; text-transform: uppercase; }
-    .badge-role.admin { background: var(--accent); color: #000; }
-    .badge-role.player { background: rgba(255,255,255,0.1); color: var(--muted); }
+    .badge-role.admin { background: var(--accent-light); color: var(--accent-hover); border: 1px solid var(--accent); }
+    .badge-role.player { background: var(--input-bg); color: var(--muted); border: 1px solid var(--border); }
     .action-btn-sm { padding: 4px 8px; font-size: 0.75rem; margin-right: 4px; border-radius: 6px; }
   </style>
 </head>
@@ -21,7 +21,7 @@
   <div class="container admin-container">
     <div class="admin-header">
       <div>
-        <h1>DANCE <span class="accent">ADMIN</span></h1>
+        <h1>FITNESS <span class="accent">ADMIN</span></h1>
         <p class="tagline">ระบบจัดการผู้ใช้และคะแนนหลังบ้าน</p>
       </div>
       <div>

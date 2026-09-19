@@ -16,7 +16,9 @@ class ScoreCreateRequest(BaseModel):
     email: Optional[str] = None
     score: Union[int, float]
     count: int
-    pose_key: Optional[str] = "dab"
+    pose_key: Optional[str] = "squats"
+    course_key: Optional[str] = None
+    calories_burned: Optional[float] = None
     pose_accuracy_details: Optional[dict] = None
     password: Optional[str] = None
 
@@ -27,6 +29,9 @@ class ScoreResponse(BaseModel):
     pose_key: str
     score: Union[int, float]
     count: int
+    calories_burned: Optional[float] = 0.0
+    course_key: Optional[str] = None
+    pose_accuracy_details: Optional[dict] = None
     created_at: str
 
     class Config:
@@ -158,9 +163,14 @@ def get_all_leaderboards(limit: int = 10, db: Session = Depends(get_db)):
 
     return {
         "overall": fetch_board(pose_filter=None, sort_field="score"),
+        "squats": fetch_board(pose_filter="squats", sort_field="count"),
+        "jumping_jacks": fetch_board(pose_filter="jumping_jacks", sort_field="count"),
+        "high_knees": fetch_board(pose_filter="high_knees", sort_field="count"),
+        "bicep_curls": fetch_board(pose_filter="bicep_curls", sort_field="count"),
+        "shoulder_press": fetch_board(pose_filter="shoulder_press", sort_field="count"),
+        "standing_crunches": fetch_board(pose_filter="standing_crunches", sort_field="count"),
+        # Legacy fallback
         "dab": fetch_board(pose_filter="dab", sort_field="count"),
-        "six_seven": fetch_board(pose_filter="six_seven", sort_field="count"),
-        "scuba": fetch_board(pose_filter="scuba", sort_field="count"),
     }
 
 @router.post("/", response_model=ScoreResponse)
@@ -205,10 +215,18 @@ def submit_score(
             user.email = clean_email
         db.commit()
 
-    pose_key_val = req.pose_key or "dab"
-    accuracy_details = req.pose_accuracy_details or {
-        "avg_accuracy": round(req.score / req.count, 1) if req.count > 0 else 0
-    }
+    pose_key_val = req.pose_key or "squats"
+    cal_burned = req.calories_burned
+    if cal_burned is None and req.pose_accuracy_details:
+        cal_burned = req.pose_accuracy_details.get("calories") or req.pose_accuracy_details.get("totalCalories")
+
+    accuracy_details = req.pose_accuracy_details or {}
+    if "avg_accuracy" not in accuracy_details:
+        accuracy_details["avg_accuracy"] = round(req.score / req.count, 1) if req.count > 0 else 0
+    if cal_burned is not None:
+        accuracy_details["calories_burned"] = round(float(cal_burned), 1)
+    if req.course_key:
+        accuracy_details["course_key"] = req.course_key
 
     new_score = Score(
         user_id=user.id,
@@ -228,5 +246,8 @@ def submit_score(
         pose_key=new_score.pose_key,
         score=new_score.score,
         count=new_score.count,
+        calories_burned=float(cal_burned or 0.0),
+        course_key=req.course_key,
+        pose_accuracy_details=new_score.pose_accuracy_details,
         created_at=new_score.created_at.strftime("%Y-%m-%d %H:%M:%S")
     )
