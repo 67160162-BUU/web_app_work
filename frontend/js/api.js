@@ -16,8 +16,22 @@ function getLocalScores() {
   const data = localStorage.getItem("dd_local_scores");
   if (!data) return [];
   try {
-    return JSON.parse(data);
+    const parsed = JSON.parse(data);
+    // กรองเอาคะแนนทดสอบเก่า (เช่น bill หรือ dab เก่า) ออกจาก LocalStorage ทันที
+    const filtered = parsed.filter(s => {
+      const name = (s.nickname || s.display_name || "").toLowerCase();
+      return name !== "bill" && !name.includes("test") && s.pose_key !== "dab";
+    });
+    if (filtered.length !== parsed.length) {
+      if (filtered.length === 0) {
+        localStorage.removeItem("dd_local_scores");
+      } else {
+        localStorage.setItem("dd_local_scores", JSON.stringify(filtered));
+      }
+    }
+    return filtered;
   } catch {
+    localStorage.removeItem("dd_local_scores");
     return [];
   }
 }
