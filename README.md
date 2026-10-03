@@ -1,5 +1,9 @@
 # SMART AI FITNESS — On-Device AI Workout Coach & Routine Tracker
 
+### 👥 ผู้จัดทำโครงงาน (Project Contributors)
+* **67160162** นายกตัญญู สงวนสัจวาจา
+* **67160331** นายณัฐภพ พิมพา
+
 [![FastAPI](https://img.shields.io/badge/Backend-FastAPI_0.110-009688.svg?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
 [![MediaPipe](https://img.shields.io/badge/AI_Engine-MediaPipe_Pose_33_Landmarks-FF6F00.svg?logo=google&logoColor=white)](https://developers.google.com/mediapipe)
 [![WebAssembly](https://img.shields.io/badge/Runtime-WebAssembly_%2F_WebGL-654FF0.svg?logo=webassembly&logoColor=white)](https://webassembly.org)
@@ -209,3 +213,7 @@ web_app_dab/
 
 ## 📄 ลิขสิทธิ์และการพัฒนาต่อยอด (License & Contributors)
 พัฒนาขึ้นสำหรับโครงการ **Smart AI Fitness Routine & Calorie Tracker** สถาปัตยกรรมระบบได้รับการออกแบบตามมาตรฐานความปลอดภัยข้อมูลส่วนบุคคล (PDPA / GDPR Compliant) โดยประมวลผลวิดีโอบนเบราว์เซอร์ 100%
+
+### ผู้จัดทำ:
+* **67160162** นายกตัญญู สงวนสัจวาจา
+* **67160331** นายณัฐภพ พิมพา
