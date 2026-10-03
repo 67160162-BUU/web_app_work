@@ -209,11 +209,4 @@ web_app_dab/
 └── README.md                 # Project Documentation (Current File)
 ```
 
----
 
-## 📄 ลิขสิทธิ์และการพัฒนาต่อยอด (License & Contributors)
-พัฒนาขึ้นสำหรับโครงการ **Smart AI Fitness Routine & Calorie Tracker** สถาปัตยกรรมระบบได้รับการออกแบบตามมาตรฐานความปลอดภัยข้อมูลส่วนบุคคล (PDPA / GDPR Compliant) โดยประมวลผลวิดีโอบนเบราว์เซอร์ 100%
-
-### ผู้จัดทำ:
-* **67160162** นายกตัญญู สงวนสัจวาจา
-* **67160331** นายณัฐภพ พิมพา
