@@ -25,8 +25,12 @@ CREATE TABLE IF NOT EXISTS users (
   created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE INDEX IF NOT EXISTS idx_users_role ON users(role);
-CREATE INDEX IF NOT EXISTS idx_users_is_guest ON users(is_guest);
+-- [Indexing Lab Insight]: เพิ่ม Index บน display_name สำหรับค้นหาผู้เล่นตอน submit_score (หลีกเลี่ยง Seq Scan)
+CREATE INDEX IF NOT EXISTS idx_users_display_name ON users(display_name);
+
+-- [Indexing Lab 04/07 Insight]: หลีกเลี่ยง Single-column Index บน Low Cardinality (role มีแค่ 2 ค่า)
+-- ใช้ Partial Index เจาะจงเฉพาะ role = 'admin' ช่วยประหยัดพื้นที่ดิสก์และเร็วสูงสุด
+CREATE INDEX IF NOT EXISTS idx_users_admins ON users(id) WHERE role = 'admin';
 
 -- --------------------------------------------------------
 -- Table structure for scores
@@ -41,8 +45,17 @@ CREATE TABLE IF NOT EXISTS scores (
   created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
+-- [Indexing Lab 01b Insight]: ทำ Index บน Foreign Key (user_id) เสมอ เพื่อเร่งความเร็ว JOIN และ Cascading Delete
+CREATE INDEX IF NOT EXISTS idx_scores_user_id ON scores(user_id);
+
+-- [Indexing Lab 05/06 Composite Index]: ปรับแต่งสำหรับ Leaderboard ที่ค้นหาแยกท่า (pose_key) และเรียงตามคะแนน
+CREATE INDEX IF NOT EXISTS idx_scores_pose_user_score ON scores(pose_key, user_id, score DESC, count DESC);
+
+-- สำหรับดึงประวัติการเล่นล่าสุดของแต่ละผู้เล่น (user_id + created_at)
+CREATE INDEX IF NOT EXISTS idx_scores_user_created ON scores(user_id, created_at DESC);
+
+-- Index ทั่วไปเดิม
 CREATE INDEX IF NOT EXISTS idx_scores_score ON scores(score);
-CREATE INDEX IF NOT EXISTS idx_scores_pose_key ON scores(pose_key);
 CREATE INDEX IF NOT EXISTS idx_scores_created_at ON scores(created_at);
 
 -- --------------------------------------------------------
@@ -55,3 +68,8 @@ CREATE TABLE IF NOT EXISTS user_sessions (
   expires_at TIMESTAMP WITH TIME ZONE NOT NULL,
   created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
+
+-- [Indexing Lab Insight]: เพิ่ม Index บน FK user_id และ expires_at สำหรับตรวจสอบ Session หมดอายุ
+CREATE INDEX IF NOT EXISTS idx_sessions_user_id ON user_sessions(user_id);
+CREATE INDEX IF NOT EXISTS idx_sessions_expires_at ON user_sessions(expires_at);
+

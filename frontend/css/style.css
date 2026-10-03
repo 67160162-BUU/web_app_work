@@ -600,6 +600,90 @@ h1 .accent {
   margin-top: auto;
 }
 
+/* ═══ Shadow Loading / Skeleton Placeholder for Course Catalog ═══ */
+.course-card-skeleton {
+  background: var(--card) !important;
+  border: 1.5px dashed var(--border) !important;
+  border-radius: 20px;
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 16px;
+  box-shadow: none !important;
+  transform: none !important;
+  cursor: default;
+  position: relative;
+  overflow: hidden;
+  min-height: 280px;
+}
+
+.course-card-skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(226, 232, 240, 0.5) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  animation: courseSkeletonShimmer 1.8s infinite;
+  pointer-events: none;
+}
+
+@keyframes courseSkeletonShimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.skeleton-box {
+  background: #e2e8f0;
+  border-radius: 8px;
+  position: relative;
+  overflow: hidden;
+}
+
+.skeleton-btn {
+  background: #cbd5e1;
+  opacity: 0.6;
+}
+
+.course-card-skeleton-badge {
+  font-size: 0.75rem;
+  color: var(--muted);
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* ═══ Clickable Leaderboard Preview Cards ═══ */
+.leaderboard-preview-card {
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  position: relative;
+}
+.leaderboard-preview-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--accent) !important;
+  box-shadow: 0 12px 28px -4px rgba(16, 185, 129, 0.18) !important;
+}
+.leaderboard-preview-card .view-all-link {
+  font-size: 0.78rem;
+  color: var(--accent);
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  transition: transform 0.2s ease;
+}
+.leaderboard-preview-card:hover .view-all-link {
+  transform: translateX(3px);
+}
+
 /* ═══ Modern Button Hover Effects & Shimmer Animation ═══ */
 .btn-hero-cta {
   padding: 12px 24px !important;
@@ -940,6 +1024,59 @@ h1 .accent {
   flex: 1; 
 }
 
+.btn-back-mode {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 18px;
+  border-radius: 14px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  border: 1.5px solid #cbd5e1;
+  background: #f8fafc;
+  color: #334155;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+.btn-back-mode:hover {
+  background: #f1f5f9;
+  border-color: #94a3b8;
+  color: #0f172a;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+.btn-back-mode:active {
+  transform: translateY(1px);
+}
+
+.btn-close-modal-icon {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid #e2e8f0;
+  background: #f8fafc;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  z-index: 10;
+}
+.btn-close-modal-icon:hover {
+  background: #fee2e2;
+  border-color: #fca5a5;
+  color: #ef4444;
+}
+
 /* Countdown 3-2-1 Overlay */
 .countdown-overlay { 
   position: absolute; 
@@ -1001,6 +1138,250 @@ h1 .accent {
   background: #e2e8f0; 
   border: 1px solid #cbd5e1; 
   cursor: pointer; 
+}
+
+/* ═══ Sandbox & Custom Workout Mode UI ═══ */
+.workout-mode-tabs {
+  display: flex;
+  background: var(--input-bg);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 5px;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.mode-tab-btn {
+  flex: 1;
+  padding: 11px 16px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--muted);
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 700;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.mode-tab-btn:hover {
+  color: var(--text);
+  background: rgba(0, 0, 0, 0.03);
+}
+
+.mode-tab-btn.active {
+  background: #ffffff;
+  color: var(--text);
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.08);
+  border: 1px solid var(--border);
+}
+
+.mode-tab-btn.active.sandbox-tab {
+  color: #d97706;
+  border-color: #fde68a;
+  background: linear-gradient(135deg, #fffbeb 0%, #ffffff 100%);
+}
+
+.sandbox-subtabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 14px;
+  border-bottom: 2px solid var(--border);
+  padding-bottom: 8px;
+}
+
+.sandbox-subtab-btn {
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  background: transparent;
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.sandbox-subtab-btn:hover {
+  background: var(--input-bg);
+  color: var(--text);
+}
+
+.sandbox-subtab-btn.active {
+  background: #fff7ed;
+  border-color: #fdba74;
+  color: #ea580c;
+  font-weight: 700;
+}
+
+/* Exercise Grid Selector */
+.exercise-grid-picker {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  margin: 12px 0 16px;
+}
+
+.exercise-picker-card {
+  background: var(--input-bg);
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  padding: 12px;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+}
+
+.exercise-picker-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent2);
+  box-shadow: 0 6px 18px rgba(14, 165, 233, 0.12);
+}
+
+.exercise-picker-card.selected {
+  border-color: #f59e0b;
+  background: #fffbeb;
+  box-shadow: 0 6px 20px rgba(245, 158, 11, 0.16);
+}
+
+.exercise-picker-card .check-circle {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  background: #ffffff;
+  color: transparent;
+  transition: all 0.2s;
+}
+
+.exercise-picker-card.selected .check-circle {
+  background: #f59e0b;
+  border-color: #f59e0b;
+  color: #ffffff;
+  font-weight: bold;
+}
+
+.param-stepper {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 4px 8px;
+}
+
+.param-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--input-bg);
+  color: var(--text);
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+}
+
+.param-btn:hover {
+  background: var(--accent);
+  color: #ffffff;
+  border-color: var(--accent);
+}
+
+.param-input {
+  width: 50px;
+  text-align: center;
+  border: none;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text);
+  background: transparent;
+  outline: none;
+}
+
+.quick-chip {
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  border: 1px solid var(--border);
+  background: #ffffff;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.quick-chip:hover, .quick-chip.active {
+  background: #fff7ed;
+  border-color: #f59e0b;
+  color: #b45309;
+}
+
+.routine-builder-queue {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 12px 0;
+  max-height: 320px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.queue-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  gap: 12px;
+  transition: all 0.2s;
+}
+
+.queue-item:hover {
+  border-color: var(--accent2);
+}
+
+.queue-actions button {
+  padding: 4px 8px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--input-bg);
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition: all 0.15s;
+}
+
+.queue-actions button:hover {
+  background: #fee2e2;
+  border-color: #ef4444;
+  color: #b91c1c;
 }
 
 /* ═══ Global Responsive Adjustments ═══ */

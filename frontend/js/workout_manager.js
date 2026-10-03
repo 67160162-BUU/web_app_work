@@ -1,7 +1,7 @@
 // ตัวจัดการลำดับคอร์สออกกำลังกายและรอบการฝึก (Workout Routine Manager)
-import { CFG, WORKOUT_COURSES, EXERCISES } from "./config.js";
-import { evaluatePose, createPoseCounter } from "./poses.js";
-import { CalorieTracker } from "./calories.js";
+import { CFG, WORKOUT_COURSES, EXERCISES } from "./config.js?v=2.1";
+import { evaluatePose, createPoseCounter } from "./poses.js?v=2.1";
+import { CalorieTracker } from "./calories.js?v=2.1";
 
 // Web Audio API สำหรับเสียงสังเคราะห์ให้กำลังใจและสัญญาณเตือน
 class SoundEffects {
@@ -144,8 +144,13 @@ export class WorkoutRoutineManager {
     this.activeCounter = null;
   }
 
-  loadCourse(courseId = "beginner_fullbody") {
-    const course = WORKOUT_COURSES[courseId] || WORKOUT_COURSES.beginner_fullbody;
+  loadCourse(courseOrId = "beginner_fullbody") {
+    let course;
+    if (typeof courseOrId === "object" && courseOrId !== null) {
+      course = courseOrId;
+    } else {
+      course = WORKOUT_COURSES[courseOrId] || WORKOUT_COURSES.beginner_fullbody;
+    }
     this.course = course;
     this.currentExIndex = 0;
     this.currentSet = 1;
@@ -157,7 +162,7 @@ export class WorkoutRoutineManager {
     this.calorieTracker.reset();
 
     // คำนวณจำนวนเซ็ตทั้งหมด
-    this.totalSetsCount = course.exercises.reduce((sum, ex) => sum + (ex.sets || 1), 0);
+    this.totalSetsCount = (course.exercises || []).reduce((sum, ex) => sum + (ex.sets || 1), 0);
     this.setupCurrentExercise();
     this.setState("IDLE");
     return this.course;
@@ -263,16 +268,25 @@ export class WorkoutRoutineManager {
   handleSetCompleted() {
     this.completedSets++;
     const currentEx = this.getCurrentExercise();
+    const restTime = typeof currentEx.rest_seconds === "number" ? currentEx.rest_seconds : 20;
 
     if (this.currentSet < currentEx.sets) {
       // ยังมีเซ็ตต่อไปในท่าเดิม -> พักระหว่างเซ็ต (Rest Interval)
-      this.sounds.playSetCompleteSound();
-      this.startRestInterval(currentEx.rest_seconds || 20, false);
+      if (restTime <= 0) {
+        this.proceedToNextSet(false);
+      } else {
+        this.sounds.playSetCompleteSound();
+        this.startRestInterval(restTime, false);
+      }
     } else {
       // เซ็ตสุดท้ายของท่านี้จบแล้ว -> ตรวจสอบว่ายังมีท่าถัดไปในคอร์สหรือไม่
       if (this.currentExIndex + 1 < this.course.exercises.length) {
-        this.sounds.playSetCompleteSound();
-        this.startRestInterval((currentEx.rest_seconds || 20) + 5, true); // พักเพิ่ม 5 วินาทีก่อนเปลี่ยนท่า
+        if (restTime <= 0) {
+          this.proceedToNextSet(true);
+        } else {
+          this.sounds.playSetCompleteSound();
+          this.startRestInterval(restTime + 5, true); // พักเพิ่ม 5 วินาทีก่อนเปลี่ยนท่า
+        }
       } else {
         // จบคอร์สทั้งหมดสมบูรณ์ (Course Complete!)
         this.handleWorkoutComplete();
@@ -281,6 +295,10 @@ export class WorkoutRoutineManager {
   }
 
   startRestInterval(durationSeconds = 20, isNextExercise = false) {
+    if (durationSeconds <= 0) {
+      this.proceedToNextSet(isNextExercise);
+      return;
+    }
     this.restTimeLeft = durationSeconds;
     const nextInfo = isNextExercise
       ? { nextExercise: this.course.exercises[this.currentExIndex + 1], nextSet: 1 }

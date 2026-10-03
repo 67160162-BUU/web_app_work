@@ -27,30 +27,213 @@
     </div>
 
     <!-- ═══ สถานะ 1: ก่อนขอกล้อง — เลือกคอร์สและตั้งค่าน้ำหนักตัว ═══ -->
+    <!-- ═══ สถานะ 1: ก่อนขอกล้อง — เลือกคอร์สมาตรฐาน หรือ โหมด Sandbox จัดท่าเอง ═══ -->
     <section id="s-consent">
-      <div class="card" style="margin: 16px 0; padding: 18px 20px; text-align: left;">
-        <label for="course-select" style="font-size:1rem; font-weight:700; color:var(--accent); display:block; margin-bottom:8px;">
-          เลือกแผนการฝึกซ้อม (Workout Course):
-        </label>
-        <select id="course-select" style="width:100%; padding:12px 14px; border-radius:10px; border:2px solid var(--accent); background:var(--input-bg); color:var(--text); font-size:1.05rem; font-weight:700; cursor:pointer;">
-          <option value="beginner_fullbody">🟢 Beginner Full Body Burn (เบิร์นทั้งตัว - ไม่ใช้อุปกรณ์)</option>
-          <option value="adv_upper_body">🟣 Advanced Upper Body Sculpt (แขน & ไหล่ - ใช้ดัมเบล)</option>
-          <option value="adv_lower_power">🔴 Advanced Leg & Glute Power (ขา & ก้น - ดัมเบล/Bodyweight)</option>
-          <option value="adv_core_abs">🔵 Standing Core Shredder (แกนกลาง & หน้าท้อง - ไม่ใช้อุปกรณ์)</option>
-        </select>
+      <!-- Tab Bar: เลือกระหว่าง คอร์สมาตรฐาน กับ Sandbox จัดท่าเอง -->
+      <div class="workout-mode-tabs">
+        <button type="button" class="mode-tab-btn active" id="btn-tab-preset">
+          📋 แผนการฝึกมาตรฐาน (Preset Courses)
+        </button>
+        <button type="button" class="mode-tab-btn sandbox-tab" id="btn-tab-sandbox">
+          🛠️ โหมด Sandbox (จัดท่าเอง / เลือกฝึกทีละท่า)
+        </button>
+      </div>
 
-        <div id="course-preview-box" style="margin-top:14px; padding:12px 16px; background:var(--input-bg); border-radius:10px; border:1px solid var(--border);">
-          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px;">
-            <span id="preview-category" style="font-size:0.85rem; color:var(--accent2-hover); font-weight:700;">Full Body</span>
-            <span id="preview-equipment" style="font-size:0.8rem; background:var(--card-border); color:var(--text); padding:2px 8px; border-radius:4px; font-weight:600;">Bodyweight</span>
+      <!-- ── แผงที่ 1: แผนการฝึกมาตรฐาน (Preset Courses) ── -->
+      <div id="panel-preset-course">
+        <div class="card" style="margin: 0 0 16px; padding: 18px 20px; text-align: left;">
+          <label for="course-select" style="font-size:1rem; font-weight:700; color:var(--accent); display:block; margin-bottom:8px;">
+            เลือกแผนการฝึกซ้อม (Workout Course):
+          </label>
+          <select id="course-select" style="width:100%; padding:12px 14px; border-radius:10px; border:2px solid var(--accent); background:var(--input-bg); color:var(--text); font-size:1.05rem; font-weight:700; cursor:pointer;">
+            <option value="beginner_fullbody">🟢 Beginner Full Body Burn (เบิร์นทั้งตัว - ไม่ใช้อุปกรณ์)</option>
+            <option value="adv_upper_body">🟣 Advanced Upper Body Sculpt (แขน & ไหล่ - ใช้ดัมเบล)</option>
+            <option value="adv_lower_power">🔴 Advanced Leg & Glute Power (ขา & ก้น - ดัมเบล/Bodyweight)</option>
+            <option value="adv_core_abs">🔵 Standing Core Shredder (แกนกลาง & หน้าท้อง - ไม่ใช้อุปกรณ์)</option>
+          </select>
+
+          <div id="course-preview-box" style="margin-top:14px; padding:12px 16px; background:var(--input-bg); border-radius:10px; border:1px solid var(--border);">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px;">
+              <span id="preview-category" style="font-size:0.85rem; color:var(--accent2-hover); font-weight:700;">Full Body</span>
+              <span id="preview-equipment" style="font-size:0.8rem; background:var(--card-border); color:var(--text); padding:2px 8px; border-radius:4px; font-weight:600;">Bodyweight</span>
+            </div>
+            <p id="preview-desc" style="font-size:0.9rem; color:var(--muted); margin:8px 0 6px;">คอร์สปลุกพลังเผาผลาญไขมันทั่วร่างกาย</p>
+            <div id="preview-exercises-chips" style="display:flex; flex-wrap:wrap; gap:6px; margin-top:8px;">
+              <!-- รายชื่อท่าในคอร์ส -->
+            </div>
           </div>
-          <p id="preview-desc" style="font-size:0.9rem; color:var(--muted); margin:8px 0 6px;">คอร์สปลุกพลังเผาผลาญไขมันทั่วร่างกาย</p>
-          <div id="preview-exercises-chips" style="display:flex; flex-wrap:wrap; gap:6px; margin-top:8px;">
-            <!-- รายชื่อท่าในคอร์ส -->
+
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-top:14px; padding-top:12px; border-top:1px solid var(--border); flex-wrap:wrap; gap:10px;">
+            <span style="font-size:0.85rem; color:var(--muted);">เป้าหมายเผาผลาญประมาณ:</span>
+            <div id="preview-target-cal" style="font-size:1.2rem; font-weight:800; color:#ff9800;">🔥 ~45 kcal</div>
           </div>
         </div>
+      </div>
 
-        <div style="display:flex; align-items:center; justify-content:space-between; margin-top:16px; padding-top:14px; border-top:1px solid var(--border); flex-wrap:wrap; gap:14px;">
+      <!-- ── แผงที่ 2: โหมด Sandbox Studio (จัดท่าเอง / เลือกฝึกทีละท่า) ── -->
+      <div id="panel-sandbox-course" class="hidden">
+        <div class="card" style="margin: 0 0 16px; padding: 20px 22px; text-align: left; border: 2px solid #fde68a; background: linear-gradient(180deg, #fffbeb 0%, #ffffff 130px);">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:14px;">
+            <div>
+              <h2 style="font-size:1.3rem; color:#b45309; margin:0; display:flex; align-items:center; gap:8px;">
+                🛠️ Sandbox Workout Studio
+              </h2>
+              <p style="font-size:0.86rem; color:var(--muted); margin:4px 0 0;">
+                ออกแบบและปรับแต่งเป้าหมายการฝึกซ้อมตามใจชอบ หรือเลือกซ้อมเฉพาะท่าเดี่ยวๆ
+              </p>
+            </div>
+            
+            <div class="sandbox-subtabs">
+              <button type="button" class="sandbox-subtab-btn active" id="btn-subtab-single">
+                🎯 เลือกฝึกท่าเดี่ยว (Single Focus)
+              </button>
+              <button type="button" class="sandbox-subtab-btn" id="btn-subtab-multi">
+                🧩 จัดคอร์สผสมเอง (Custom Routine)
+              </button>
+            </div>
+          </div>
+
+          <!-- Sandbox View 1: เลือกฝึกท่าเดี่ยว (Single Exercise Focus) -->
+          <div id="sandbox-view-single">
+            <div style="margin-bottom:8px;">
+              <span style="font-size:0.95rem; font-weight:700; color:var(--text);">
+                1. เลือกท่าออกกำลังกายที่ต้องการฝึก:
+              </span>
+              <span style="font-size:0.8rem; color:var(--muted); margin-left:6px;">(คลิกการ์ดเพื่อเลือกท่า)</span>
+            </div>
+
+            <!-- 6 Interactive Exercise Cards -->
+            <div class="exercise-grid-picker" id="single-exercise-picker">
+              <!-- Rendered via JS -->
+            </div>
+
+            <!-- Target Parameters -->
+            <div style="background:var(--input-bg); border-radius:14px; border:1px solid var(--border); padding:16px; margin-top:14px;">
+              <div style="font-size:0.92rem; font-weight:700; color:var(--text); margin-bottom:12px;">
+                2. กำหนดจำนวนครั้งและเซ็ตสำหรับท่านี้:
+              </div>
+
+              <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(210px, 1fr)); gap:12px;">
+                <!-- Reps -->
+                <div style="background:#ffffff; padding:12px 14px; border-radius:12px; border:1px solid var(--border);">
+                  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                    <label style="font-size:0.85rem; font-weight:700; color:var(--text);">🎯 ครั้งต่อเซ็ต (Reps)</label>
+                    <div class="param-stepper">
+                      <button type="button" class="param-btn" id="btn-single-reps-dec">−</button>
+                      <input type="number" id="input-single-reps" class="param-input" value="10" min="1" max="100" />
+                      <button type="button" class="param-btn" id="btn-single-reps-inc">+</button>
+                    </div>
+                  </div>
+                  <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                    <button type="button" class="quick-chip chip-reps" data-val="5">5</button>
+                    <button type="button" class="quick-chip chip-reps active" data-val="10">10</button>
+                    <button type="button" class="quick-chip chip-reps" data-val="15">15</button>
+                    <button type="button" class="quick-chip chip-reps" data-val="20">20</button>
+                    <button type="button" class="quick-chip chip-reps" data-val="30">30</button>
+                  </div>
+                </div>
+
+                <!-- Sets -->
+                <div style="background:#ffffff; padding:12px 14px; border-radius:12px; border:1px solid var(--border);">
+                  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                    <label style="font-size:0.85rem; font-weight:700; color:var(--text);">🔁 จำนวนเซ็ต (Sets)</label>
+                    <div class="param-stepper">
+                      <button type="button" class="param-btn" id="btn-single-sets-dec">−</button>
+                      <input type="number" id="input-single-sets" class="param-input" value="2" min="1" max="10" />
+                      <button type="button" class="param-btn" id="btn-single-sets-inc">+</button>
+                    </div>
+                  </div>
+                  <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                    <button type="button" class="quick-chip chip-sets" data-val="1">1</button>
+                    <button type="button" class="quick-chip chip-sets active" data-val="2">2</button>
+                    <button type="button" class="quick-chip chip-sets" data-val="3">3</button>
+                    <button type="button" class="quick-chip chip-sets" data-val="4">4</button>
+                    <button type="button" class="quick-chip chip-sets" data-val="5">5</button>
+                  </div>
+                </div>
+
+                <!-- Rest Seconds -->
+                <div style="background:#ffffff; padding:12px 14px; border-radius:12px; border:1px solid var(--border);">
+                  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                    <label style="font-size:0.85rem; font-weight:700; color:var(--text);">⏱️ พักระหว่างเซ็ต (วิ)</label>
+                    <div class="param-stepper">
+                      <button type="button" class="param-btn" id="btn-single-rest-dec">−</button>
+                      <input type="number" id="input-single-rest" class="param-input" value="20" min="0" max="120" step="5" />
+                      <button type="button" class="param-btn" id="btn-single-rest-inc">+</button>
+                    </div>
+                  </div>
+                  <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                    <button type="button" class="quick-chip chip-rest" data-val="0">0s (ไม่พัก)</button>
+                    <button type="button" class="quick-chip chip-rest" data-val="15">15s</button>
+                    <button type="button" class="quick-chip chip-rest active" data-val="20">20s</button>
+                    <button type="button" class="quick-chip chip-rest" data-val="30">30s</button>
+                    <button type="button" class="quick-chip chip-rest" data-val="45">45s</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sandbox View 2: จัดคอร์สผสมเอง (Custom Multi-Exercise Routine) -->
+          <div id="sandbox-view-multi" class="hidden">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:10px;">
+              <div>
+                <span style="font-size:0.95rem; font-weight:700; color:var(--text);">
+                  ลำดับท่าในคอร์สของคุณ (จัดคอร์สแบบผสม):
+                </span>
+                <p style="font-size:0.82rem; color:var(--muted); margin:2px 0 0;">
+                  คลิกปุ่มด้านล่างเพื่อเพิ่มท่าเข้าสู่คอร์ส ปรับจำนวน Reps และ Sets ของแต่ละท่าได้อิสระ
+                </p>
+              </div>
+              <div style="display:flex; gap:6px;">
+                <button type="button" class="btn btn-secondary" id="btn-add-all-poses" style="padding:4px 10px; font-size:0.75rem;">+ เพิ่มครบ 6 ท่า</button>
+                <button type="button" class="btn btn-secondary" id="btn-clear-routine" style="padding:4px 10px; font-size:0.75rem; color:#ef4444; border-color:#fca5a5;">ล้างคิว</button>
+              </div>
+            </div>
+
+            <!-- Queue of exercises in custom routine -->
+            <div class="routine-builder-queue" id="custom-routine-queue">
+              <!-- Rendered via JS -->
+            </div>
+
+            <!-- Add exercise bar -->
+            <div style="margin-top:12px; padding:12px 14px; background:var(--input-bg); border-radius:12px; border:1px dashed var(--border);">
+              <span style="font-size:0.84rem; font-weight:700; color:var(--muted); display:block; margin-bottom:8px;">
+                ➕ คลิกเพื่อเพิ่มท่าเข้าสู่คอร์ส:
+              </span>
+              <div id="add-exercise-buttons-row" style="display:flex; flex-wrap:wrap; gap:8px;">
+                <!-- 6 Exercise buttons rendered via JS -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Sandbox Live Calculation Bar -->
+          <div id="sandbox-summary-bar" style="margin-top:16px; padding:12px 16px; border-radius:12px; background:#fff7ed; border:1px solid #fde68a; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+            <div style="display:flex; align-items:center; gap:16px; flex-wrap:wrap;">
+              <div>
+                <span style="font-size:0.75rem; color:#92400e; font-weight:600; display:block;">จำนวนท่า</span>
+                <strong id="sandbox-total-exercises" style="font-size:1.05rem; color:#b45309;">1 ท่า</strong>
+              </div>
+              <div>
+                <span style="font-size:0.75rem; color:#92400e; font-weight:600; display:block;">จำนวนเซ็ตรวม</span>
+                <strong id="sandbox-total-sets" style="font-size:1.05rem; color:#b45309;">2 เซ็ต</strong>
+              </div>
+              <div>
+                <span style="font-size:0.75rem; color:#92400e; font-weight:600; display:block;">จำนวนครั้งรวม</span>
+                <strong id="sandbox-total-reps" style="font-size:1.05rem; color:#b45309;">20 ครั้ง</strong>
+              </div>
+            </div>
+            <div style="text-align:right;">
+              <span style="font-size:0.75rem; color:#92400e; font-weight:600; display:block;">เป้าหมายเผาผลาญประมาณ</span>
+              <strong id="sandbox-est-calories" style="font-size:1.2rem; font-weight:800; color:#ea580c;">🔥 ~25 kcal</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ส่วนข้อมูลสรีระและ BMI (ใช้ร่วมกันทั้ง Preset และ Sandbox) -->
+      <div class="card" style="margin-bottom:16px; padding:14px 18px; text-align:left;">
+        <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:14px;">
           <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
             <div style="display:flex; align-items:center; gap:10px; background:var(--card); padding:8px 14px; border-radius:12px; border:1px solid var(--card-border);">
               <span style="font-size:1.1rem;">👤</span>
@@ -68,9 +251,8 @@
             </div>
           </div>
 
-          <div style="text-align:right;">
-            <span style="font-size:0.8rem; color:var(--muted);">เป้าหมายเผาผลาญประมาณ:</span>
-            <div id="preview-target-cal" style="font-size:1.2rem; font-weight:800; color:#ff9800;">🔥 ~45 kcal</div>
+          <div style="font-size:0.85rem; color:var(--muted);">
+            💡 AI จะคำนวณแคลอรี่แบบ Real-time ตามน้ำหนักสรีระจริงของคุณ
           </div>
         </div>
       </div>
@@ -238,7 +420,7 @@
           <!-- Buttons Row -->
           <div class="controls-card" style="margin-top:12px;">
             <button class="btn btn-toggle-debug" id="btn-toggle-debug">⚙️ ดีบั๊ก</button>
-            <a class="btn btn-quit-game" href="../index.html" id="btn-quit">ออกจากการฝึก</a>
+            <button type="button" class="btn btn-quit-game" id="btn-quit">🚪 ออกจากการฝึก</button>
           </div>
 
           <!-- Collapsible Debug Panel -->
@@ -255,7 +437,10 @@
 
     <!-- ═══ Modal สรุปผลเมื่อจบคอร์สการฝึก ═══ -->
     <div id="modal-summary" class="modal-backdrop hidden">
-      <div class="modal-card" style="max-width: 480px;">
+      <div class="modal-card" style="max-width: 480px; position: relative;">
+        <!-- ปุ่มปิดมุมบนขวาเพื่อย้อนกลับ -->
+        <button type="button" class="btn-close-modal-icon" id="btn-close-summary-modal" title="ปิดและกลับหน้าเลือกคอร์ส">✕</button>
+
         <h2 class="modal-title" style="font-size:1.8rem;">🎉 จบคอร์สยอดเยี่ยม! 🎉</h2>
         <p class="modal-subtitle" id="summary-course-name">Beginner Full Body Burn</p>
 
@@ -310,6 +495,12 @@
             <div class="modal-actions" style="margin-top:16px;">
               <button type="submit" class="btn btn-primary" id="btn-submit-score">💾 บันทึกสถิติ</button>
               <button type="button" class="btn btn-secondary" id="btn-replay">🔄 เล่นอีกครั้ง</button>
+            </div>
+
+            <div style="margin-top:10px;">
+              <button type="button" class="btn-back-mode" id="btn-back-to-mode">
+                🔙 กลับไปหน้าเลือกคอร์ส
+              </button>
             </div>
           </form>
           <div id="save-status-msg" class="notice" style="margin-top:10px;"></div>
@@ -479,13 +670,44 @@
   </div>
 
   <script type="module">
-    import { CFG, WORKOUT_COURSES, EXERCISES } from "../js/config.js";
-    import { preloadModel, startCamera, stopCamera, startDetectLoop, drawSkeleton } from "../js/pose.js";
-    import { createSmoother, angle, dist } from "../js/exercises/common.js";
-    import { evaluatePose, LM } from "../js/poses.js";
-    import { WorkoutRoutineManager } from "../js/workout_manager.js";
-    import { getUserWeight, setUserWeight, getUserHeight, setUserHeight, calculateBMI } from "../js/calories.js";
-    import { submitScore, registerUser, loginUser, updateUserProfile, getSavedSession, saveSession, clearSession } from "../js/api.js";
+    import { CFG, WORKOUT_COURSES, EXERCISES } from "../js/config.js?v=2.1";
+    import { preloadModel, startCamera, stopCamera, startDetectLoop, drawSkeleton } from "../js/pose.js?v=2.1";
+    import { createSmoother, angle, dist } from "../js/exercises/common.js?v=2.1";
+    import { evaluatePose, LM } from "../js/poses.js?v=2.1";
+    import { WorkoutRoutineManager } from "../js/workout_manager.js?v=2.1";
+    import { getUserWeight, setUserWeight, getUserHeight, setUserHeight, calculateBMI } from "../js/calories.js?v=2.1";
+    import { submitScore, registerUser, loginUser, updateUserProfile, getSavedSession, saveSession, clearSession } from "../js/api.js?v=2.1";
+
+    // ฟังก์ชันสร้าง Custom Course สำหรับ Sandbox (ดึงจาก CFG หรือใช้ Fallback ป้องกัน Cache)
+    const createCustomCourse = CFG?.createCustomCourse || function({
+      id = "sandbox_custom",
+      name = "Sandbox: โหมดฝึกซ้อมอิสระ",
+      category = "Sandbox Mode",
+      equipment = "ตามท่าที่เลือก",
+      description = "คอร์สที่ผู้ใช้ออกแบบและจัดท่าฝึกด้วยตัวเอง",
+      exercises = [],
+    } = {}) {
+      const safeExercises = exercises.length > 0 ? exercises : [
+        { pose_key: "squats", name: "Bodyweight Squats", target_reps: 10, sets: 2, rest_seconds: 20, met: 5.0 }
+      ];
+
+      const totalEstCalories = safeExercises.reduce((sum, ex) => {
+        const met = ex.met || (EXERCISES && EXERCISES[ex.pose_key]?.met) || 5.0;
+        return sum + Math.round((ex.target_reps || 10) * (ex.sets || 1) * 0.45 * (met / 5.0));
+      }, 0);
+
+      return {
+        id,
+        name,
+        category,
+        difficulty: "Custom / กำหนดเอง",
+        badgeColor: "#f59e0b",
+        equipment,
+        description,
+        target_calories_est: Math.max(15, totalEstCalories),
+        exercises: safeExercises,
+      };
+    };
 
     const $ = (id) => document.getElementById(id);
     const sections = ["s-consent", "s-loading", "s-error", "s-play"];
@@ -636,6 +858,417 @@
       renderCoursePreview(e.target.value);
     });
     renderCoursePreview($("course-select")?.value || "beginner_fullbody");
+
+    // ══════════════════════════════════════════════════════
+    // 🛠️ โหมด SANDBOX WORKOUT & CUSTOM ROUTINE CONTROLLER
+    // ══════════════════════════════════════════════════════
+    let currentWorkoutMode = (urlParams.get("mode") === "sandbox" || urlParams.get("exercise")) ? "sandbox" : "preset";
+    let sandboxSubMode = urlParams.get("sandbox_type") === "multi" ? "multi" : "single";
+    let selectedSinglePose = (urlParams.get("exercise") && EXERCISES[urlParams.get("exercise")]) ? urlParams.get("exercise") : "squats";
+    let singleReps = 10;
+    let singleSets = 2;
+    let singleRest = 20;
+
+    // โหลดคอร์สที่ผู้ใช้เคยจัดไว้ (LocalStorage) หรือใช้ Default
+    let customRoutineList = (() => {
+      try {
+        const saved = localStorage.getItem("dd_sandbox_routine");
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        }
+      } catch (e) {}
+      return [
+        { pose_key: "jumping_jacks", name: "Jumping Jacks", target_reps: 15, sets: 2, rest_seconds: 20, met: 8.0 },
+        { pose_key: "squats", name: "Bodyweight Squats", target_reps: 10, sets: 2, rest_seconds: 25, met: 5.0 },
+        { pose_key: "high_knees", name: "High Knees", target_reps: 20, sets: 2, rest_seconds: 20, met: 8.0 },
+      ];
+    })();
+
+    function saveCustomRoutineToStorage() {
+      try {
+        localStorage.setItem("dd_sandbox_routine", JSON.stringify(customRoutineList));
+      } catch (e) {}
+    }
+
+    // สลับโหมด Preset vs Sandbox
+    function setWorkoutMode(mode) {
+      currentWorkoutMode = mode;
+      const isSandbox = mode === "sandbox";
+      $("btn-tab-preset")?.classList.toggle("active", !isSandbox);
+      $("btn-tab-sandbox")?.classList.toggle("active", isSandbox);
+      $("panel-preset-course")?.classList.toggle("hidden", isSandbox);
+      $("panel-sandbox-course")?.classList.toggle("hidden", !isSandbox);
+
+      if (isSandbox) {
+        updateSandboxSummary();
+      }
+    }
+
+    $("btn-tab-preset")?.addEventListener("click", () => setWorkoutMode("preset"));
+    $("btn-tab-sandbox")?.addEventListener("click", () => setWorkoutMode("sandbox"));
+
+    // สลับโหมดย่อยใน Sandbox: Single Pose vs Multi Custom Routine
+    function setSandboxSubMode(subMode) {
+      sandboxSubMode = subMode;
+      const isMulti = subMode === "multi";
+      $("btn-subtab-single")?.classList.toggle("active", !isMulti);
+      $("btn-subtab-multi")?.classList.toggle("active", isMulti);
+      $("sandbox-view-single")?.classList.toggle("hidden", isMulti);
+      $("sandbox-view-multi")?.classList.toggle("hidden", !isMulti);
+      updateSandboxSummary();
+    }
+
+    $("btn-subtab-single")?.addEventListener("click", () => setSandboxSubMode("single"));
+    $("btn-subtab-multi")?.addEventListener("click", () => setSandboxSubMode("multi"));
+
+    // เรนเดอร์การ์ดเลือกท่าเดี่ยว (6 ท่า)
+    function renderSingleExercisePicker() {
+      const container = $("single-exercise-picker");
+      if (!container) return;
+
+      container.innerHTML = Object.keys(EXERCISES).map(poseKey => {
+        const ex = EXERCISES[poseKey];
+        const isSelected = poseKey === selectedSinglePose;
+        return `
+          <div class="exercise-picker-card ${isSelected ? 'selected' : ''}" data-pose="${poseKey}">
+            <div class="check-circle">${isSelected ? '✓' : ''}</div>
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+              <span style="font-size:1.6rem;">${ex.icon || '⚡'}</span>
+              <div>
+                <strong style="font-size:0.95rem; color:var(--text); display:block;">${ex.name}</strong>
+                <span style="font-size:0.75rem; color:var(--muted);">${ex.equipment}</span>
+              </div>
+            </div>
+            <div style="font-size:0.78rem; color:var(--accent2-hover); font-weight:600; margin-bottom:10px;">
+              🎯 ${ex.targetArea}
+            </div>
+            <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--border); padding-top:8px;">
+              <span style="font-size:0.75rem; font-weight:700; color:#ea580c;">🔥 ${ex.met || 5.0} MET</span>
+              <button type="button" class="btn-preview-demo" data-pose="${poseKey}" style="font-size:0.75rem; padding:3px 8px; border-radius:6px; background:#ecfdf5; color:#059669; border:1px solid #10b981; cursor:pointer; font-weight:600;">
+                👁️ ดูตัวอย่าง
+              </button>
+            </div>
+          </div>
+        `;
+      }).join("");
+
+      // ผูก Event ให้แต่ละการ์ด
+      container.querySelectorAll(".exercise-picker-card").forEach(card => {
+        card.addEventListener("click", (e) => {
+          if (e.target.closest(".btn-preview-demo")) return;
+          selectedSinglePose = card.dataset.pose;
+          renderSingleExercisePicker();
+          updateSandboxSummary();
+        });
+      });
+
+      // ผูก Event ปุ่มดูตัวอย่าง
+      container.querySelectorAll(".btn-preview-demo").forEach(btn => {
+        btn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          openExerciseDemoModal(btn.dataset.pose);
+        });
+      });
+    }
+
+    // จัดการตัวเลข Reps, Sets, Rest ของโหมดท่าเดี่ยว
+    function bindSingleStepper(paramId, decBtnId, incBtnId, chipClass, min, max, step, onChange) {
+      const input = $(paramId);
+      const decBtn = $(decBtnId);
+      const incBtn = $(incBtnId);
+
+      const updateVal = (newVal) => {
+        let val = Math.max(min, Math.min(max, newVal));
+        if (input) input.value = val;
+        document.querySelectorAll(`.${chipClass}`).forEach(chip => {
+          chip.classList.toggle("active", parseInt(chip.dataset.val, 10) === val);
+        });
+        onChange(val);
+        updateSandboxSummary();
+      };
+
+      decBtn?.addEventListener("click", () => updateVal((parseInt(input?.value || min, 10)) - step));
+      incBtn?.addEventListener("click", () => updateVal((parseInt(input?.value || min, 10)) + step));
+      input?.addEventListener("change", () => updateVal(parseInt(input.value || min, 10)));
+
+      document.querySelectorAll(`.${chipClass}`).forEach(chip => {
+        chip.addEventListener("click", () => {
+          updateVal(parseInt(chip.dataset.val, 10));
+        });
+      });
+    }
+
+    bindSingleStepper("input-single-reps", "btn-single-reps-dec", "btn-single-reps-inc", "chip-reps", 1, 100, 1, (val) => { singleReps = val; });
+    bindSingleStepper("input-single-sets", "btn-single-sets-dec", "btn-single-sets-inc", "chip-sets", 1, 10, 1, (val) => { singleSets = val; });
+    bindSingleStepper("input-single-rest", "btn-single-rest-dec", "btn-single-rest-inc", "chip-rest", 0, 120, 5, (val) => { singleRest = val; });
+
+    // เรนเดอร์คิวท่าสำหรับ Multi Custom Routine
+    function renderCustomRoutineQueue() {
+      const container = $("custom-routine-queue");
+      if (!container) return;
+
+      if (customRoutineList.length === 0) {
+        container.innerHTML = `
+          <div style="text-align:center; padding:24px; color:var(--muted); font-size:0.9rem; background:#ffffff; border-radius:12px; border:1px dashed var(--border);">
+            ยังไม่มีท่าในคอร์สของคุณ — คลิกปุ่มด้านล่างเพื่อเพิ่มท่าเข้าสู่คอร์ส ⬇️
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = customRoutineList.map((ex, idx) => {
+        const def = EXERCISES[ex.pose_key] || {};
+        return `
+          <div class="queue-item" data-idx="${idx}">
+            <div style="display:flex; align-items:center; gap:10px; flex:1;">
+              <span style="font-size:1.1rem; font-weight:800; color:var(--muted); width:20px;">#${idx + 1}</span>
+              <span style="font-size:1.4rem;">${def.icon || '⚡'}</span>
+              <div>
+                <strong style="font-size:0.92rem; color:var(--text); display:block;">${ex.name}</strong>
+                <span style="font-size:0.75rem; color:var(--muted);">${def.targetArea || ''}</span>
+              </div>
+            </div>
+
+            <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+              <!-- Reps -->
+              <div style="display:flex; align-items:center; gap:4px;">
+                <span style="font-size:0.75rem; color:var(--muted); font-weight:600;">ครั้ง:</span>
+                <input type="number" class="param-input queue-input-reps" data-idx="${idx}" value="${ex.target_reps}" min="1" max="100" style="width:44px; border:1px solid var(--border); border-radius:6px; padding:2px 4px;" />
+              </div>
+
+              <!-- Sets -->
+              <div style="display:flex; align-items:center; gap:4px;">
+                <span style="font-size:0.75rem; color:var(--muted); font-weight:600;">เซ็ต:</span>
+                <input type="number" class="param-input queue-input-sets" data-idx="${idx}" value="${ex.sets}" min="1" max="10" style="width:40px; border:1px solid var(--border); border-radius:6px; padding:2px 4px;" />
+              </div>
+
+              <!-- Rest -->
+              <div style="display:flex; align-items:center; gap:4px;">
+                <span style="font-size:0.75rem; color:var(--muted); font-weight:600;">พัก:</span>
+                <input type="number" class="param-input queue-input-rest" data-idx="${idx}" value="${ex.rest_seconds}" min="0" max="120" step="5" style="width:44px; border:1px solid var(--border); border-radius:6px; padding:2px 4px;" />
+                <span style="font-size:0.75rem; color:var(--muted);">วิ</span>
+              </div>
+
+              <!-- Reorder / Remove Actions -->
+              <div class="queue-actions" style="display:flex; gap:4px;">
+                <button type="button" class="btn-queue-up" data-idx="${idx}" title="เลื่อนขึ้น" ${idx === 0 ? 'disabled style="opacity:0.4;"' : ''}>▲</button>
+                <button type="button" class="btn-queue-down" data-idx="${idx}" title="เลื่อนลง" ${idx === customRoutineList.length - 1 ? 'disabled style="opacity:0.4;"' : ''}>▼</button>
+                <button type="button" class="btn-queue-remove" data-idx="${idx}" title="ลบท่านี้ออก">✕</button>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join("");
+
+      // Bind input changes
+      container.querySelectorAll(".queue-input-reps").forEach(inp => {
+        inp.addEventListener("change", () => {
+          const idx = parseInt(inp.dataset.idx, 10);
+          customRoutineList[idx].target_reps = Math.max(1, parseInt(inp.value, 10) || 10);
+          saveCustomRoutineToStorage();
+          updateSandboxSummary();
+        });
+      });
+
+      container.querySelectorAll(".queue-input-sets").forEach(inp => {
+        inp.addEventListener("change", () => {
+          const idx = parseInt(inp.dataset.idx, 10);
+          customRoutineList[idx].sets = Math.max(1, parseInt(inp.value, 10) || 2);
+          saveCustomRoutineToStorage();
+          updateSandboxSummary();
+        });
+      });
+
+      container.querySelectorAll(".queue-input-rest").forEach(inp => {
+        inp.addEventListener("change", () => {
+          const idx = parseInt(inp.dataset.idx, 10);
+          customRoutineList[idx].rest_seconds = Math.max(0, parseInt(inp.value, 10) || 0);
+          saveCustomRoutineToStorage();
+          updateSandboxSummary();
+        });
+      });
+
+      // Bind Move Up
+      container.querySelectorAll(".btn-queue-up").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const idx = parseInt(btn.dataset.idx, 10);
+          if (idx > 0) {
+            const temp = customRoutineList[idx];
+            customRoutineList[idx] = customRoutineList[idx - 1];
+            customRoutineList[idx - 1] = temp;
+            saveCustomRoutineToStorage();
+            renderCustomRoutineQueue();
+            updateSandboxSummary();
+          }
+        });
+      });
+
+      // Bind Move Down
+      container.querySelectorAll(".btn-queue-down").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const idx = parseInt(btn.dataset.idx, 10);
+          if (idx < customRoutineList.length - 1) {
+            const temp = customRoutineList[idx];
+            customRoutineList[idx] = customRoutineList[idx + 1];
+            customRoutineList[idx + 1] = temp;
+            saveCustomRoutineToStorage();
+            renderCustomRoutineQueue();
+            updateSandboxSummary();
+          }
+        });
+      });
+
+      // Bind Remove
+      container.querySelectorAll(".btn-queue-remove").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const idx = parseInt(btn.dataset.idx, 10);
+          customRoutineList.splice(idx, 1);
+          saveCustomRoutineToStorage();
+          renderCustomRoutineQueue();
+          updateSandboxSummary();
+        });
+      });
+    }
+
+    // ปุ่มกดเพื่อเพิ่มท่าเข้าสู่คอร์ส
+    function renderAddExerciseButtons() {
+      const container = $("add-exercise-buttons-row");
+      if (!container) return;
+
+      container.innerHTML = Object.keys(EXERCISES).map(poseKey => {
+        const ex = EXERCISES[poseKey];
+        return `
+          <button type="button" class="btn btn-secondary btn-add-pose-chip" data-pose="${poseKey}" style="padding:6px 12px; font-size:0.84rem; display:inline-flex; align-items:center; gap:6px; border-radius:8px;">
+            <span>${ex.icon || '⚡'}</span>
+            <span>+ ${ex.name}</span>
+          </button>
+        `;
+      }).join("");
+
+      container.querySelectorAll(".btn-add-pose-chip").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const poseKey = btn.dataset.pose;
+          const def = EXERCISES[poseKey];
+          if (!def) return;
+          customRoutineList.push({
+            pose_key: poseKey,
+            name: def.name,
+            target_reps: 10,
+            sets: 2,
+            rest_seconds: 20,
+            met: def.met || 5.0
+          });
+          saveCustomRoutineToStorage();
+          renderCustomRoutineQueue();
+          updateSandboxSummary();
+        });
+      });
+    }
+
+    // ปุ่มเพิ่มครบ 6 ท่า
+    $("btn-add-all-poses")?.addEventListener("click", () => {
+      customRoutineList = [];
+      Object.keys(EXERCISES).forEach(poseKey => {
+        const def = EXERCISES[poseKey];
+        customRoutineList.push({
+          pose_key: poseKey,
+          name: def.name,
+          target_reps: 12,
+          sets: 2,
+          rest_seconds: 20,
+          met: def.met || 5.0
+        });
+      });
+      saveCustomRoutineToStorage();
+      renderCustomRoutineQueue();
+      updateSandboxSummary();
+    });
+
+    // ปุ่มล้างคิว
+    $("btn-clear-routine")?.addEventListener("click", () => {
+      if (confirm("คุณต้องการล้างรายการท่าทั้งหมดในคอร์สใช่หรือไม่?")) {
+        customRoutineList = [];
+        saveCustomRoutineToStorage();
+        renderCustomRoutineQueue();
+        updateSandboxSummary();
+      }
+    });
+
+    // อัปเดตการคำนวณสรุปในแถบ Sandbox Live Bar
+    function updateSandboxSummary() {
+      let totalEx = 0;
+      let totalSets = 0;
+      let totalReps = 0;
+      let estCal = 0;
+      const weight = getUserWeight();
+
+      if (sandboxSubMode === "single") {
+        totalEx = 1;
+        totalSets = singleSets;
+        totalReps = singleReps * singleSets;
+        const met = EXERCISES[selectedSinglePose]?.met || 5.0;
+        estCal = Math.round(totalReps * 0.45 * (met / 5.0) * (weight / 65));
+      } else {
+        totalEx = customRoutineList.length;
+        totalSets = customRoutineList.reduce((s, ex) => s + (ex.sets || 1), 0);
+        totalReps = customRoutineList.reduce((s, ex) => s + ((ex.target_reps || 10) * (ex.sets || 1)), 0);
+        estCal = customRoutineList.reduce((s, ex) => {
+          const met = ex.met || EXERCISES[ex.pose_key]?.met || 5.0;
+          return s + Math.round((ex.target_reps || 10) * (ex.sets || 1) * 0.45 * (met / 5.0) * (weight / 65));
+        }, 0);
+      }
+
+      if ($("sandbox-total-exercises")) $("sandbox-total-exercises").textContent = `${totalEx} ท่า`;
+      if ($("sandbox-total-sets")) $("sandbox-total-sets").textContent = `${totalSets} เซ็ต`;
+      if ($("sandbox-total-reps")) $("sandbox-total-reps").textContent = `${totalReps} ครั้ง`;
+      if ($("sandbox-est-calories")) $("sandbox-est-calories").textContent = `🔥 ~${Math.max(10, estCal)} kcal`;
+    }
+
+    // สร้างคอร์ส Sandbox ที่พร้อมส่งให้ WorkoutRoutineManager
+    function getActiveSandboxCourse() {
+      const weight = getUserWeight();
+      if (sandboxSubMode === "single") {
+        const def = EXERCISES[selectedSinglePose] || EXERCISES.squats;
+        return createCustomCourse({
+          id: `sandbox_${selectedSinglePose}`,
+          name: `🎯 Sandbox: ${def.name}`,
+          category: `Single Focus (${def.name})`,
+          equipment: def.equipment,
+          description: `ฝึกเฉพาะท่า ${def.name} เป้าหมาย ${singleReps} ครั้ง x ${singleSets} เซ็ต`,
+          exercises: [
+            {
+              pose_key: selectedSinglePose,
+              name: def.name,
+              target_reps: singleReps,
+              sets: singleSets,
+              rest_seconds: singleRest,
+              met: def.met || 5.0
+            }
+          ]
+        });
+      } else {
+        const exList = customRoutineList.length > 0 ? customRoutineList : [
+          { pose_key: "squats", name: "Bodyweight Squats", target_reps: 10, sets: 2, rest_seconds: 20, met: 5.0 }
+        ];
+        return createCustomCourse({
+          id: "sandbox_custom_routine",
+          name: "🧩 Sandbox: Custom Routine",
+          category: `Custom Routine (${exList.length} ท่า)`,
+          equipment: "ตามอุปกรณ์ของแต่ละท่า",
+          description: `คอร์สที่ผู้ใช้จัดเอง ผสม ${exList.length} ท่า`,
+          exercises: exList
+        });
+      }
+    }
+
+    // เริ่มต้นเรนเดอร์ Sandbox UI
+    renderSingleExercisePicker();
+    renderCustomRoutineQueue();
+    renderAddExerciseButtons();
+    setWorkoutMode(currentWorkoutMode);
+    setSandboxSubMode(sandboxSubMode);
+
 
     // ── Auth & Session Management ──
     function updateAuthUI() {
@@ -810,7 +1443,13 @@
     async function boot() {
       show("s-loading");
       try {
-        const courseKey = $("course-select")?.value || "beginner_fullbody";
+        let activeCourse;
+        if (currentWorkoutMode === "sandbox") {
+          activeCourse = getActiveSandboxCourse();
+        } else {
+          activeCourse = $("course-select")?.value || "beginner_fullbody";
+        }
+
         const session = getSavedSession();
         const weightVal = session?.user?.weight || getUserWeight();
         setUserWeight(weightVal);
@@ -824,7 +1463,7 @@
         canvas.height = video.videoHeight;
         show("s-play");
 
-        initWorkoutSession(courseKey);
+        initWorkoutSession(activeCourse);
         startMediaPipeLoop();
       } catch (err) {
         showError(err);
@@ -833,12 +1472,23 @@
 
     $("btn-start-camera").addEventListener("click", boot);
     $("btn-retry").addEventListener("click", boot);
-    $("btn-quit").addEventListener("click", () => stopAll());
+    $("btn-quit")?.addEventListener("click", () => {
+      const modeText = currentWorkoutMode === "sandbox" ? "หน้า Sandbox" : "หน้าเลือกคอร์ส";
+      if (confirm(`ต้องการออกจากการฝึกและกลับไปที่ ${modeText} หรือไม่?`)) {
+        returnToModeSelection();
+      }
+    });
     window.addEventListener("pagehide", () => stopAll());
 
     function stopAll() {
-      if (workout) workout.destroy();
-      if (stopLoop) stopLoop();
+      if (workout) {
+        workout.destroy();
+        workout = null;
+      }
+      if (stopLoop) {
+        stopLoop();
+        stopLoop = null;
+      }
       stopCamera(video);
     }
 
@@ -1056,13 +1706,53 @@
       const s = String(summary.durationSeconds % 60).padStart(2, "0");
       $("res-time").textContent = `${m}:${s}`;
 
+      // ปรับเปลี่ยนข้อความและสถานะปุ่มย้อนกลับตามโหมดที่เล่นมา (Sandbox vs Preset Course)
+      const btnBack = $("btn-back-to-mode");
+      if (btnBack) {
+        if (currentWorkoutMode === "sandbox") {
+          btnBack.innerHTML = `🔙 กลับไปหน้า Sandbox`;
+          btnBack.setAttribute("title", "กลับไปหน้าเลือกท่าหรือปรับแต่ง Sandbox");
+        } else {
+          btnBack.innerHTML = `🔙 กลับไปหน้าเลือกคอร์ส`;
+          btnBack.setAttribute("title", "กลับไปหน้าเลือกคอร์สออกกำลังกายมาตรฐาน");
+        }
+      }
+
       $("modal-summary").classList.remove("hidden");
     }
 
+    // ── ฟังก์ชันย้อนกลับไปหน้าเลือกคอร์ส/Sandbox ตามโหมดที่เข้ามา ──
+    function returnToModeSelection() {
+      // 1. ซ่อน Modal สรุปผล
+      $("modal-summary")?.classList.add("hidden");
+
+      // 2. หยุดกล้องและวงรอบ MediaPipe ทั้งหมด
+      stopAll();
+
+      // 3. สลับหน้าจอไปยังหน้าเริ่มต้น (s-consent)
+      show("s-consent");
+
+      // 4. สลับแท็บและพาเนลให้ตรงกับโหมดเดิมที่มาจากตอนแรก
+      if (currentWorkoutMode === "sandbox") {
+        setWorkoutMode("sandbox");
+        setSandboxSubMode(sandboxSubMode);
+        window.history.replaceState(null, "", "play.html?mode=sandbox");
+      } else {
+        setWorkoutMode("preset");
+        window.history.replaceState(null, "", "play.html");
+      }
+
+      // 5. เลื่อนหน้าจอกลับขึ้นด้านบนอย่างนุ่มนวล
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    $("btn-back-to-mode")?.addEventListener("click", returnToModeSelection);
+    $("btn-close-summary-modal")?.addEventListener("click", returnToModeSelection);
+
     $("btn-replay").addEventListener("click", () => {
       $("modal-summary").classList.add("hidden");
-      const cKey = $("course-select")?.value || "beginner_fullbody";
-      workout?.loadCourse(cKey);
+      const activeCourse = currentWorkoutMode === "sandbox" ? getActiveSandboxCourse() : ($("course-select")?.value || "beginner_fullbody");
+      workout?.loadCourse(activeCourse);
       startCountdown();
     });
 

@@ -19,8 +19,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `weight` FLOAT NOT NULL DEFAULT 65.0,
   `height` FLOAT NOT NULL DEFAULT 170.0,
   `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  INDEX `idx_role` (`role`),
-  INDEX `idx_is_guest` (`is_guest`)
+  INDEX `idx_display_name` (`display_name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -35,9 +34,11 @@ CREATE TABLE IF NOT EXISTS `scores` (
   `pose_accuracy_details` JSON NULL,
   `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE,
+  INDEX `idx_user_id` (`user_id`),
   INDEX `idx_score` (`score`),
-  INDEX `idx_pose_key` (`pose_key`),
-  INDEX `idx_created_at` (`created_at`)
+  INDEX `idx_created_at` (`created_at`),
+  INDEX `idx_pose_user_score` (`pose_key`, `user_id`, `score`, `count`),
+  INDEX `idx_user_created` (`user_id`, `created_at`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -49,5 +50,8 @@ CREATE TABLE IF NOT EXISTS `user_sessions` (
   `token` TEXT NOT NULL,
   `expires_at` DATETIME NOT NULL,
   `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE
+  FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE,
+  INDEX `idx_user_id` (`user_id`),
+  INDEX `idx_expires_at` (`expires_at`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+

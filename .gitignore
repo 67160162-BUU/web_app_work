@@ -6,6 +6,8 @@ db_data/
 pg_data/
 mysql_data/
 old/
+plan/
+indexing-lab/
 *.sqlite3
 venv/
 .venv/

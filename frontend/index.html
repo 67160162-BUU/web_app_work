@@ -37,14 +37,11 @@
 
     <!-- แนะนำคอร์สออกกำลังกาย (Workout Routine Catalog) -->
     <div style="margin-top: 24px; text-align: left;">
-      <div class="section-header-row" style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
+      <div class="section-header-row" style="margin-bottom:12px;">
         <div>
           <h2 style="font-size:1.4rem; color:var(--text); margin:0;">แผนการฝึกออกกำลังกายยอดนิยม</h2>
           <span style="font-size:0.88rem; color:var(--muted);">เลือกคอร์สที่ต้องการแล้วเปิดกล้องเริ่มฝึกได้ทันที</span>
         </div>
-        <a class="btn btn-primary" href="pages/play.html" style="padding:8px 18px; font-size:0.9rem;">
-          เข้าสู่โหมดฝึกซ้อมทันที
-        </a>
       </div>
 
       <div class="course-catalog-grid" id="course-catalog">
@@ -143,18 +140,109 @@
             เริ่มคอร์สนี้
           </a>
         </div>
+
+        <!-- 5. Sandbox Workout Studio Card -->
+        <div class="course-card" style="border: 2px solid #f59e0b; background: linear-gradient(135deg, #fffbeb 0%, #ffffff 100%);">
+          <div>
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <span class="course-card-badge" style="background:rgba(245, 158, 11, 0.2); color:#b45309; border:1px solid #f59e0b;">
+                🛠️ Sandbox & Custom
+              </span>
+              <span style="font-size:0.85rem; font-weight:700; color:#b45309;">🔥 ปรับแต่งเอง 100%</span>
+            </div>
+            <h3 class="course-card-title" style="color:#b45309;">โหมด Sandbox (จัดท่าเอง / เลือกเป็นท่าๆ)</h3>
+            <p class="course-card-desc">
+              เลือกฝึกเฉพาะท่าที่ต้องการเดี่ยวๆ หรือจัดโปรแกรมออกกำลังกายผสมหลายท่า กำหนดจำนวน Reps, Sets และเวลาพักได้เองอิสระ
+            </p>
+            <div class="course-meta-tags">
+              <span class="meta-tag" style="background:#fef3c7; color:#92400e;">🎯 ซ้อมเฉพาะท่าเดี่ยว</span>
+              <span class="meta-tag" style="background:#fef3c7; color:#92400e;">⚙️ กำหนด Reps/Sets เอง</span>
+              <span class="meta-tag" style="background:#fef3c7; color:#92400e;">⏱️ ปรับเวลาพักได้</span>
+            </div>
+          </div>
+          <a class="btn btn-primary" href="pages/play.html?mode=sandbox" style="width:100%; text-align:center; padding:10px; background:linear-gradient(135deg, #f59e0b, #d97706); border-color:#f59e0b; color:#ffffff;">
+            🛠️ ออกแบบการฝึกใน Sandbox
+          </a>
+        </div>
+
+        <!-- 6. Shadow Loading Placeholder 1 -->
+        <div class="course-card course-card-skeleton" aria-hidden="true">
+          <div>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+              <span class="course-card-skeleton-badge">✨ เร็วๆ นี้</span>
+              <div class="skeleton-box" style="width: 58px; height: 16px; border-radius: 6px;"></div>
+            </div>
+            <div class="skeleton-box" style="width: 78%; height: 22px; border-radius: 6px; margin-bottom: 12px;"></div>
+            <div class="skeleton-box" style="width: 100%; height: 13px; border-radius: 4px; margin-bottom: 8px;"></div>
+            <div class="skeleton-box" style="width: 90%; height: 13px; border-radius: 4px; margin-bottom: 8px;"></div>
+            <div class="skeleton-box" style="width: 65%; height: 13px; border-radius: 4px; margin-bottom: 16px;"></div>
+            <div style="display:flex; gap:6px; flex-wrap:wrap;">
+              <div class="skeleton-box" style="width: 75px; height: 20px; border-radius: 6px;"></div>
+              <div class="skeleton-box" style="width: 68px; height: 20px; border-radius: 6px;"></div>
+            </div>
+          </div>
+          <div style="margin-top:auto;">
+            <div class="skeleton-box skeleton-btn" style="width: 100%; height: 38px; border-radius: 12px;"></div>
+          </div>
+        </div>
+
+        <!-- 7. Shadow Loading Placeholder 2 -->
+        <div class="course-card course-card-skeleton" aria-hidden="true">
+          <div>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+              <span class="course-card-skeleton-badge">✨ เร็วๆ นี้</span>
+              <div class="skeleton-box" style="width: 58px; height: 16px; border-radius: 6px;"></div>
+            </div>
+            <div class="skeleton-box" style="width: 84%; height: 22px; border-radius: 6px; margin-bottom: 12px;"></div>
+            <div class="skeleton-box" style="width: 100%; height: 13px; border-radius: 4px; margin-bottom: 8px;"></div>
+            <div class="skeleton-box" style="width: 86%; height: 13px; border-radius: 4px; margin-bottom: 8px;"></div>
+            <div class="skeleton-box" style="width: 70%; height: 13px; border-radius: 4px; margin-bottom: 16px;"></div>
+            <div style="display:flex; gap:6px; flex-wrap:wrap;">
+              <div class="skeleton-box" style="width: 80px; height: 20px; border-radius: 6px;"></div>
+              <div class="skeleton-box" style="width: 64px; height: 20px; border-radius: 6px;"></div>
+            </div>
+          </div>
+          <div style="margin-top:auto;">
+            <div class="skeleton-box skeleton-btn" style="width: 100%; height: 38px; border-radius: 12px;"></div>
+          </div>
+        </div>
+
+        <!-- 8. Shadow Loading Placeholder 3 -->
+        <div class="course-card course-card-skeleton" aria-hidden="true">
+          <div>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+              <span class="course-card-skeleton-badge">✨ เร็วๆ นี้</span>
+              <div class="skeleton-box" style="width: 58px; height: 16px; border-radius: 6px;"></div>
+            </div>
+            <div class="skeleton-box" style="width: 72%; height: 22px; border-radius: 6px; margin-bottom: 12px;"></div>
+            <div class="skeleton-box" style="width: 100%; height: 13px; border-radius: 4px; margin-bottom: 8px;"></div>
+            <div class="skeleton-box" style="width: 92%; height: 13px; border-radius: 4px; margin-bottom: 8px;"></div>
+            <div class="skeleton-box" style="width: 58%; height: 13px; border-radius: 4px; margin-bottom: 16px;"></div>
+            <div style="display:flex; gap:6px; flex-wrap:wrap;">
+              <div class="skeleton-box" style="width: 70px; height: 20px; border-radius: 6px;"></div>
+              <div class="skeleton-box" style="width: 72px; height: 20px; border-radius: 6px;"></div>
+            </div>
+          </div>
+          <div style="margin-top:auto;">
+            <div class="skeleton-box skeleton-btn" style="width: 100%; height: 38px; border-radius: 12px;"></div>
+          </div>
+        </div>
       </div>
     </div>
 
-    <!-- ปุ่มลิงก์หน้าอื่นๆ -->
-    <div style="margin: 10px 0 20px; display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;">
-      <a class="btn btn-secondary" href="pages/leaderboard.html" style="padding:10px 24px;">🏆 ดูกระดานผู้นำทั้งหมด</a>
-      <a class="btn btn-secondary" href="pages/presentation.html" style="padding:10px 24px; border-color: var(--accent2); color: var(--accent2);">📊 ดูสไลด์นำเสนอระบบ</a>
-    </div>
-
     <!-- กระดานอันดับผู้นำบนหน้า Index -->
-    <div style="margin-top: 14px;">
-      <h2 style="font-size:1.3rem; margin-bottom: 14px; text-align: center;">🏆 กระดานผู้นำ <span class="accent">Top 5</span> การออกกำลังกาย</h2>
+    <div style="margin-top: 28px; text-align: left;">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:14px;">
+        <div>
+          <h2 style="font-size:1.35rem; margin:0; display:flex; align-items:center; gap:8px;">
+            🏆 กระดานผู้นำ <span class="accent">Top 5</span> การออกกำลังกาย
+          </h2>
+          <span style="font-size:0.86rem; color:var(--muted);">คลิกที่กระดานใดก็ได้เพื่อเปิดดูกระดานผู้นำแบบเต็ม (Leaderboard)</span>
+        </div>
+        <a href="pages/leaderboard.html" class="view-all-link" style="text-decoration:none; font-size:0.9rem; font-weight:700;">
+          ดูอันดับทั้งหมดทุกท่า →
+        </a>
+      </div>
       
       <div id="index-leaderboards-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px;">
         <div class="card"><div class="spinner"></div></div>
@@ -427,6 +515,44 @@
     updateAuthUI();
     preloadModel().catch(() => {});
 
+    // เติมการ์ด Shadow Loading ให้แถวคอร์สออกกำลังกายเต็มแถวละ 4 การ์ดเสมอ
+    function ensureFullRowCourseSkeletons() {
+      const catalog = document.getElementById("course-catalog");
+      if (!catalog) return;
+      catalog.querySelectorAll(".course-card-skeleton").forEach(el => el.remove());
+      const realCards = catalog.querySelectorAll(".course-card:not(.course-card-skeleton)");
+      const remainder = realCards.length % 4;
+      if (remainder !== 0) {
+        const needed = 4 - remainder;
+        for (let i = 0; i < needed; i++) {
+          const skel = document.createElement("div");
+          skel.className = "course-card course-card-skeleton";
+          skel.setAttribute("aria-hidden", "true");
+          skel.innerHTML = `
+            <div>
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                <span class="course-card-skeleton-badge">✨ เร็วๆ นี้</span>
+                <div class="skeleton-box" style="width: 58px; height: 16px; border-radius: 6px;"></div>
+              </div>
+              <div class="skeleton-box" style="width: 78%; height: 22px; border-radius: 6px; margin-bottom: 12px;"></div>
+              <div class="skeleton-box" style="width: 100%; height: 13px; border-radius: 4px; margin-bottom: 8px;"></div>
+              <div class="skeleton-box" style="width: 90%; height: 13px; border-radius: 4px; margin-bottom: 8px;"></div>
+              <div class="skeleton-box" style="width: 65%; height: 13px; border-radius: 4px; margin-bottom: 16px;"></div>
+              <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                <div class="skeleton-box" style="width: 75px; height: 20px; border-radius: 6px;"></div>
+                <div class="skeleton-box" style="width: 68px; height: 20px; border-radius: 6px;"></div>
+              </div>
+            </div>
+            <div style="margin-top:auto;">
+              <div class="skeleton-box skeleton-btn" style="width: 100%; height: 38px; border-radius: 12px;"></div>
+            </div>
+          `;
+          catalog.appendChild(skel);
+        }
+      }
+    }
+    ensureFullRowCourseSkeletons();
+
     // Render Top Leaderboard Tables
     const grid = document.getElementById("index-leaderboards-grid");
 
@@ -450,31 +576,43 @@
     try {
       const data = await fetchLeaderboards(5);
       grid.innerHTML = `
-        <div class="card" style="text-align:left;">
-          <h4 style="margin-bottom:10px; color:var(--accent); font-size:1.05rem; display:flex; align-items:center; gap:6px;">
-            <span>🏆</span> คะแนนและความพยายามรวมสูงสุด
-          </h4>
+        <div class="card leaderboard-preview-card" onclick="window.location.href='pages/leaderboard.html'" style="text-align:left;" title="คลิกเพื่อดูอันดับทั้งหมด">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+            <h4 style="margin:0; color:var(--accent); font-size:1.05rem; display:flex; align-items:center; gap:6px;">
+              <span>🏆</span> คะแนนรวมสูงสุด
+            </h4>
+            <span class="view-all-link">ดูทั้งหมด →</span>
+          </div>
           ${renderTable(data.overall, "score")}
         </div>
 
-        <div class="card" style="text-align:left;">
-          <h4 style="margin-bottom:10px; color:var(--accent2); font-size:1.05rem; display:flex; align-items:center; gap:6px;">
-            <span>🦵</span> Bodyweight Squats (ครั้ง)
-          </h4>
+        <div class="card leaderboard-preview-card" onclick="window.location.href='pages/leaderboard.html'" style="text-align:left;" title="คลิกเพื่อดูอันดับทั้งหมด">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+            <h4 style="margin:0; color:var(--accent2); font-size:1.05rem; display:flex; align-items:center; gap:6px;">
+              <span>🦵</span> Bodyweight Squats
+            </h4>
+            <span class="view-all-link">ดูทั้งหมด →</span>
+          </div>
           ${renderTable(data.squats || data.dab, "count")}
         </div>
 
-        <div class="card" style="text-align:left;">
-          <h4 style="margin-bottom:10px; color:#a78bfa; font-size:1.05rem; display:flex; align-items:center; gap:6px;">
-            <span>⭐</span> Jumping Jacks (ครั้ง)
-          </h4>
+        <div class="card leaderboard-preview-card" onclick="window.location.href='pages/leaderboard.html'" style="text-align:left;" title="คลิกเพื่อดูอันดับทั้งหมด">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+            <h4 style="margin:0; color:#a78bfa; font-size:1.05rem; display:flex; align-items:center; gap:6px;">
+              <span>⭐</span> Jumping Jacks
+            </h4>
+            <span class="view-all-link">ดูทั้งหมด →</span>
+          </div>
           ${renderTable(data.jumping_jacks, "count")}
         </div>
 
-        <div class="card" style="text-align:left;">
-          <h4 style="margin-bottom:10px; color:#f472b6; font-size:1.05rem; display:flex; align-items:center; gap:6px;">
-            <span>🏃</span> High Knees (ครั้ง)
-          </h4>
+        <div class="card leaderboard-preview-card" onclick="window.location.href='pages/leaderboard.html'" style="text-align:left;" title="คลิกเพื่อดูอันดับทั้งหมด">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+            <h4 style="margin:0; color:#f472b6; font-size:1.05rem; display:flex; align-items:center; gap:6px;">
+              <span>🏃</span> High Knees
+            </h4>
+            <span class="view-all-link">ดูทั้งหมด →</span>
+          </div>
           ${renderTable(data.high_knees, "count")}
         </div>
       `;

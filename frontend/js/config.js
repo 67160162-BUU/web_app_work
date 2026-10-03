@@ -191,6 +191,36 @@ export const WORKOUT_COURSES = {
   },
 };
 
+export function createCustomCourse({
+  id = "sandbox_custom",
+  name = "Sandbox: โหมดฝึกซ้อมอิสระ",
+  category = "Sandbox Mode",
+  equipment = "ตามท่าที่เลือก",
+  description = "คอร์สที่ผู้ใช้ออกแบบและจัดท่าฝึกด้วยตัวเอง",
+  exercises = [],
+} = {}) {
+  const safeExercises = exercises.length > 0 ? exercises : [
+    { pose_key: "squats", name: "Bodyweight Squats", target_reps: 10, sets: 2, rest_seconds: 20, met: 5.0 }
+  ];
+
+  const totalEstCalories = safeExercises.reduce((sum, ex) => {
+    const met = ex.met || EXERCISES[ex.pose_key]?.met || 5.0;
+    return sum + Math.round((ex.target_reps || 10) * (ex.sets || 1) * 0.45 * (met / 5.0));
+  }, 0);
+
+  return {
+    id,
+    name,
+    category,
+    difficulty: "Custom / กำหนดเอง",
+    badgeColor: "#f59e0b",
+    equipment,
+    description,
+    target_calories_est: Math.max(15, totalEstCalories),
+    exercises: safeExercises,
+  };
+}
+
 export const CFG = {
   COUNTDOWN_DESKTOP: 3,
   COUNTDOWN_MOBILE: 5,
@@ -200,6 +230,7 @@ export const CFG = {
   // การตั้งค่าท่าออกกำลังกายและคอร์ส
   EXERCISES,
   COURSES: WORKOUT_COURSES,
+  createCustomCourse,
 
   // ความเข้ากันได้ย้อนหลังสำหรับระบบเดิม
   POSES: EXERCISES,
@@ -210,3 +241,4 @@ export const CFG = {
       "https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/latest/pose_landmarker_lite.task",
   },
 };
+
