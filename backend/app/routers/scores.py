@@ -61,6 +61,7 @@ def get_top_scores(
             query = db.query(
                 subq.c.user_id,
                 User.display_name,
+                User.is_pro,
                 subq.c.max_score,
                 subq.c.max_count
             ).join(User, subq.c.user_id == User.id)\
@@ -78,6 +79,7 @@ def get_top_scores(
             query = db.query(
                 subq.c.user_id,
                 User.display_name,
+                User.is_pro,
                 subq.c.max_score,
                 subq.c.max_count
             ).join(User, subq.c.user_id == User.id)\
@@ -86,11 +88,12 @@ def get_top_scores(
         results = query.limit(limit).all()
 
         output = []
-        for uid, display_name, score_val, count_val in results:
+        for uid, display_name, is_pro_val, score_val, count_val in results:
             output.append({
                 "id": uid,
                 "user_id": uid,
                 "nickname": display_name,
+                "is_pro": bool(is_pro_val),
                 "pose_key": pose_key or "dab",
                 "score": score_val,
                 "dab_count": count_val,
@@ -105,7 +108,7 @@ def get_top_scores(
 
 @router.get("/leaderboards")
 def get_all_leaderboards(limit: int = 10, db: Session = Depends(get_db)):
-    """ดึงทั้ง 4 กระดานผู้นำพร้อมกัน ( High Score 1 คนต่อ 1 ช่องอันดับ)"""
+    """ดึงกระดานผู้นำทุกประเภท (High Score 1 คนต่อ 1 ช่องอันดับ พร้อมสถานะ PRO)"""
     def fetch_board(pose_filter=None, sort_field="score"):
         try:
             if sort_field == "count":
@@ -121,6 +124,7 @@ def get_all_leaderboards(limit: int = 10, db: Session = Depends(get_db)):
                 q = db.query(
                     subq.c.user_id,
                     User.display_name,
+                    User.is_pro,
                     subq.c.max_score,
                     subq.c.max_count
                 ).join(User, subq.c.user_id == User.id)\
@@ -138,6 +142,7 @@ def get_all_leaderboards(limit: int = 10, db: Session = Depends(get_db)):
                 q = db.query(
                     subq.c.user_id,
                     User.display_name,
+                    User.is_pro,
                     subq.c.max_score,
                     subq.c.max_count
                 ).join(User, subq.c.user_id == User.id)\
@@ -149,13 +154,14 @@ def get_all_leaderboards(limit: int = 10, db: Session = Depends(get_db)):
                     "id": uid,
                     "user_id": uid,
                     "nickname": name,
+                    "is_pro": bool(is_pro_val),
                     "pose_key": pose_filter or "dab",
                     "score": score_val,
                     "count": count_val,
                     "dab_count": count_val,
                     "created_at": ""
                 }
-                for uid, name, score_val, count_val in res
+                for uid, name, is_pro_val, score_val, count_val in res
             ]
         except Exception as e:
             print("Error fetching board:", e)
@@ -163,6 +169,7 @@ def get_all_leaderboards(limit: int = 10, db: Session = Depends(get_db)):
 
     return {
         "overall": fetch_board(pose_filter=None, sort_field="score"),
+        "pushups": fetch_board(pose_filter="pushups", sort_field="count"),
         "squats": fetch_board(pose_filter="squats", sort_field="count"),
         "jumping_jacks": fetch_board(pose_filter="jumping_jacks", sort_field="count"),
         "high_knees": fetch_board(pose_filter="high_knees", sort_field="count"),

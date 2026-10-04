@@ -2,6 +2,39 @@
 import { CFG, WORKOUT_COURSES, EXERCISES } from "./config.js?v=2.1";
 import { evaluatePose, createPoseCounter } from "./poses.js?v=2.1";
 import { CalorieTracker } from "./calories.js?v=2.1";
+import { isProUser } from "./api.js?v=2.1";
+
+// AI Real-time Verbal Voice Coach สำหรับสมาชิก PRO (Web Speech API)
+class VoiceCoach {
+  constructor() {
+    this.synth = typeof window !== "undefined" ? window.speechSynthesis : null;
+    this.enabled = true;
+    this.lastSpokenTime = 0;
+    this.minIntervalMs = 3800; // ป้องกันการพูดรัวซ้ำ
+  }
+
+  speak(text, isPro = false) {
+    if (!this.synth || !this.enabled || !isPro || !text) return;
+    const now = Date.now();
+    if (now - this.lastSpokenTime < this.minIntervalMs) return;
+    this.lastSpokenTime = now;
+
+    try {
+      if (this.synth.speaking) this.synth.cancel();
+      // ตัดสัญลักษณ์ emoji ออกก่อนพูด
+      const clean = text.replace(/[\u{1F300}-\u{1F9FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]/gu, "").trim();
+      if (!clean) return;
+
+      const utterance = new SpeechSynthesisUtterance(clean);
+      utterance.lang = "th-TH";
+      utterance.rate = 1.05;
+      utterance.pitch = 1.0;
+      this.synth.speak(utterance);
+    } catch {
+      // SpeechSynthesis may fail silently in background tabs
+    }
+  }
+}
 
 // Web Audio API สำหรับเสียงสังเคราะห์ให้กำลังใจและสัญญาณเตือน
 class SoundEffects {
@@ -132,6 +165,7 @@ export class WorkoutRoutineManager {
     this.accuracyScores = [];
     this.calorieTracker = new CalorieTracker();
     this.sounds = new SoundEffects();
+    this.voiceCoach = new VoiceCoach();
 
     // Callbacks
     this.onStateChange = options.onStateChange || (() => {});
@@ -237,6 +271,7 @@ export class WorkoutRoutineManager {
 
     if (counterRes.feedback) {
       this.onFeedback(counterRes.feedback);
+      this.voiceCoach.speak(counterRes.feedback, isProUser());
     }
 
     if (counterRes.counted) {
@@ -348,6 +383,7 @@ export class WorkoutRoutineManager {
   handleWorkoutComplete() {
     this.stopTimers();
     this.sounds.playVictorySound();
+    this.voiceCoach.speak("ยอดเยี่ยมมาก จบคอร์สการฝึกซ้อมแล้วครับ", isProUser());
 
     const summary = this.getSummary();
     this.setState("COMPLETED", { summary });

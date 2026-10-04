@@ -17,6 +17,8 @@ class UserAdminResponse(BaseModel):
     display_name: str
     role: str
     is_guest: bool
+    is_pro: bool = False
+    pro_expires_at: Optional[str] = None
     created_at: str
 
     class Config:
@@ -41,9 +43,30 @@ def list_users(
             "display_name": u.display_name,
             "role": str(u.role.value if hasattr(u.role, 'value') else u.role),
             "is_guest": u.is_guest,
+            "is_pro": bool(u.is_pro),
+            "pro_expires_at": u.pro_expires_at.strftime("%Y-%m-%d %H:%M:%S") if u.pro_expires_at else None,
             "created_at": u.created_at.strftime("%Y-%m-%d %H:%M:%S") if u.created_at else ""
         })
     return output
+
+@router.put("/users/{user_id}/toggle-pro")
+def toggle_user_pro(
+    user_id: int,
+    admin: User = Depends(require_admin),
+    db: Session = Depends(get_db)
+):
+    """(Admin เท่านั้น) สลับสถานะสมาชิก Pro ของผู้ใช้"""
+    from datetime import datetime, timedelta
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    user.is_pro = not bool(user.is_pro)
+    if user.is_pro:
+        user.pro_expires_at = datetime.utcnow() + timedelta(days=30)
+    else:
+        user.pro_expires_at = None
+    db.commit()
+    return {"message": "Pro status updated", "user_id": user_id, "is_pro": user.is_pro}
 
 @router.put("/users/{user_id}/role")
 def update_user_role(

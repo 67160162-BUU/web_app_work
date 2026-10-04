@@ -22,6 +22,8 @@ class User(Base):
     is_guest = Column(Boolean, default=True, nullable=False)
     weight = Column(Float, default=65.0, nullable=False)
     height = Column(Float, default=170.0, nullable=False)
+    is_pro = Column(Boolean, default=False, nullable=False)
+    pro_expires_at = Column(DateTime, nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
 
     scores = relationship("Score", back_populates="user", cascade="all, delete-orphan")

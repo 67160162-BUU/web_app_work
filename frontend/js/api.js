@@ -196,6 +196,7 @@ export async function fetchLeaderboards(limit = 10) {
 
   return {
     overall: getBoard(null, "score"),
+    pushups: getBoard("pushups", "count"),
     squats: getBoard("squats", "count"),
     jumping_jacks: getBoard("jumping_jacks", "count"),
     high_knees: getBoard("high_knees", "count"),
@@ -422,4 +423,125 @@ export async function deleteAdminScore(scoreId) {
   });
   if (!res.ok) throw new Error("ลบคะแนนไม่สำเร็จ");
   return res.json();
+}
+
+// ── Subscription & Pro Tier APIs (PromptPay Scan-to-Pay Engine) ──
+
+export function isProUser() {
+  if (typeof window === "undefined") return false;
+  // 1. ตรวจสอบจาก LocalStorage Flag
+  if (localStorage.getItem("dd_is_pro") === "true") {
+    const expires = localStorage.getItem("dd_pro_expires");
+    if (expires) {
+      const expDate = new Date(expires);
+      if (!isNaN(expDate.getTime()) && expDate < new Date()) {
+        localStorage.removeItem("dd_is_pro");
+        localStorage.removeItem("dd_pro_expires");
+        return false;
+      }
+    }
+    return true;
+  }
+  // 2. ตรวจสอบจาก Session ของ User ที่ล็อกอิน
+  const session = getSavedSession();
+  if (session && session.user && session.user.is_pro) {
+    localStorage.setItem("dd_is_pro", "true");
+    return true;
+  }
+  return false;
+}
+
+export function setProStatus(isPro, expiresAt = null) {
+  if (isPro) {
+    localStorage.setItem("dd_is_pro", "true");
+    if (expiresAt) {
+      localStorage.setItem("dd_pro_expires", expiresAt);
+    } else {
+      const defaultExp = new Date();
+      defaultExp.setDate(defaultExp.getDate() + 30);
+      localStorage.setItem("dd_pro_expires", defaultExp.toISOString());
+    }
+  } else {
+    localStorage.removeItem("dd_is_pro");
+    localStorage.removeItem("dd_pro_expires");
+  }
+
+  // อัปเดตใน session ถ้ามี
+  const session = getSavedSession();
+  if (session && session.user) {
+    session.user.is_pro = Boolean(isPro);
+    if (expiresAt) session.user.pro_expires_at = expiresAt;
+    saveSession(session.user, session.token);
+  }
+
+  // ส่ง Event แจ้งเตือนทุกส่วนของหน้าเว็บให้ปรับ UI ทันที
+  if (typeof window !== "undefined") {
+    window.dispatchEvent(new CustomEvent("dd_pro_status_changed", {
+      detail: { isPro: Boolean(isPro), expiresAt }
+    }));
+  }
+}
+
+export async function upgradeUserToPro(plan = "monthly", days = 30) {
+  const session = getSavedSession();
+  let backendResult = null;
+
+  if (session && session.user && session.user.id) {
+    try {
+      const res = await fetch(`${BASE}/users/${session.user.id}/upgrade-pro`, {
+        method: "POST",
+        headers: getAuthHeaders(),
+        body: JSON.stringify({ plan, days }),
+      });
+      if (res.ok) {
+        backendResult = await res.json();
+      }
+    } catch (err) {
+      console.warn("⚠️ Cannot notify backend of PRO upgrade, fallback to local:", err);
+    }
+  }
+
+  const expDate = new Date();
+  expDate.setDate(expDate.getDate() + days);
+  const expStr = backendResult?.pro_expires_at || expDate.toISOString();
+
+  setProStatus(true, expStr);
+  return {
+    success: true,
+    is_pro: true,
+    pro_expires_at: expStr,
+    plan,
+    backendSynced: Boolean(backendResult)
+  };
+}
+
+/**
+ * จำลองการสแกนจ่ายเงินผ่าน PromptPay QR Code (Simulated Payment Gateway)
+ * มี Delay เสมือนจริง 1.5 วินาที สำหรับจำลองการ Verify จาก SlipOK หรือ Webhook ธนาคาร
+ */
+export async function simulatePromptPayPayment({ plan = "monthly", amount = 99 } = {}) {
+  const refCode = "PRO-2026-" + Math.floor(100000 + Math.random() * 900000);
+  
+  // จำลองเวลารอการตรวจสอบสลิปจาก Gateway 1500 ms
+  await new Promise(resolve => setTimeout(resolve, 1500));
+
+  const result = await upgradeUserToPro(plan, 30);
+  return {
+    ...result,
+    refCode,
+    amount,
+    paidAt: new Date().toISOString()
+  };
+}
+
+export async function toggleAdminUserPro(userId) {
+  const token = getAuthToken();
+  const res = await fetch(`${BASE}/admin/users/${userId}/toggle-pro`, {
+    method: "PUT",
+    headers: {
+      "Authorization": `Bearer ${token}`
+    }
+  });
+  if (!res.ok) throw new Error("ไม่สามารถเปลี่ยนสถานะ PRO ได้");
+  return await res.json();
 }

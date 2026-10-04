@@ -37,7 +37,10 @@
         ${list.map((s, i) => `
           <tr${s.id === myId ? ' style="outline:2px solid var(--accent);border-radius:6px;background:rgba(255,214,10,0.15)"' : ""}>
             <td>${["🥇","🥈","🥉"][i] ?? (i + 1)}</td>
-            <td><strong>${s.nickname}</strong></td>
+            <td>
+              <strong>${s.nickname}</strong>
+              ${s.is_pro ? `<span class="badge-pro" style="margin-left:6px; font-size:0.68rem; padding:1px 6px;">👑 PRO</span>` : ''}
+            </td>
             <td style="text-align:right; font-weight:700; color:var(--accent)">
               ${type === "score" ? Number(s.score).toFixed(0) : `${s.count ?? 0} ครั้ง`}
             </td>
@@ -56,7 +59,15 @@
           ${renderTable(data.overall, "score")}
         </div>
 
-        <!-- ตารางที่ 2: ท่า Squats -->
+        <!-- ตารางที่ 2: ท่า Push-ups (วิดพื้น) -->
+        <div class="card" style="text-align:left;">
+          <h3 style="margin-bottom:12px; display:flex; align-items:center; gap:8px; color:#10b981;">
+            <span>🤸</span> Push-ups / ท่าวิดพื้น (ครั้งสูงสุด)
+          </h3>
+          ${renderTable(data.pushups, "count")}
+        </div>
+
+        <!-- ตารางที่ 3: ท่า Squats -->
         <div class="card" style="text-align:left;">
           <h3 style="margin-bottom:12px; display:flex; align-items:center; gap:8px; color:var(--accent2);">
             <span>🦵</span> Bodyweight Squats (ครั้งสูงสุด)
@@ -64,7 +75,7 @@
           ${renderTable(data.squats || data.dab, "count")}
         </div>
 
-        <!-- ตารางที่ 3: ท่า Jumping Jacks -->
+        <!-- ตารางที่ 4: ท่า Jumping Jacks -->
         <div class="card" style="text-align:left;">
           <h3 style="margin-bottom:12px; display:flex; align-items:center; gap:8px; color:#7c3aed;">
             <span>⭐</span> Jumping Jacks (ครั้งสูงสุด)
@@ -72,7 +83,7 @@
           ${renderTable(data.jumping_jacks, "count")}
         </div>
 
-        <!-- ตารางที่ 4: ท่า High Knees -->
+        <!-- ตารางที่ 5: ท่า High Knees -->
         <div class="card" style="text-align:left;">
           <h3 style="margin-bottom:12px; display:flex; align-items:center; gap:8px; color:#db2777;">
             <span>🏃</span> High Knees (ครั้งสูงสุด)
@@ -80,7 +91,7 @@
           ${renderTable(data.high_knees, "count")}
         </div>
 
-        <!-- ตารางที่ 5: ท่า Bicep Curls -->
+        <!-- ตารางที่ 6: ท่า Bicep Curls -->
         <div class="card" style="text-align:left;">
           <h3 style="margin-bottom:12px; display:flex; align-items:center; gap:8px; color:#0284c7;">
             <span>💪</span> Dumbbell Bicep Curls (ครั้งสูงสุด)
@@ -88,7 +99,7 @@
           ${renderTable(data.bicep_curls, "count")}
         </div>
 
-        <!-- ตารางที่ 6: ท่า Shoulder Press -->
+        <!-- ตารางที่ 7: ท่า Shoulder Press -->
         <div class="card" style="text-align:left;">
           <h3 style="margin-bottom:12px; display:flex; align-items:center; gap:8px; color:#d97706;">
             <span>🏋️</span> Dumbbell Shoulder Press (ครั้งสูงสุด)

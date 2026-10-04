@@ -59,12 +59,13 @@
               <th>Display Name</th>
               <th>Role</th>
               <th>Type</th>
+              <th>Plan</th>
               <th>Created At</th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody id="user-table-body">
-            <tr><td colspan="7" style="text-align: center;">กำลังโหลดข้อมูล...</td></tr>
+            <tr><td colspan="8" style="text-align: center;">กำลังโหลดข้อมูล...</td></tr>
           </tbody>
         </table>
       </div>
@@ -72,7 +73,7 @@
   </div>
 
   <script type="module">
-    import { loginUser, fetchCurrentUser, fetchAdminUsers, updateAdminUserRole, deleteAdminUser, setAuthToken } from "../js/api.js";
+    import { loginUser, fetchCurrentUser, fetchAdminUsers, updateAdminUserRole, deleteAdminUser, setAuthToken, toggleAdminUserPro } from "../js/api.js";
 
     const $ = (id) => document.getElementById(id);
 
@@ -121,15 +122,30 @@
             <td><strong>${u.display_name}</strong></td>
             <td><span class="badge-role ${u.role}">${u.role}</span></td>
             <td>${u.is_guest ? 'Guest' : 'Member'}</td>
+            <td>${u.is_pro ? '<span class="badge-pro" style="padding:2px 8px; font-size:0.75rem;">👑 PRO</span>' : '<span style="color:var(--muted); font-size:0.8rem;">Free</span>'}</td>
             <td>${u.created_at}</td>
             <td>
               <button class="btn btn-secondary action-btn-sm btn-role" data-id="${u.id}" data-role="${u.role === 'admin' ? 'player' : 'admin'}">
                 ${u.role === 'admin' ? 'Set Player' : 'Set Admin'}
               </button>
+              <button class="btn btn-secondary action-btn-sm btn-toggle-pro" data-id="${u.id}" data-pro="${u.is_pro ? 'true' : 'false'}" style="background:${u.is_pro ? '#fef3c7' : '#f1f5f9'}; color:${u.is_pro ? '#b45309' : 'inherit'}; border-color:#f59e0b;">
+                ${u.is_pro ? 'Downgrade' : '👑 Set PRO'}
+              </button>
               <button class="btn btn-quit-game action-btn-sm btn-del" data-id="${u.id}">ลบ</button>
             </td>
           </tr>
         `).join("");
+
+        document.querySelectorAll(".btn-toggle-pro").forEach(btn => {
+          btn.addEventListener("click", async (e) => {
+            const uid = e.target.dataset.id;
+            const currentPro = e.target.dataset.pro === "true";
+            if (confirm(`คุณต้องการ ${currentPro ? 'ยกเลิก' : 'เปิดใช้งาน'} สมาชิก PRO ให้ User #${uid} หรือไม่?`)) {
+              await toggleAdminUserPro(uid);
+              loadUsers();
+            }
+          });
+        });
 
         document.querySelectorAll(".btn-role").forEach(btn => {
           btn.addEventListener("click", async (e) => {

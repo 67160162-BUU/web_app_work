@@ -34,6 +34,16 @@ for attempt in range(1, 15):
                 conn.commit()
             except Exception:
                 pass
+            try:
+                conn.execute(text("ALTER TABLE users ADD COLUMN is_pro BOOLEAN NOT NULL DEFAULT FALSE;"))
+                conn.commit()
+            except Exception:
+                pass
+            try:
+                conn.execute(text("ALTER TABLE users ADD COLUMN pro_expires_at DATETIME NULL;"))
+                conn.commit()
+            except Exception:
+                pass
 
         # Auto-seed initial admin and demo players if empty or fix invalid hashes
         from app.models import User, Score

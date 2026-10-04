@@ -18,6 +18,7 @@ class UserUpdateRequest(BaseModel):
     password: Optional[str] = None
     weight: Optional[float] = None
     height: Optional[float] = None
+    is_pro: Optional[bool] = None
 
 class UserDetailResponse(BaseModel):
     id: int
@@ -28,6 +29,8 @@ class UserDetailResponse(BaseModel):
     is_guest: bool
     weight: Optional[float] = 65.0
     height: Optional[float] = 170.0
+    is_pro: bool = False
+    pro_expires_at: Optional[str] = None
     created_at: str
 
     class Config:
@@ -190,3 +193,43 @@ def delete_user(
     db.delete(user)
     db.commit()
     return {"message": "User deleted successfully", "user_id": user_id}
+
+class UpgradeProRequest(BaseModel):
+    plan: Optional[str] = "monthly"
+    days: Optional[int] = 30
+    transaction_ref: Optional[str] = None
+
+@router.post("/{user_id}/upgrade-pro")
+def upgrade_user_pro(
+    user_id: int,
+    req: Optional[UpgradeProRequest] = None,
+    db: Session = Depends(get_db)
+):
+    """อัปเกรดสถานะผู้ใช้งานเป็น PRO (รองรับทั้งการจ่ายเงินจริงและการจำลอง PromptPay Scan-to-Pay)"""
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    from datetime import datetime, timedelta
+    days = req.days if req and req.days else 30
+    expires = datetime.utcnow() + timedelta(days=days)
+
+    user.is_pro = True
+    user.pro_expires_at = expires
+    db.commit()
+    db.refresh(user)
+
+    return {
+        "status": "success",
+        "message": "User upgraded to PRO successfully",
+        "is_pro": True,
+        "pro_expires_at": expires.strftime("%Y-%m-%d %H:%M:%S"),
+        "plan": req.plan if req else "monthly",
+        "user": {
+            "id": user.id,
+            "username": user.username,
+            "display_name": user.display_name,
+            "is_pro": True,
+            "pro_expires_at": expires.strftime("%Y-%m-%d %H:%M:%S")
+        }
+    }

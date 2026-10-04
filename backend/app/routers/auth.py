@@ -1,4 +1,5 @@
 from typing import Optional
+from datetime import datetime
 from pydantic import BaseModel, EmailStr
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
@@ -35,6 +36,8 @@ class UserResponse(BaseModel):
     is_guest: bool
     weight: Optional[float] = 65.0
     height: Optional[float] = 170.0
+    is_pro: bool = False
+    pro_expires_at: Optional[datetime] = None
 
     class Config:
         from_attributes = True

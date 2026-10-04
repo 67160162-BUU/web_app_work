@@ -7,13 +7,14 @@ import { scoreHighKnee, createHighKneeCounter } from "./exercises/high_knee.js";
 import { scoreBicepCurl, createBicepCurlCounter } from "./exercises/bicep_curl.js";
 import { scoreShoulderPress, createShoulderPressCounter } from "./exercises/shoulder_press.js";
 import { scoreStandingCrunch, createStandingCrunchCounter } from "./exercises/standing_crunch.js";
+import { scorePushup, createPushupCounter } from "./exercises/pushup.js";
 
 export { LM, dist, angle, smoothstep, visible };
-export { scoreSquat, scoreJumpingJack, scoreHighKnee, scoreBicepCurl, scoreShoulderPress, scoreStandingCrunch };
+export { scoreSquat, scoreJumpingJack, scoreHighKnee, scoreBicepCurl, scoreShoulderPress, scoreStandingCrunch, scorePushup };
 
 /**
  * ฟังก์ชันประเมินคะแนนและความถูกต้องตามประเภทท่าออกกำลังกาย
- * @param {string} poseKey - คีย์ของท่า (เช่น squats, jumping_jacks)
+ * @param {string} poseKey - คีย์ของท่า (เช่น squats, jumping_jacks, pushups)
  * @param {Array} lm - MediaPipe Landmarks 33 จุด
  */
 export function evaluatePose(poseKey, lm) {
@@ -30,6 +31,8 @@ export function evaluatePose(poseKey, lm) {
       return scoreShoulderPress(lm);
     case "standing_crunches":
       return scoreStandingCrunch(lm);
+    case "pushups":
+      return scorePushup(lm);
     default:
       return scoreSquat(lm);
   }
@@ -53,6 +56,8 @@ export function createPoseCounter(poseKey = "squats") {
       return createShoulderPressCounter();
     case "standing_crunches":
       return createStandingCrunchCounter();
+    case "pushups":
+      return createPushupCounter();
 
     default:
       return createSquatCounter();

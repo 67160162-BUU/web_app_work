@@ -11,7 +11,9 @@
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
       <h1 style="font-size:1.6rem; margin:0;">SMART AI <span class="accent">FITNESS</span></h1>
       
-      <div id="user-session-bar">
+      <div id="user-session-bar" style="display:flex; align-items:center; gap:8px;">
+        <button class="btn btn-upgrade-pro" id="btn-header-upgrade-pro" style="padding:5px 12px; font-size:0.82rem;" title="อัปเกรดเป็น SMART AI FITNESS PRO">👑 อัปเกรดเป็น PRO (99.-)</button>
+        <span id="header-pro-badge" class="badge-pro hidden" style="font-size:0.82rem; padding:4px 10px;">👑 PRO MEMBER</span>
         <div id="session-logged-out">
           <button class="btn btn-secondary" id="btn-show-login" style="padding:6px 14px; font-size:0.85rem;">🔑 เข้าสู่ระบบ / สมัครสมาชิก</button>
         </div>
@@ -50,6 +52,9 @@
             <option value="adv_upper_body">🟣 Advanced Upper Body Sculpt (แขน & ไหล่ - ใช้ดัมเบล)</option>
             <option value="adv_lower_power">🔴 Advanced Leg & Glute Power (ขา & ก้น - ดัมเบล/Bodyweight)</option>
             <option value="adv_core_abs">🔵 Standing Core Shredder (แกนกลาง & หน้าท้อง - ไม่ใช้อุปกรณ์)</option>
+            <option value="pro_hiit_shredder">🔥 Extreme Fat Shredder HIIT (👑 PRO - คาร์ดิโอเบิร์นหนัก)</option>
+            <option value="pro_upper_mastery">🛡️ Upper Body & Push-up Mastery (👑 PRO - วิดพื้น & แขนไหล่)</option>
+            <option value="pro_office_syndrome">🧘 Office Syndrome & Posture Fix (👑 PRO - บำบัดกล้ามเนื้อ)</option>
           </select>
 
           <div id="course-preview-box" style="margin-top:14px; padding:12px 16px; background:var(--input-bg); border-radius:10px; border:1px solid var(--border);">
@@ -505,6 +510,125 @@
           </form>
           <div id="save-status-msg" class="notice" style="margin-top:10px;"></div>
         </div>
+
+        <!-- 🛍️ Contextual Shopee Affiliate Recommendations (ซ่อนอัตโนมัติสำหรับสมาชิก Pro) -->
+        <div class="shopee-affiliate-section" id="shopee-summary-widget">
+          <div class="shopee-header-row">
+            <div style="display:flex; align-items:center; gap:6px;">
+              <span class="shopee-tag">Shopee Partner</span>
+              <strong style="font-size:0.86rem; color:#1e293b;">💡 อุปกรณ์ & อาหารเสริมแนะนำสำหรับการฝึกวันนี้:</strong>
+            </div>
+          </div>
+          <div class="shopee-products-grid" id="shopee-summary-products">
+            <!-- Dynamically populated based on workout exercises & calories -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ Modal PromptPay Scan-to-Pay (จำลองระบบการชำระเงิน) ═══ -->
+    <div id="modal-promptpay" class="modal-backdrop hidden">
+      <div class="modal-card promptpay-modal-card">
+        <div class="promptpay-header">
+          <button type="button" class="btn-close-modal-icon btn-close-promptpay" style="color:#ffffff; top:12px; right:12px;">✕</button>
+          <div style="display:inline-flex; align-items:center; gap:8px; background:rgba(255,255,255,0.15); padding:4px 12px; border-radius:20px; margin-bottom:6px;">
+            <span style="font-size:1.1rem;">👑</span>
+            <span style="font-size:0.8rem; font-weight:700; letter-spacing:1px; text-transform:uppercase;">SMART AI FITNESS PRO</span>
+          </div>
+          <h3>สแกนจ่ายผ่าน Thai QR Payment</h3>
+          <p id="promptpay-reason-text">ปลดล็อกคอร์สพิเศษ 3 คอร์ส + AI Voice Coach + ปิดโฆษณา 100%</p>
+        </div>
+
+        <div class="promptpay-body">
+          <div class="countdown-badge">
+            ⏱️ รหัสชำระเงินหมดอายุใน: <strong id="promptpay-timer">05:00</strong>
+          </div>
+
+          <!-- PromptPay QR Frame -->
+          <div class="qr-container">
+            <div class="qr-image-wrapper">
+              <svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                <rect width="200" height="200" fill="#ffffff"/>
+                <!-- Corner 1 -->
+                <rect x="10" y="10" width="45" height="45" fill="#003b6f" rx="6"/>
+                <rect x="17" y="17" width="31" height="31" fill="#ffffff" rx="3"/>
+                <rect x="24" y="24" width="17" height="17" fill="#003b6f" rx="2"/>
+                <!-- Corner 2 -->
+                <rect x="145" y="10" width="45" height="45" fill="#003b6f" rx="6"/>
+                <rect x="152" y="17" width="31" height="31" fill="#ffffff" rx="3"/>
+                <rect x="159" y="24" width="17" height="17" fill="#003b6f" rx="2"/>
+                <!-- Corner 3 -->
+                <rect x="10" y="145" width="45" height="45" fill="#003b6f" rx="6"/>
+                <rect x="17" y="152" width="31" height="31" fill="#ffffff" rx="3"/>
+                <rect x="24" y="159" width="17" height="17" fill="#003b6f" rx="2"/>
+                <!-- Data Blocks Pattern -->
+                <g fill="#003b6f">
+                  <rect x="65" y="15" width="10" height="10"/>
+                  <rect x="85" y="15" width="10" height="10"/>
+                  <rect x="105" y="15" width="10" height="10"/>
+                  <rect x="125" y="15" width="10" height="10"/>
+                  <rect x="65" y="35" width="20" height="10"/>
+                  <rect x="110" y="35" width="15" height="10"/>
+                  <rect x="15" y="65" width="10" height="20"/>
+                  <rect x="35" y="65" width="15" height="10"/>
+                  <rect x="65" y="65" width="10" height="10"/>
+                  <rect x="85" y="65" width="25" height="10"/>
+                  <rect x="120" y="65" width="10" height="10"/>
+                  <rect x="145" y="65" width="15" height="10"/>
+                  <rect x="170" y="65" width="15" height="20"/>
+                  <rect x="15" y="95" width="20" height="10"/>
+                  <rect x="45" y="95" width="10" height="10"/>
+                  <rect x="145" y="95" width="20" height="10"/>
+                  <rect x="175" y="95" width="10" height="10"/>
+                  <rect x="15" y="115" width="10" height="15"/>
+                  <rect x="35" y="115" width="15" height="15"/>
+                  <rect x="65" y="115" width="10" height="10"/>
+                  <rect x="125" y="115" width="10" height="10"/>
+                  <rect x="150" y="115" width="20" height="10"/>
+                  <rect x="65" y="145" width="15" height="10"/>
+                  <rect x="90" y="145" width="20" height="10"/>
+                  <rect x="120" y="145" width="15" height="10"/>
+                  <rect x="145" y="145" width="10" height="10"/>
+                  <rect x="165" y="145" width="20" height="10"/>
+                  <rect x="65" y="165" width="10" height="20"/>
+                  <rect x="85" y="165" width="20" height="10"/>
+                  <rect x="115" y="165" width="25" height="10"/>
+                  <rect x="150" y="165" width="10" height="20"/>
+                  <rect x="170" y="165" width="15" height="10"/>
+                </g>
+                <circle cx="100" cy="100" r="22" fill="#ffffff" stroke="#003b6f" stroke-width="2"/>
+                <circle cx="100" cy="100" r="18" fill="#003b6f"/>
+                <text x="100" y="105" font-family="sans-serif" font-size="11" font-weight="bold" fill="#ffffff" text-anchor="middle">PRO</text>
+              </svg>
+              <div class="qr-scanner-line"></div>
+            </div>
+          </div>
+
+          <div class="price-tag-row">
+            <div style="text-align:left;">
+              <strong style="display:block; font-size:0.95rem; color:#1e293b;">SMART AI FITNESS PRO</strong>
+              <span class="price-period">แพ็กเกจ 30 วัน (ประหยัด 50% จาก 199.-)</span>
+            </div>
+            <div style="text-align:right;">
+              <span class="price-amount">฿99</span>
+              <span style="font-size:0.75rem; color:#64748b;">/เดือน</span>
+            </div>
+          </div>
+
+          <div class="promptpay-ref">
+            เลขอ้างอิง: <span id="promptpay-ref-text">PRO-2026-849201</span> · ปลายทาง: SMART AI FITNESS CO., LTD.
+          </div>
+
+          <button type="button" class="btn-demo-pay" id="btn-simulate-pay">
+            <span>📲 จำลองการสแกนจ่ายเงินสำเร็จ (Demo Payment)</span>
+          </button>
+          
+          <div id="promptpay-status-msg" class="notice hidden" style="margin-top:10px;"></div>
+
+          <button type="button" class="btn-cancel-pay btn-close-promptpay">
+            ชำระภายหลัง / ปิดหน้าต่าง
+          </button>
+        </div>
       </div>
     </div>
 
@@ -676,7 +800,7 @@
     import { evaluatePose, LM } from "../js/poses.js?v=2.1";
     import { WorkoutRoutineManager } from "../js/workout_manager.js?v=2.1";
     import { getUserWeight, setUserWeight, getUserHeight, setUserHeight, calculateBMI } from "../js/calories.js?v=2.1";
-    import { submitScore, registerUser, loginUser, updateUserProfile, getSavedSession, saveSession, clearSession } from "../js/api.js?v=2.1";
+    import { submitScore, registerUser, loginUser, updateUserProfile, getSavedSession, saveSession, clearSession, isProUser, simulatePromptPayPayment } from "../js/api.js?v=2.1";
 
     // ฟังก์ชันสร้าง Custom Course สำหรับ Sandbox (ดึงจาก CFG หรือใช้ Fallback ป้องกัน Cache)
     const createCustomCourse = CFG?.createCustomCourse || function({
@@ -749,6 +873,172 @@
     }
 
     updateBMIUI();
+
+    // ══════════════════════════════════════════════════════
+    // 👑 SMART AI FITNESS PRO & PROMPTPAY SCAN-TO-PAY ENGINE
+    // ══════════════════════════════════════════════════════
+    let promptpayTimerInterval = null;
+
+    function triggerConfetti() {
+      const colors = ['#f59e0b', '#ef4444', '#10b981', '#3b82f6', '#8b5cf6', '#ec4899'];
+      const container = document.createElement('div');
+      container.style.position = 'fixed';
+      container.style.inset = '0';
+      container.style.pointerEvents = 'none';
+      container.style.zIndex = '99999';
+      document.body.appendChild(container);
+
+      for (let i = 0; i < 90; i++) {
+        const p = document.createElement('div');
+        const color = colors[Math.floor(Math.random() * colors.length)];
+        const size = Math.floor(Math.random() * 8 + 6);
+        p.style.position = 'absolute';
+        p.style.left = `${Math.random() * 100}vw`;
+        p.style.top = '-10px';
+        p.style.width = `${size}px`;
+        p.style.height = `${size * (Math.random() > 0.5 ? 1.5 : 1)}px`;
+        p.style.background = color;
+        p.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+        p.style.opacity = '1';
+        p.style.transform = `rotate(${Math.random() * 360}deg)`;
+        p.style.transition = `transform ${Math.random() * 2 + 1.8}s cubic-bezier(.25,1,.5,1), top ${Math.random() * 2 + 1.8}s ease-in, opacity ${Math.random() * 1.5 + 1.8}s ease-out`;
+        container.appendChild(p);
+
+        setTimeout(() => {
+          p.style.top = `${Math.random() * 40 + 70}vh`;
+          p.style.transform = `rotate(${Math.random() * 1080}deg) scale(${Math.random() * 0.8 + 0.4})`;
+          p.style.opacity = '0';
+        }, 20);
+      }
+
+      setTimeout(() => container.remove(), 4000);
+    }
+
+    function startPromptPayCountdown() {
+      if (promptpayTimerInterval) clearInterval(promptpayTimerInterval);
+      let secondsLeft = 300;
+      const timerEl = $("promptpay-timer");
+      const updateTimer = () => {
+        const m = Math.floor(secondsLeft / 60);
+        const s = secondsLeft % 60;
+        if (timerEl) timerEl.textContent = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+        if (secondsLeft <= 0) {
+          clearInterval(promptpayTimerInterval);
+          if (timerEl) timerEl.textContent = "หมดอายุ (กดใหม่เพื่อสร้าง QR)";
+        }
+        secondsLeft--;
+      };
+      updateTimer();
+      promptpayTimerInterval = setInterval(updateTimer, 1000);
+    }
+
+    function openPromptPayModal(reasonText = null) {
+      const modal = $("modal-promptpay");
+      if (!modal) return;
+      modal.classList.remove("hidden");
+      startPromptPayCountdown();
+      const refEl = $("promptpay-ref-text");
+      if (refEl) {
+        refEl.textContent = "PRO-2026-" + Math.floor(100000 + Math.random() * 900000);
+      }
+      const reasonEl = $("promptpay-reason-text");
+      if (reasonEl && reasonText) {
+        reasonEl.textContent = reasonText;
+      }
+      const statusMsg = $("promptpay-status-msg");
+      if (statusMsg) {
+        statusMsg.classList.add("hidden");
+        statusMsg.textContent = "";
+      }
+      const btnPay = $("btn-simulate-pay");
+      if (btnPay) {
+        btnPay.disabled = false;
+        btnPay.innerHTML = `<span>📲 จำลองการสแกนจ่ายเงินสำเร็จ (Demo Payment)</span>`;
+      }
+    }
+
+    function closePromptPayModal() {
+      if (promptpayTimerInterval) clearInterval(promptpayTimerInterval);
+      $("modal-promptpay")?.classList.add("hidden");
+    }
+
+    function updateProUI() {
+      const isPro = isProUser();
+      document.body.classList.toggle("is-pro-member", isPro);
+
+      const btnUpgrade = $("btn-header-upgrade-pro");
+      const badgePro = $("header-pro-badge");
+      if (btnUpgrade) btnUpgrade.style.display = isPro ? "none" : "inline-flex";
+      if (badgePro) badgePro.style.display = isPro ? "inline-flex" : "none";
+
+      const shopeeWidget = $("shopee-summary-widget");
+      if (shopeeWidget) {
+        shopeeWidget.style.display = isPro ? "none" : "block";
+      }
+
+      // อัปเดตข้อความใน select dropdown
+      const select = $("course-select");
+      if (select) {
+        Array.from(select.options).forEach(opt => {
+          const course = WORKOUT_COURSES[opt.value];
+          if (course && course.isPro) {
+            opt.textContent = isPro ? `👑 ${course.name} (PRO UNLOCKED)` : `🔒 ${course.name} (PRO)`;
+          }
+        });
+      }
+
+      if (typeof renderCoursePreview === "function" && $("course-select")?.value) {
+        renderCoursePreview($("course-select").value);
+      }
+    }
+
+    $("btn-header-upgrade-pro")?.addEventListener("click", () => openPromptPayModal());
+    document.querySelectorAll(".btn-close-promptpay").forEach(btn => {
+      btn.addEventListener("click", closePromptPayModal);
+    });
+
+    $("btn-simulate-pay")?.addEventListener("click", async () => {
+      const btn = $("btn-simulate-pay");
+      const statusMsg = $("promptpay-status-msg");
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = `<span class="spinner" style="width:18px;height:18px;display:inline-block;vertical-align:middle;margin-right:8px;border-width:2px;"></span> กำลังตรวจสอบยอดชำระกับระบบธนาคาร...`;
+      }
+      try {
+        const result = await simulatePromptPayPayment({ plan: "monthly", amount: 99 });
+        triggerConfetti();
+        if (statusMsg) {
+          statusMsg.className = "notice";
+          statusMsg.style.background = "#ecfdf5";
+          statusMsg.style.color = "#059669";
+          statusMsg.style.borderColor = "#10b981";
+          statusMsg.innerHTML = `🎉 <strong>ชำระเงินสำเร็จ!</strong> ปลดล็อก SMART AI FITNESS PRO เรียบร้อย (เลขอ้างอิง: ${result.refCode}) ขอบคุณที่สนับสนุนครับ!`;
+          statusMsg.classList.remove("hidden");
+        }
+        updateProUI();
+        setTimeout(() => {
+          closePromptPayModal();
+        }, 1600);
+      } catch (err) {
+        if (statusMsg) {
+          statusMsg.className = "notice";
+          statusMsg.style.background = "#fef2f2";
+          statusMsg.style.color = "#dc2626";
+          statusMsg.innerHTML = `❌ การตรวจสอบล้มเหลว: ${err.message}`;
+          statusMsg.classList.remove("hidden");
+        }
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = `<span>📲 จำลองการสแกนจ่ายเงินสำเร็จ (Demo Payment)</span>`;
+        }
+      }
+    });
+
+    window.addEventListener("dd_pro_status_changed", () => {
+      updateProUI();
+    });
+
+    updateProUI();
 
     function updateModalBMI() {
       const w = parseFloat($("edit-weight")?.value) || getUserWeight();
@@ -851,6 +1141,41 @@
             openExerciseDemoModal(poseKey);
           });
         });
+      }
+
+      // ตรวจสอบสิทธิ์ PRO และแสดงกล่องแจ้งเตือนหากเป็นคอร์สพิเศษ
+      const previewBox = $("course-preview-box");
+      const isPro = isProUser();
+      let proBanner = $("preview-pro-banner");
+
+      if (course.isPro && !isPro) {
+        if (!proBanner && previewBox) {
+          proBanner = document.createElement("div");
+          proBanner.id = "preview-pro-banner";
+          proBanner.className = "pro-course-locked-banner";
+          proBanner.style.cssText = "margin-top:14px; padding:12px 14px; background:linear-gradient(135deg, rgba(245, 158, 11, 0.12), rgba(217, 119, 6, 0.2)); border:1.5px solid #f59e0b; border-radius:10px; display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;";
+          previewBox.appendChild(proBanner);
+        }
+        if (proBanner) {
+          proBanner.style.display = "flex";
+          proBanner.innerHTML = `
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span style="font-size:1.4rem;">👑</span>
+              <div>
+                <strong style="color:#d97706; font-size:0.92rem; display:block;">คอร์สนี้สำหรับสมาชิก SMART AI FITNESS PRO</strong>
+                <span style="font-size:0.8rem; color:#b45309;">ปลดล็อกทุกคอร์สพิเศษ + AI Voice Coach ภาษาไทย + ปิดโฆษณา 100% เพียง ฿99/ด.</span>
+              </div>
+            </div>
+            <button type="button" class="btn-upgrade-pro" id="btn-banner-unlock-pro" style="padding:6px 14px; font-size:0.82rem; white-space:nowrap;">
+              👑 สแกนปลดล็อก ฿99
+            </button>
+          `;
+          $("btn-banner-unlock-pro")?.addEventListener("click", () => {
+            openPromptPayModal(`ปลดล็อกคอร์สพิเศษ "${course.name}" และฟีเจอร์ PRO ทั้งหมดทันที!`);
+          });
+        }
+      } else if (proBanner) {
+        proBanner.style.display = "none";
       }
     }
 
@@ -1148,6 +1473,11 @@
 
       container.querySelectorAll(".btn-add-pose-chip").forEach(btn => {
         btn.addEventListener("click", () => {
+          const isPro = isProUser();
+          if (!isPro && customRoutineList.length >= 2) {
+            openPromptPayModal(`Sandbox Free เพิ่มท่าในรูทีนได้สูงสุด 2 ท่า (ปัจจุบันมี ${customRoutineList.length} ท่า) สแกนอัปเกรดเป็น SMART AI FITNESS PRO เพื่อผสมท่าฝึกได้ไม่จำกัด!`);
+            return;
+          }
           const poseKey = btn.dataset.pose;
           const def = EXERCISES[poseKey];
           if (!def) return;
@@ -1439,8 +1769,38 @@
       show("s-error");
     }
 
-    // ── เริ่มต้นระบบกล้องและคอร์ส ──
+    // ── เริ่มต้นระบบกล้องและคอร์ส (พร้อมระบบตรวจสอบสิทธิ์สมาชิก PRO) ──
     async function boot() {
+      const isPro = isProUser();
+
+      // ตรวจสอบ Paywall ตามโหมด
+      if (currentWorkoutMode === "sandbox") {
+        if (!isPro) {
+          if (sandboxSubMode === "single" && singleSets > 2) {
+            openPromptPayModal(`Sandbox Free ปรับจำนวนเซ็ตได้สูงสุด 2 เซ็ตต่อท่า (คุณเลือก ${singleSets} เซ็ต) สแกนอัปเกรดเป็น SMART AI FITNESS PRO เพื่อกำหนดเซ็ตและท่าได้ไม่จำกัด!`);
+            return;
+          }
+          if (sandboxSubMode === "multi") {
+            if (customRoutineList.length > 2) {
+              openPromptPayModal(`Sandbox Free ผสมท่าในรูทีนได้สูงสุด 2 ท่า (คุณเลือก ${customRoutineList.length} ท่า) สแกนอัปเกรดเป็น SMART AI FITNESS PRO เพื่อจัดรูทีนผสมท่าได้ไม่จำกัด!`);
+              return;
+            }
+            const hasOverSets = customRoutineList.some(ex => (ex.sets || 1) > 2);
+            if (hasOverSets) {
+              openPromptPayModal(`Sandbox Free ปรับจำนวนเซ็ตได้สูงสุด 2 เซ็ตต่อท่า สแกนอัปเกรดเป็น SMART AI FITNESS PRO เพื่อกำหนดจำนวนเซ็ตได้ไม่จำกัด!`);
+              return;
+            }
+          }
+        }
+      } else {
+        const activeCourseKey = $("course-select")?.value || "beginner_fullbody";
+        const course = WORKOUT_COURSES[activeCourseKey];
+        if (course && course.isPro && !isPro) {
+          openPromptPayModal(`คอร์ส "${course.name}" เป็นสิทธิพิเศษเฉพาะสมาชิก SMART AI FITNESS PRO สแกน PromptPay เพื่อปลดล็อกทันที!`);
+          return;
+        }
+      }
+
       show("s-loading");
       try {
         let activeCourse;
@@ -1705,6 +2065,88 @@
       const m = String(Math.floor(summary.durationSeconds / 60)).padStart(2, "0");
       const s = String(summary.durationSeconds % 60).padStart(2, "0");
       $("res-time").textContent = `${m}:${s}`;
+
+      // 🛍️ Shopee Affiliate Contextual Engine (แสดงเฉพาะสมาชิก Free, ซ่อน 100% สำหรับสมาชิก Pro)
+      const isPro = isProUser();
+      const shopeeWidget = $("shopee-summary-widget");
+      const shopeeGrid = $("shopee-summary-products");
+
+      if (isPro) {
+        if (shopeeWidget) shopeeWidget.style.display = "none";
+      } else if (shopeeWidget && shopeeGrid) {
+        shopeeWidget.style.display = "block";
+        const courseId = summary.courseId || "";
+        const exercises = workout?.course?.exercises || [];
+        const usedPoses = exercises.map(e => e.pose_key || "");
+        const hasUpper = usedPoses.includes("pushups") || usedPoses.includes("bicep_curls") || usedPoses.includes("shoulder_press") || courseId.includes("upper");
+        const hasLegsCardio = usedPoses.includes("squats") || usedPoses.includes("jumping_jacks") || usedPoses.includes("high_knees") || courseId.includes("shredder") || courseId.includes("burn");
+
+        const products = [];
+
+        if (hasUpper) {
+          products.push({
+            name: "บาร์วิดพื้น Push-up Stand เกรดฟิตเนส ป้องกันข้อมือเจ็บ",
+            tag: "ขายดีอันดับ 1 🔥",
+            desc: "ช่วยให้โฟกัสกล้ามอกลึกขึ้น ลดแรงกดทับข้อมือขณะวิดพื้น",
+            price: "฿189",
+            originalPrice: "฿350",
+            icon: "💪",
+            link: "https://shopee.co.th/search?keyword=push%20up%20bar&utm_source=smart_ai_fitness&utm_medium=affiliate"
+          });
+        }
+
+        if (hasLegsCardio || products.length === 0) {
+          products.push({
+            name: "เสื่อโยคะ NBR หนา 10mm ซับแรงกระแทกเข่าและข้อเท้า",
+            tag: "คาร์ดิโอ & ขา 🧘",
+            desc: "เกาะพื้นแน่น กันลื่น ซับแรงกระแทกได้ดีเยี่ยม เหมาะกับกระโดดและสควอท",
+            price: "฿249",
+            originalPrice: "฿490",
+            icon: "🧘",
+            link: "https://shopee.co.th/search?keyword=yoga%20mat%2010mm&utm_source=smart_ai_fitness&utm_medium=affiliate"
+          });
+        }
+
+        products.push({
+          name: "Whey Protein Isolate 100% 2lb + ฟรีแก้วเชคเกอร์",
+          tag: "ซ่อมแซมกล้ามเนื้อ 🥛",
+          desc: "โปรตีน 27g/สกู๊ป ลีนไขมัน ดูดซึมเร็ว ช่วยฟื้นฟูหลังการฝึกหนัก",
+          price: "฿890",
+          originalPrice: "฿1,290",
+          icon: "🥛",
+          link: "https://shopee.co.th/search?keyword=whey%20protein%20isolate&utm_source=smart_ai_fitness&utm_medium=affiliate"
+        });
+
+        products.push({
+          name: "เชือกกระโดด Speed Rope ลูกปืนเหล็ก ปรับความยาวสายได้",
+          tag: "เบิร์นไขมันไว ⚡",
+          desc: "หมุนลื่นพิเศษ ไม่พันกัน เบิร์นแคลอรี่สะใจเพิ่มขึ้น x2",
+          price: "฿99",
+          originalPrice: "฿220",
+          icon: "⚡",
+          link: "https://shopee.co.th/search?keyword=speed%20rope&utm_source=smart_ai_fitness&utm_medium=affiliate"
+        });
+
+        shopeeGrid.innerHTML = products.slice(0, 3).map(p => `
+          <a href="${p.link}" target="_blank" rel="noopener noreferrer" class="shopee-product-card" title="คลิกเพื่อสั่งซื้อผ่าน Shopee">
+            <div class="shopee-product-img">
+              <span style="font-size:2.3rem;">${p.icon}</span>
+            </div>
+            <div style="flex:1;">
+              <span class="meta-tag" style="background:#fff7ed; color:#ea580c; font-size:0.7rem; font-weight:700; margin-bottom:4px; display:inline-block;">${p.tag}</span>
+              <div class="shopee-product-title" style="font-weight:700;">${p.name}</div>
+              <div style="font-size:0.75rem; color:#64748b; margin-top:2px;">${p.desc}</div>
+              <div class="shopee-price-row">
+                <div>
+                  <span class="shopee-price">${p.price}</span>
+                  <span class="shopee-price-original">${p.originalPrice}</span>
+                </div>
+                <span class="shopee-btn">ซื้อบน Shopee ↗</span>
+              </div>
+            </div>
+          </a>
+        `).join("");
+      }
 
       // ปรับเปลี่ยนข้อความและสถานะปุ่มย้อนกลับตามโหมดที่เล่นมา (Sandbox vs Preset Course)
       const btnBack = $("btn-back-to-mode");

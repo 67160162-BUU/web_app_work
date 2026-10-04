@@ -128,6 +128,28 @@ export const EXERCISES = {
     aiTip: "📷 ยืนระยะ 2 เมตร ให้กล้องจับท่อนบนและท่อนล่างได้พร้อมกัน",
     enterScore: 65,
   },
+  pushups: {
+    key: "pushups",
+    name: "Push-ups (วิดพื้น)",
+    icon: "🤸",
+    targetArea: "กล้ามเนื้อหน้าอก, หลังแขน & แกนกลางลำตัว (Chest, Triceps & Core)",
+    equipment: "ไม่ต้องใช้อุปกรณ์ (Bodyweight)",
+    met: 8.0,
+    gif: "assets/demos/pushups.gif",
+    instructions: "นอนคว่ำวางมือยันพื้นกว้างเท่าช่วงไหล่ ลำตัวเป็นเส้นตรง ย่อตัวลงจนศอกทำมุม 90° แล้วออกแรงดันตัวกลับขึ้นมาแขนตึง",
+    steps: [
+      "1. ท่าเตรียม: วางมือยันพื้นกว้างเท่าช่วงไหล่ ลำตัวเหยียดตรง เกร็งหน้าท้องและก้น ไม่ให้สะโพกตกหรือก้นโด่ง",
+      "2. จังหวะย่อ: หายใจเข้า ค่อยๆ พับข้อศอกลดหน้าอกลงเข้าใกล้พื้น จนข้อศอกทำมุมประมาณ 90 องศา",
+      "3. จังหวะดันตัว: หายใจออก ออกแรงดันฝ่ามือส่งลำตัวกลับขึ้นสู่ท่าเริ่มต้นจนแขนเหยียดตึง"
+    ],
+    mistakes: [
+      "⚠️ สะโพกตกหรือหย่อนลงพื้น (ควรเกร็งลำตัวให้เป็นเส้นตรงตั้งแต่หัวถึงส้นเท้า)",
+      "⚠️ ก้นโด่งขึ้นสูงเกินไป (ลดระดับสะโพกให้อยู่ในระนาบเดียวกับแผ่นหลัง)",
+      "⚠️ ย่อตัวลงไม่สุด (พับข้อศอกลงจนอกเกือบแตะพื้นหรือ 90 องศาเพื่อให้ AI นับครั้ง)"
+    ],
+    aiTip: "📷 วางกล้องด้านข้างหรือเฉียง 45 องศา ให้กล้องเห็นแนวไหล่ ข้อศอก สะโพก และขาชัดเจน",
+    enterScore: 70,
+  },
 };
 
 export const WORKOUT_COURSES = {
@@ -187,6 +209,54 @@ export const WORKOUT_COURSES = {
     exercises: [
       { pose_key: "standing_crunches", name: "Standing Cross Crunches", target_reps: 20, sets: 3, rest_seconds: 25, met: 5.5 },
       { pose_key: "high_knees", name: "Sprint High Knees", target_reps: 25, sets: 2, rest_seconds: 20, met: 8.0 },
+    ],
+  },
+  pro_hiit_shredder: {
+    id: "pro_hiit_shredder",
+    name: "Extreme Fat Shredder HIIT",
+    category: "HIIT & Cardio (เบิร์นไขมันขั้นสุด)",
+    difficulty: "Advanced / ระดับโปร",
+    badgeColor: "#ef4444",
+    isPro: true,
+    equipment: "ไม่ต้องใช้อุปกรณ์ (Bodyweight)",
+    description: "คอร์ส HIIT ความเข้มข้นสูง เร่งอัตราเต้นหัวใจสู่ Fat Burning Zone เผาผลาญไขมันต่อเนื่องหลังฝึก (Afterburn Effect)",
+    target_calories_est: 210,
+    exercises: [
+      { pose_key: "high_knees", name: "Sprint High Knees", target_reps: 35, sets: 3, rest_seconds: 15, met: 9.0 },
+      { pose_key: "jumping_jacks", name: "Speed Jumping Jacks", target_reps: 40, sets: 3, rest_seconds: 15, met: 8.5 },
+      { pose_key: "standing_crunches", name: "Explosive Cross Crunches", target_reps: 25, sets: 3, rest_seconds: 30, met: 6.0 },
+    ],
+  },
+  pro_upper_mastery: {
+    id: "pro_upper_mastery",
+    name: "Upper Body & Push-up Mastery",
+    category: "Upper Body & Calisthenics (อก แขน ไหล่)",
+    difficulty: "Advanced / ระดับโปร",
+    badgeColor: "#f59e0b",
+    isPro: true,
+    equipment: "ดัมเบล 1 คู่ & Bodyweight",
+    description: "โปรแกรมพัฒนากล้ามเนื้อท่อนบนเต็มรูปแบบ รวมพลัง Push-ups วิดพื้นตรวจฟอร์มหลังตรง ผสานเวทเทรนนิ่งสร้างกล้ามเนื้อ",
+    target_calories_est: 175,
+    exercises: [
+      { pose_key: "pushups", name: "Strict Form Push-ups", target_reps: 12, sets: 3, rest_seconds: 25, met: 8.0 },
+      { pose_key: "shoulder_press", name: "Overhead Dumbbell Press", target_reps: 12, sets: 3, rest_seconds: 20, met: 5.5 },
+      { pose_key: "bicep_curls", name: "Isometric Bicep Curls", target_reps: 15, sets: 3, rest_seconds: 30, met: 4.5 },
+    ],
+  },
+  pro_office_syndrome: {
+    id: "pro_office_syndrome",
+    name: "Office Syndrome Relief & Posture Fix",
+    category: "Mobility & Posture (แก้ออฟฟิศซินโดรม)",
+    difficulty: "Beginner-Intermediate / บำบัดกล้ามเนื้อ",
+    badgeColor: "#10b981",
+    isPro: true,
+    equipment: "ไม่ต้องใช้อุปกรณ์ (Bodyweight)",
+    description: "ฟื้นฟูกล้ามเนื้อที่ตึงสะสมจากการนั่งทำงานนาน เปิดสะบักหลัง ยืดสะโพก และเสริมความแข็งแรงแกนกลางลำตัว ปรับบุคลิกภาพให้สง่างาม",
+    target_calories_est: 90,
+    exercises: [
+      { pose_key: "squats", name: "Mobility Deep Squats", target_reps: 12, sets: 2, rest_seconds: 20, met: 5.0 },
+      { pose_key: "standing_crunches", name: "Core & Spine Cross Stretch", target_reps: 15, sets: 2, rest_seconds: 20, met: 5.5 },
+      { pose_key: "shoulder_press", name: "Scapular Overhead Reach", target_reps: 12, sets: 2, rest_seconds: 30, met: 4.5 },
     ],
   },
 };
