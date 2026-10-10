@@ -63,10 +63,14 @@ def toggle_user_pro(
     user.is_pro = not bool(user.is_pro)
     if user.is_pro:
         user.pro_expires_at = datetime.utcnow() + timedelta(days=30)
-    else:
-        user.pro_expires_at = None
     db.commit()
-    return {"message": "Pro status updated", "user_id": user_id, "is_pro": user.is_pro}
+    db.refresh(user)
+    return {
+        "message": "Pro status updated",
+        "user_id": user_id,
+        "is_pro": user.is_pro,
+        "pro_expires_at": user.pro_expires_at.strftime("%Y-%m-%d %H:%M:%S") if user.pro_expires_at else None
+    }
 
 @router.put("/users/{user_id}/role")
 def update_user_role(

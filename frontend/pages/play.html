@@ -8,11 +8,18 @@
   <script>
     (function() {
       try {
+        if (window.location.search.indexOf("pro=0") !== -1) return;
         var isProUrl = window.location.search.indexOf("pro=1") !== -1;
-        var isProFlag = localStorage.getItem("dd_is_pro") === "true";
         var sess = JSON.parse(localStorage.getItem("dd_user_session") || "null");
-        var isProSess = sess && sess.user && Boolean(sess.user.is_pro);
-        if (isProUrl || isProFlag || isProSess) {
+        var isPro = false;
+        if (isProUrl) {
+          isPro = true;
+        } else if (sess && sess.user) {
+          isPro = Boolean(sess.user.is_pro);
+        } else {
+          isPro = localStorage.getItem("dd_is_pro") === "true";
+        }
+        if (isPro) {
           document.documentElement.classList.add("is-pro-member");
           if (document.body) {
             document.body.classList.add("is-pro-member");
@@ -1828,8 +1835,19 @@
     $("tab-login")?.addEventListener("click", () => setAuthTab("login"));
     $("tab-register")?.addEventListener("click", () => setAuthTab("register"));
     $("link-goto-register")?.addEventListener("click", () => setAuthTab("register"));
-    $("link-goto-login")?.addEventListener("click", () => setAuthTab("login"));
-    $("btn-logout")?.addEventListener("click", () => { clearSession(); updateAuthUI(); updateBMIUI(); });
+    $("btn-logout")?.addEventListener("click", () => {
+      try {
+        const url = new URL(window.location.href);
+        if (url.searchParams.has("pro")) {
+          url.searchParams.delete("pro");
+          window.history.replaceState({}, "", url.pathname + (url.search ? url.search : ""));
+        }
+      } catch (e) {}
+      clearSession();
+      updateAuthUI();
+      updateBMIUI();
+      updateProUI();
+    });
 
     // Edit Profile Modal
     function openEditProfileModal() {

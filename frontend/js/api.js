@@ -101,6 +101,10 @@ export function clearSession() {
   localStorage.removeItem("dd_current_user");
   localStorage.removeItem("dd_is_pro");
   localStorage.removeItem("dd_pro_expires");
+  if (typeof document !== "undefined") {
+    document.documentElement.classList.remove("is-pro-member");
+    if (document.body) document.body.classList.remove("is-pro-member");
+  }
   if (typeof window !== "undefined") {
     window.dispatchEvent(new CustomEvent("dd_pro_status_changed", {
       detail: { isPro: false, expiresAt: null }
@@ -439,7 +443,7 @@ export async function deleteAdminScore(scoreId) {
 export function isProUser() {
   if (typeof window === "undefined") return false;
 
-  // ตรวจสอบจาก URL Query Parameter เช่น ?pro=1
+  // 1. ตรวจสอบจาก URL Query Parameter ก่อนเสมอ (สำหรับการทดสอบ ?pro=1 หรือ ?pro=0)
   try {
     const params = new URLSearchParams(window.location.search);
     if (params.get("pro") === "1") return true;
@@ -453,21 +457,25 @@ export function isProUser() {
     return !isNaN(expDate.getTime()) && expDate < new Date();
   };
 
-  // 1. ตรวจสอบจาก Session ของ User ที่ล็อกอิน (ข้อมูลอัปเดตจาก Database)
+  // 2. ตรวจสอบจาก Session ของ User ที่ล็อกอิน (ข้อมูลจาก Database คือ Single Source of Truth)
   const session = getSavedSession();
-  if (session && session.user && Boolean(session.user.is_pro)) {
-    const expires = session.user.pro_expires_at || localStorage.getItem("dd_pro_expires");
-    if (checkExpired(expires)) {
-      session.user.is_pro = false;
-      saveSession(session.user, session.token);
-      localStorage.removeItem("dd_is_pro");
-      localStorage.removeItem("dd_pro_expires");
-      return false;
+  if (session && session.user) {
+    if (Boolean(session.user.is_pro)) {
+      const expires = session.user.pro_expires_at || localStorage.getItem("dd_pro_expires");
+      if (checkExpired(expires)) {
+        session.user.is_pro = false;
+        saveSession(session.user, session.token);
+        localStorage.removeItem("dd_is_pro");
+        localStorage.removeItem("dd_pro_expires");
+        return false;
+      }
+      return true;
     }
-    return true;
+    // หากเป็นผู้ใช้ที่ล็อกอินแล้ว และใน DB ระบุว่า is_pro = false ให้ยึดตาม DB ทันที (ห้ามตกไปเช็ค dd_is_pro ตกค้าง)
+    return false;
   }
 
-  // 2. ตรวจสอบจาก LocalStorage Flag (สำหรับโหมดทดสอบหรือผู้ใช้ที่อัปเกรดเป็น PRO)
+  // 3. ตรวจสอบจาก LocalStorage Flag เฉพาะผู้ใช้ทั่วไป / Guest ที่ทดลองเปิดใช้งาน
   if (localStorage.getItem("dd_is_pro") === "true") {
     const expires = localStorage.getItem("dd_pro_expires");
     if (checkExpired(expires)) {
@@ -513,7 +521,18 @@ export async function checkDbProStatus() {
     }
 
     if (freshUser) {
-      const isProDb = Boolean(freshUser.is_pro) || localStorage.getItem("dd_is_pro") === "true";
+      const checkExpired = (expires) => {
+        if (!expires) return false;
+        const cleanExpires = typeof expires === "string" ? expires.replace(" ", "T") : expires;
+        const expDate = new Date(cleanExpires);
+        return !isNaN(expDate.getTime()) && expDate < new Date();
+      };
+
+      let isProDb = Boolean(freshUser.is_pro);
+      if (isProDb && checkExpired(freshUser.pro_expires_at)) {
+        isProDb = false;
+      }
+
       session.user = { ...session.user, ...freshUser, is_pro: isProDb };
       saveSession(session.user, session.token);
       setProStatus(isProDb, freshUser.pro_expires_at || session.user.pro_expires_at);
@@ -539,6 +558,17 @@ export function setProStatus(isPro, expiresAt = null) {
   } else {
     localStorage.removeItem("dd_is_pro");
     localStorage.removeItem("dd_pro_expires");
+  }
+
+  // อัปเดต class ใน DOM ทันที
+  if (typeof document !== "undefined") {
+    if (isPro) {
+      document.documentElement.classList.add("is-pro-member");
+      if (document.body) document.body.classList.add("is-pro-member");
+    } else {
+      document.documentElement.classList.remove("is-pro-member");
+      if (document.body) document.body.classList.remove("is-pro-member");
+    }
   }
 
   // อัปเดตใน session ถ้ามี

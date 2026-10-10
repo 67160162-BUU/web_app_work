@@ -73,7 +73,7 @@
   </div>
 
   <script type="module">
-    import { loginUser, fetchCurrentUser, fetchAdminUsers, updateAdminUserRole, deleteAdminUser, setAuthToken, toggleAdminUserPro } from "../js/api.js";
+    import { loginUser, fetchCurrentUser, fetchAdminUsers, updateAdminUserRole, deleteAdminUser, setAuthToken, toggleAdminUserPro, getSavedSession, saveSession, setProStatus } from "../js/api.js";
 
     const $ = (id) => document.getElementById(id);
 
@@ -141,7 +141,14 @@
             const uid = e.target.dataset.id;
             const currentPro = e.target.dataset.pro === "true";
             if (confirm(`คุณต้องการ ${currentPro ? 'ยกเลิก' : 'เปิดใช้งาน'} สมาชิก PRO ให้ User #${uid} หรือไม่?`)) {
-              await toggleAdminUserPro(uid);
+              const res = await toggleAdminUserPro(uid);
+              const session = getSavedSession();
+              if (session && session.user && String(session.user.id) === String(uid)) {
+                session.user.is_pro = Boolean(res.is_pro);
+                session.user.pro_expires_at = res.pro_expires_at || null;
+                saveSession(session.user, session.token);
+                setProStatus(Boolean(res.is_pro), res.pro_expires_at);
+              }
               loadUsers();
             }
           });
