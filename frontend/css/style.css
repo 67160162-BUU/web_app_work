@@ -66,9 +66,10 @@ body {
 }
 
 .container.container-wide { 
-  max-width: 1560px; 
+  max-width: 1440px; 
   width: 96%;
-  padding: 24px 20px;
+  padding: 24px 16px;
+  margin: 0 auto;
 }
 
 h1 { 
@@ -557,36 +558,24 @@ h1 .accent {
   color: #991b1b; 
 }
 
-/* ═══ Course Catalog Grid (Index Page) ═══ */
+/* ═══ Course Catalog Grid (Responsive: 4 cols -> 3 cols -> 2 cols -> 1 col) ═══ */
 .course-catalog-grid { 
   display: grid; 
   grid-template-columns: repeat(4, 1fr); 
-  gap: 20px; 
-  margin: 20px 0; 
+  gap: 16px; 
+  margin: 16px 0; 
   text-align: left; 
-}
-
-@media (max-width: 1140px) {
-  .course-catalog-grid { 
-    grid-template-columns: repeat(2, 1fr); 
-  }
-}
-
-@media (max-width: 640px) {
-  .course-catalog-grid { 
-    grid-template-columns: 1fr; 
-  }
 }
 
 .course-card { 
   background: var(--card); 
   border: 1px solid var(--card-border); 
   border-radius: 20px; 
-  padding: 22px; 
+  padding: 20px 18px; 
   display: flex; 
   flex-direction: column; 
   justify-content: space-between; 
-  gap: 16px; 
+  gap: 14px; 
   box-shadow: var(--card-shadow); 
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
   height: 100%;
@@ -598,6 +587,91 @@ h1 .accent {
 }
 .course-card .btn {
   margin-top: auto;
+}
+
+/* ═══ Sandbox Card Styling ═══ */
+.course-card-sandbox {
+  grid-column: span 1;
+  border: 2px solid #f59e0b !important;
+  background: linear-gradient(135deg, #fffbeb 0%, #ffffff 100%) !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.course-card-sandbox:hover {
+  border-color: #d97706 !important;
+  box-shadow: 0 16px 35px -5px rgba(245, 158, 11, 0.2) !important;
+}
+
+/* ═══ Responsive Logic:
+   - 4 Columns: Sandbox spans 1 col (8 cards = 2 full rows of 4)
+   - 3 Columns: Sandbox spans 2 cols (7 single + 1 double = 9 slots = 3 full rows of 3)
+   - 2 Columns: Sandbox spans 1 col (8 cards = 4 full rows of 2)
+   - 1 Column: Sandbox spans 1 col (mobile stacked)
+═══ */
+
+/* Fallback Media Queries */
+@media (max-width: 1380px) and (min-width: 681px) {
+  .course-catalog-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .course-card-sandbox {
+    grid-column: span 2;
+  }
+}
+
+@media (max-width: 680px) and (min-width: 480px) {
+  .course-catalog-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  .course-card-sandbox {
+    grid-column: span 1 !important;
+  }
+}
+
+@media (max-width: 479px) {
+  .course-catalog-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .course-card-sandbox {
+    grid-column: span 1 !important;
+  }
+}
+
+/* Container Queries for Main Column (Real layout-aware responsive rules) */
+@container maincol (min-width: 1000px) {
+  .course-catalog-grid {
+    grid-template-columns: repeat(4, 1fr) !important;
+  }
+  .course-card-sandbox {
+    grid-column: span 1 !important;
+  }
+}
+
+@container maincol (min-width: 680px) and (max-width: 999px) {
+  .course-catalog-grid {
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
+  .course-card-sandbox {
+    grid-column: span 2 !important;
+  }
+}
+
+@container maincol (min-width: 480px) and (max-width: 679px) {
+  .course-catalog-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  .course-card-sandbox {
+    grid-column: span 1 !important;
+  }
+}
+
+@container maincol (max-width: 479px) {
+  .course-catalog-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .course-card-sandbox {
+    grid-column: span 1 !important;
+  }
 }
 
 /* ═══ Shadow Loading / Skeleton Placeholder for Course Catalog ═══ */
@@ -1393,27 +1467,52 @@ h1 .accent {
 
 @media (max-width: 680px) {
   .container {
-    padding: 16px 12px !important;
+    padding: 14px 10px !important;
     gap: 14px !important;
     max-width: 100% !important;
+    box-sizing: border-box !important;
+    overflow-x: hidden !important;
   }
   .container.container-wide {
     width: 100% !important;
-    padding: 14px 10px !important;
+    padding: 12px 10px !important;
+    box-sizing: border-box !important;
+  }
+  .header-top-bar {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 10px !important;
+  }
+  .header-actions-group {
+    width: 100% !important;
+    display: flex !important;
+    flex-wrap: wrap !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: 8px !important;
+  }
+  .header-actions-group .btn {
+    font-size: 0.82rem !important;
+    padding: 6px 12px !important;
   }
   h1 {
-    font-size: 1.6rem !important;
-    word-break: break-word !important;
+    font-size: 1.45rem !important;
+    overflow-wrap: break-word !important;
+    word-break: normal !important;
+    line-height: 1.25 !important;
   }
   .tagline {
-    font-size: 0.88rem !important;
+    font-size: 0.85rem !important;
     line-height: 1.45 !important;
     margin-bottom: 8px !important;
+    overflow-wrap: break-word !important;
+    word-break: normal !important;
   }
   h2 {
     font-size: 1.15rem !important;
     line-height: 1.35 !important;
-    word-break: break-word !important;
+    overflow-wrap: break-word !important;
+    word-break: normal !important;
   }
   .section-header-row {
     flex-direction: column !important;
@@ -1437,21 +1536,28 @@ h1 .accent {
     width: 100% !important;
     box-sizing: border-box !important;
   }
+  .course-card-sandbox {
+    grid-column: span 1 !important;
+  }
   .course-card-title {
     font-size: 1.15rem !important;
     margin: 4px 0 2px !important;
+    overflow-wrap: break-word !important;
+    word-break: normal !important;
   }
   .course-card-desc {
     font-size: 0.82rem !important;
     line-height: 1.4 !important;
+    overflow-wrap: break-word !important;
+    word-break: normal !important;
   }
   .meta-tag {
     font-size: 0.72rem !important;
     padding: 3px 8px !important;
   }
   .btn {
-    padding: 10px 16px !important;
-    font-size: 0.92rem !important;
+    padding: 8px 14px !important;
+    font-size: 0.88rem !important;
     border-radius: 12px !important;
   }
   #index-leaderboards-grid {
@@ -1462,7 +1568,8 @@ h1 .accent {
   .board th, .board td {
     padding: 8px 6px !important;
     font-size: 0.82rem !important;
-    word-break: break-word !important;
+    overflow-wrap: break-word !important;
+    word-break: normal !important;
   }
   .hud {
     padding: 6px 10px !important;
@@ -1473,6 +1580,7 @@ h1 .accent {
     padding: 3px 8px !important;
   }
 }
+
 
 /* ═══════════════════════════════════════════════════════════════════
    👑 SMART AI FITNESS PRO & PROMPTPAY SCAN-TO-PAY STYLES
@@ -1712,15 +1820,15 @@ h1 .accent {
 
 .shopee-products-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-  gap: 10px;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
   margin-top: 10px;
 }
 
 .shopee-product-card {
   background: #ffffff;
   border: 1px solid #ffedd5;
-  border-radius: 10px;
+  border-radius: 12px;
   padding: 10px;
   display: flex;
   flex-direction: column;
@@ -1728,25 +1836,41 @@ h1 .accent {
   transition: transform 0.2s, box-shadow 0.2s;
   text-decoration: none;
   color: inherit;
+  overflow: hidden;
 }
 
 .shopee-product-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(238, 77, 45, 0.15);
+  box-shadow: 0 6px 16px rgba(238, 77, 45, 0.15);
   border-color: #fdba74;
 }
 
 .shopee-product-img {
   width: 100%;
-  height: 80px;
-  object-fit: cover;
-  border-radius: 6px;
-  background: #f1f5f9;
-  margin-bottom: 6px;
+  height: 230px;
+  border-radius: 12px;
+  background: #ffffff;
+  margin-bottom: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 2rem;
+  overflow: hidden;
+  border: 1px solid #f1f5f9;
+  padding: 12px;
+  box-sizing: border-box;
+}
+
+.shopee-product-img img {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain !important;
+  transition: transform 0.25s ease;
+}
+
+.shopee-product-card:hover .shopee-product-img img {
+  transform: scale(1.05);
 }
 
 .shopee-product-title {
@@ -1764,7 +1888,7 @@ h1 .accent {
 .shopee-price-row {
   display: flex;
   align-items: baseline;
-  gap: 4px;
+  gap: 6px;
   margin-top: 4px;
 }
 
@@ -1775,25 +1899,327 @@ h1 .accent {
 }
 
 .shopee-price-original {
-  font-size: 0.7rem;
+  font-size: 0.72rem;
   color: #94a3b8;
   text-decoration: line-through;
 }
 
 .shopee-btn {
-  background: #ee4d2d;
+  background: linear-gradient(135deg, #ee4d2d 0%, #ff5722 100%);
   color: #ffffff;
   font-size: 0.74rem;
   font-weight: 700;
-  padding: 4px 8px;
+  padding: 5px 8px;
   border-radius: 6px;
   text-align: center;
   margin-top: 6px;
   display: block;
+  box-shadow: 0 2px 6px rgba(238, 77, 45, 0.2);
 }
 
-/* Hidden for Pro Users */
-body.is-pro-member .shopee-affiliate-section,
+/* ═══════════════════════════════════════════════════════════════════
+   🎯 SIDEBAR ADS LAYOUT (ย่อหน้าให้เล็กลง + โฆษณาข้างๆ + รูปจริง)
+   ═══════════════════════════════════════════════════════════════════ */
+
+.index-layout-row {
+  display: flex;
+  gap: 22px;
+  align-items: flex-start;
+  width: 100%;
+  max-width: 100%;
+  margin-top: 14px;
+  text-align: left;
+  box-sizing: border-box;
+}
+
+.index-main-column {
+  container-type: inline-size;
+  container-name: maincol;
+  flex: 1 1 0%;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  box-sizing: border-box;
+}
+
+.index-sidebar-ads {
+  width: 310px;
+  flex-shrink: 0;
+  position: sticky;
+  top: 16px;
+}
+
+.shopee-sidebar-widget {
+  background: #ffffff;
+  border: 1.5px solid #fed7aa;
+  border-radius: 18px;
+  padding: 16px;
+  box-shadow: 0 6px 20px rgba(238, 77, 45, 0.08);
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.shopee-sidebar-header {
+  border-bottom: 1px solid #ffedd5;
+  padding-bottom: 10px;
+}
+
+.shopee-sponsor-badge {
+  font-size: 0.68rem;
+  color: #94a3b8;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.shopee-sidebar-title {
+  font-size: 1rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 6px 0 2px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.shopee-sidebar-subtitle {
+  font-size: 0.74rem;
+  color: #64748b;
+  line-height: 1.35;
+}
+
+.shopee-sidebar-products {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.shopee-sidebar-card {
+  display: flex;
+  gap: 10px;
+  background: #fffaf5;
+  border: 1px solid #ffedd5;
+  border-radius: 12px;
+  padding: 10px;
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.shopee-sidebar-card:hover {
+  transform: translateY(-2px);
+  background: #ffffff;
+  border-color: #fdba74;
+  box-shadow: 0 6px 18px rgba(238, 77, 45, 0.15);
+}
+
+.shopee-card-img-wrap {
+  width: 82px;
+  height: 82px;
+  border-radius: 10px;
+  background: #ffffff;
+  flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid #f1f5f9;
+}
+
+.shopee-real-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.3s ease;
+}
+
+.shopee-sidebar-card:hover .shopee-real-img {
+  transform: scale(1.08);
+}
+
+.shopee-badge-sale {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  background: #ef4444;
+  color: #ffffff;
+  font-size: 0.62rem;
+  font-weight: 800;
+  padding: 1px 4px;
+  border-radius: 4px;
+}
+
+.shopee-card-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.shopee-mini-tag {
+  font-size: 0.68rem;
+  color: #ea580c;
+  font-weight: 700;
+  margin-bottom: 2px;
+}
+
+.shopee-card-title {
+  font-size: 0.77rem;
+  font-weight: 700;
+  color: #1e293b;
+  line-height: 1.25;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.shopee-card-rating {
+  font-size: 0.68rem;
+  color: #64748b;
+  margin: 2px 0;
+}
+
+.shopee-pro-upsell {
+  padding: 12px;
+  background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+  border: 1px dashed #f59e0b;
+  border-radius: 12px;
+  text-align: center;
+}
+
+@media (max-width: 1080px) {
+  .index-layout-row {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    gap: 20px !important;
+  }
+  .index-main-column {
+    width: 100% !important;
+    max-width: 100% !important;
+    flex: 1 1 100% !important;
+    box-sizing: border-box !important;
+  }
+  .index-sidebar-ads {
+    width: 100% !important;
+    max-width: 100% !important;
+    position: static !important;
+  }
+  .shopee-sidebar-products {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)) !important;
+    gap: 10px !important;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   👑 PRO MEMBER SUPPRESSION (ซ่อนปุ่มและกล่องอัปเกรดทั้งหมดเมื่อเป็น PRO)
+   ═══════════════════════════════════════════════════════════════════ */
+html.is-pro-member .btn-upgrade-pro,
+html.is-pro-member #btn-header-upgrade-pro,
+html.is-pro-member #btn-sidebar-upgrade-pro,
+html.is-pro-member .btn-pro-paywall,
+html.is-pro-member .shopee-pro-upsell,
+html.is-pro-member #shopee-sidebar-upsell-box,
+html.is-pro-member #btn-banner-unlock-pro,
+body.is-pro-member .btn-upgrade-pro,
+body.is-pro-member #btn-header-upgrade-pro,
+body.is-pro-member #btn-sidebar-upgrade-pro,
+body.is-pro-member .btn-pro-paywall,
+body.is-pro-member .shopee-pro-upsell,
+body.is-pro-member #shopee-sidebar-upsell-box,
+body.is-pro-member #btn-banner-unlock-pro,
 body.is-pro-member .shopee-hide-for-pro {
+  display: none !important;
+}
+
+html.is-pro-member #header-pro-badge,
+body.is-pro-member #header-pro-badge {
+  display: inline-flex !important;
+}
+
+/* Ensure sidebar advertisement and product recommendations remain visible */
+.index-sidebar-ads {
+  display: block !important;
+}
+.shopee-sidebar-widget {
+  display: flex !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   👑 PRO MEMBER ADAPTIVE LAYOUT (หน้าหลัก: คอร์สเต็มจอ + ย้ายสินค้าไปล่างสุด)
+   ═══════════════════════════════════════════════════════════════════ */
+body.is-pro-member .index-layout-row {
+  flex-direction: column !important;
+  align-items: stretch !important;
+  gap: 28px !important;
+}
+
+body.is-pro-member .index-main-column {
+  width: 100% !important;
+  max-width: 100% !important;
+  flex: 1 1 100% !important;
+}
+
+body.is-pro-member .index-sidebar-ads {
+  width: 100% !important;
+  max-width: 100% !important;
+  position: static !important;
+  order: 99 !important;
+  margin-top: 14px !important;
+}
+
+body.is-pro-member .shopee-sidebar-widget {
+  background: #ffffff !important;
+  border: 1.5px solid #fed7aa !important;
+  border-radius: 18px !important;
+  padding: 20px 24px !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04) !important;
+}
+
+body.is-pro-member .shopee-sidebar-products {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)) !important;
+  gap: 14px !important;
+}
+
+body.is-pro-member .shopee-sidebar-card {
+  flex-direction: column !important;
+  background: #f8fafc !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 12px !important;
+  padding: 12px !important;
+}
+
+body.is-pro-member .shopee-sidebar-card:hover {
+  background: #ffffff !important;
+  border-color: #fdba74 !important;
+  box-shadow: 0 6px 18px rgba(238, 77, 45, 0.12) !important;
+}
+
+body.is-pro-member .shopee-card-img-wrap {
+  width: 100% !important;
+  height: 140px !important;
+  margin-bottom: 6px !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   👑 PRO MEMBER PLAY PAGE AD-FREE (หน้าฝึกซ้อม: ไร้โฆษณา 100%)
+   ═══════════════════════════════════════════════════════════════════ */
+body.is-pro-member #play-free-ad-banner,
+body.is-pro-member #play-active-ad-banner,
+body.is-pro-member #shopee-summary-widget,
+html.is-pro-member #play-free-ad-banner,
+html.is-pro-member #play-active-ad-banner,
+html.is-pro-member #shopee-summary-widget {
   display: none !important;
 }

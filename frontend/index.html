@@ -5,18 +5,36 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SMART AI FITNESS — On-Device AI Workout Coach & Routine Tracker</title>
   <link rel="stylesheet" href="css/style.css" />
+  <script>
+    (function() {
+      try {
+        var isProUrl = window.location.search.indexOf("pro=1") !== -1;
+        var isProFlag = localStorage.getItem("dd_is_pro") === "true";
+        var sess = JSON.parse(localStorage.getItem("dd_user_session") || "null");
+        var isProSess = sess && sess.user && Boolean(sess.user.is_pro);
+        if (isProUrl || isProFlag || isProSess) {
+          document.documentElement.classList.add("is-pro-member");
+          if (document.body) {
+            document.body.classList.add("is-pro-member");
+          } else {
+            document.addEventListener("DOMContentLoaded", function() {
+              document.body.classList.add("is-pro-member");
+            });
+          }
+        }
+      } catch(e) {}
+    })();
+  </script>
 </head>
 <body>
   <div class="container container-wide">
     <!-- Top Header & Session Bar -->
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:12px;">
+    <div class="header-top-bar" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:12px;">
       <h1 style="font-size:2.2rem; margin:0; text-align:left;">SMART AI <span class="accent">FITNESS</span></h1>
       
-      <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+      <div class="header-actions-group" style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
         <button class="btn btn-upgrade-pro" id="btn-header-upgrade-pro" style="padding:6px 14px; font-size:0.85rem;" title="อัปเกรดเป็น SMART AI FITNESS PRO">👑 อัปเกรดเป็น PRO (99.-)</button>
         <span id="header-pro-badge" class="badge-pro hidden" style="font-size:0.85rem; padding:4px 10px;">👑 PRO MEMBER</span>
-        <a href="pages/architecture.html" class="btn btn-secondary" style="padding:6px 12px; font-size:0.85rem; text-decoration:none;">🏛️ Architecture & Tech Stack</a>
-        <a href="pages/presentation.html" class="btn btn-secondary" style="padding:6px 12px; font-size:0.85rem; text-decoration:none;">📑 สไลด์นำเสนอ</a>
         <div id="user-session-bar">
           <div id="session-logged-out">
             <button class="btn btn-secondary" id="btn-show-login" style="padding:6px 14px; font-size:0.85rem;">🔑 เข้าสู่ระบบ / สมัครสมาชิก</button>
@@ -37,9 +55,12 @@
       ออกกำลังกายตามแผนการฝึกที่บ้านด้วย AI วิเคราะห์ฟอร์ม นับครั้ง นับเซ็ต มีเวลาพัก และคำนวณแคลอรี่แบบ Real-time ผ่านกล้องเว็บแคม
     </p>
 
-    <!-- แนะนำคอร์สออกกำลังกาย (Workout Routine Catalog) -->
-    <div style="margin-top: 24px; text-align: left;">
-      <div class="section-header-row" style="margin-bottom:12px;">
+    <!-- ═══ Main App 2-Column Layout (Content + Side Ads) ═══ -->
+    <div class="index-layout-row">
+      <main class="index-main-column">
+        <!-- แนะนำคอร์สออกกำลังกาย (Workout Routine Catalog) -->
+        <div style="text-align: left;">
+          <div class="section-header-row" style="margin-bottom:12px;">
         <div>
           <h2 style="font-size:1.4rem; color:var(--text); margin:0;">แผนการฝึกออกกำลังกายยอดนิยม</h2>
           <span style="font-size:0.88rem; color:var(--muted);">เลือกคอร์สที่ต้องการแล้วเปิดกล้องเริ่มฝึกได้ทันที</span>
@@ -143,31 +164,7 @@
           </a>
         </div>
 
-        <!-- 5. Sandbox Workout Studio Card -->
-        <div class="course-card" style="border: 2px solid #f59e0b; background: linear-gradient(135deg, #fffbeb 0%, #ffffff 100%);">
-          <div>
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-              <span class="course-card-badge" style="background:rgba(245, 158, 11, 0.2); color:#b45309; border:1px solid #f59e0b;">
-                🛠️ Sandbox & Custom
-              </span>
-              <span style="font-size:0.85rem; font-weight:700; color:#b45309;">🔥 ปรับแต่งเอง 100%</span>
-            </div>
-            <h3 class="course-card-title" style="color:#b45309;">โหมด Sandbox (จัดท่าเอง / เลือกเป็นท่าๆ)</h3>
-            <p class="course-card-desc">
-              เลือกฝึกเฉพาะท่าที่ต้องการเดี่ยวๆ หรือจัดโปรแกรมออกกำลังกายผสมหลายท่า กำหนดจำนวน Reps, Sets และเวลาพักได้เองอิสระ
-            </p>
-            <div class="course-meta-tags">
-              <span class="meta-tag" style="background:#fef3c7; color:#92400e;">🎯 ซ้อมเฉพาะท่าเดี่ยว</span>
-              <span class="meta-tag" style="background:#fef3c7; color:#92400e;">⚙️ กำหนด Reps/Sets เอง</span>
-              <span class="meta-tag" style="background:#fef3c7; color:#92400e;">⏱️ ปรับเวลาพักได้</span>
-            </div>
-          </div>
-          <a class="btn btn-primary" href="pages/play.html?mode=sandbox" style="width:100%; text-align:center; padding:10px; background:linear-gradient(135deg, #f59e0b, #d97706); border-color:#f59e0b; color:#ffffff;">
-            🛠️ ออกแบบการฝึกใน Sandbox
-          </a>
-        </div>
-
-        <!-- 6. PRO Course 1: Extreme Fat Shredder HIIT -->
+        <!-- 5. PRO Course 1: Extreme Fat Shredder HIIT -->
         <div class="course-card course-pro-card" style="border: 2px solid #ef4444; background: linear-gradient(135deg, #fef2f2 0%, #ffffff 100%);">
           <div>
             <div style="display:flex; justify-content:space-between; align-items:center;">
@@ -244,79 +241,174 @@
             </button>
           </div>
         </div>
+
+        <!-- 8. Sandbox Workout Studio Card (ล่างสุดในกลุ่ม Course - Responsive: 1 col on 4-cols, 2 cols on 3-cols) -->
+        <div class="course-card course-card-sandbox">
+          <div>
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <span class="course-card-badge" style="background:rgba(245, 158, 11, 0.2); color:#b45309; border:1px solid #f59e0b;">
+                🛠️ Sandbox & Custom Studio
+              </span>
+              <span style="font-size:0.85rem; font-weight:700; color:#b45309;">🔥 ปรับแต่งเองอิสระ 100%</span>
+            </div>
+            <h3 class="course-card-title" style="color:#b45309; font-size:1.25rem; margin-top:8px;">โหมด Sandbox (จัดโปรแกรมฝึกเอง / ซ้อมเฉพาะท่าเดี่ยว)</h3>
+            <p class="course-card-desc" style="font-size:0.9rem; line-height:1.55;">
+              เลือกฝึกเฉพาะท่าที่ต้องการเดี่ยวๆ หรือจัดโปรแกรมออกกำลังกายผสมหลายท่าเข้าด้วยกัน กำหนดจำนวนครั้ง (Reps), จำนวนเซ็ต (Sets) และเวลาพักได้เองอิสระ พร้อมระบบ AI ตรวจจับฟอร์มแบบเรียลไทม์
+            </p>
+            <div class="course-meta-tags" style="margin-top:12px;">
+              <span class="meta-tag" style="background:#fef3c7; color:#92400e;">🎯 ซ้อมเฉพาะท่าเดี่ยว</span>
+              <span class="meta-tag" style="background:#fef3c7; color:#92400e;">⚙️ กำหนด Reps & Sets เอง</span>
+              <span class="meta-tag" style="background:#fef3c7; color:#92400e;">⏱️ ปรับระยะเวลาพักได้</span>
+              <span class="meta-tag" style="background:#fef3c7; color:#92400e;">📊 บันทึกสถิติ Real-time</span>
+            </div>
+          </div>
+          <a class="btn btn-primary" href="pages/play.html?mode=sandbox" style="width:100%; text-align:center; padding:12px; font-weight:700; background:linear-gradient(135deg, #f59e0b, #d97706); border-color:#f59e0b; color:#ffffff; box-shadow:0 4px 14px rgba(245, 158, 11, 0.25);">
+            🛠️ เปิดโหมด Sandbox ออกแบบการฝึก →
+          </a>
+        </div>
       </div>
     </div>
 
-    <!-- กระดานอันดับผู้นำบนหน้า Index -->
-    <div style="margin-top: 28px; text-align: left;">
-      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:14px;">
-        <div>
-          <h2 style="font-size:1.35rem; margin:0; display:flex; align-items:center; gap:8px;">
-            🏆 กระดานผู้นำ <span class="accent">Top 5</span> การออกกำลังกาย
-          </h2>
-          <span style="font-size:0.86rem; color:var(--muted);">คลิกที่กระดานใดก็ได้เพื่อเปิดดูกระดานผู้นำแบบเต็ม (Leaderboard)</span>
+        <!-- กระดานอันดับผู้นำบนหน้า Index (ขนาดพอดีคอลัมน์) -->
+        <div style="margin-top: 14px; text-align: left;">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:12px;">
+            <div>
+              <h2 style="font-size:1.35rem; margin:0; display:flex; align-items:center; gap:8px;">
+                🏆 กระดานผู้นำ <span class="accent">Top 5</span> การออกกำลังกาย
+              </h2>
+              <span style="font-size:0.86rem; color:var(--muted);">สถิติผู้นำประจำสัปดาห์ (ดูสถิติแยกท่าทั้งหมดได้ในหน้ากระดานผู้นำ)</span>
+            </div>
+            <a href="pages/leaderboard.html" class="view-all-link" style="text-decoration:none; font-size:0.9rem; font-weight:700;">
+              ดูอันดับทั้งหมดทุกท่า →
+            </a>
+          </div>
+          
+          <div id="index-leaderboards-grid" style="width: 100%;">
+            <div class="card"><div class="spinner"></div></div>
+          </div>
         </div>
-        <a href="pages/leaderboard.html" class="view-all-link" style="text-decoration:none; font-size:0.9rem; font-weight:700;">
-          ดูอันดับทั้งหมดทุกท่า →
-        </a>
-      </div>
-      
-      <div id="index-leaderboards-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px;">
-        <div class="card"><div class="spinner"></div></div>
-      </div>
-    </div>
+      </main>
 
-    <!-- 🛍️ Shopee Affiliate Recommendation Banner (สำหรับ Free Tier - ซ่อนอัตโนมัติสำหรับสมาชิก Pro) -->
-    <div class="shopee-affiliate-section" id="index-shopee-banner">
-      <div class="shopee-header-row">
-        <div style="display:flex; align-items:center; gap:8px;">
-          <span class="shopee-tag">Shopee Partner</span>
-          <strong style="font-size:0.95rem; color:#1e293b;">🛍️ อุปกรณ์ฟิตเนสยอดนิยม & โภชนาการกีฬาแนะนำ</strong>
+      <!-- 🛍️ Shopee Affiliate Sidebar (สำหรับ Free Tier - ซ่อนอัตโนมัติสำหรับสมาชิก Pro) -->
+      <aside class="index-sidebar-ads" id="index-shopee-banner">
+        <div class="shopee-sidebar-widget">
+          <!-- Sidebar Header -->
+          <div class="shopee-sidebar-header">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+              <span class="shopee-tag">Shopee Partner</span>
+              <span class="shopee-sponsor-badge" id="shopee-tag-sponsor">Sponsored</span>
+            </div>
+            <div class="shopee-sidebar-title" id="shopee-banner-title">🛍️ อุปกรณ์ฟิตเนสแนะนำ</div>
+            <div class="shopee-sidebar-subtitle" id="shopee-banner-subtitle">ของแท้ 100% คัดสรรเพื่อการฝึกที่บ้าน สั่งซื้อพร้อมรับส่วนลดพิเศษ</div>
+          </div>
+
+          <!-- Products List with Real Photography (ไม่ใช่ Emoji) -->
+          <div class="shopee-sidebar-products">
+            <!-- 1. บาร์วิดพื้น Push-up Bars -->
+            <a href="https://shopee.co.th/search?keyword=push%20up%20bar" target="_blank" rel="noopener noreferrer" class="shopee-sidebar-card">
+              <div class="shopee-card-img-wrap">
+                <img src="assets/products/pushup_bars.jpg" alt="บาร์วิดพื้น Push-up Bars" class="shopee-real-img" loading="lazy" />
+                <span class="shopee-badge-sale">-45%</span>
+              </div>
+              <div class="shopee-card-info">
+                <span class="shopee-mini-tag">🔥 ยอดนิยมอันดับ 1</span>
+                <div class="shopee-card-title">บาร์วิดพื้น Push-up Bars ฐานเหล็ก ถนอมข้อมือ</div>
+                <div class="shopee-card-rating">⭐ 4.9 (1.2k+ ชิ้น)</div>
+                <div class="shopee-price-row">
+                  <span class="shopee-price">฿159</span>
+                  <span class="shopee-price-original">฿290</span>
+                </div>
+                <span class="shopee-btn">สั่งซื้อบน Shopee ↗</span>
+              </div>
+            </a>
+
+            <!-- 2. ดัมเบลหกเหลี่ยม -->
+            <a href="https://shopee.co.th/search?keyword=dumbbells" target="_blank" rel="noopener noreferrer" class="shopee-sidebar-card">
+              <div class="shopee-card-img-wrap">
+                <img src="assets/products/dumbbells.jpg" alt="ดัมเบลหกเหลี่ยม ยางเคลือบกันกลิ้ง" class="shopee-real-img" loading="lazy" />
+                <span class="shopee-badge-sale">-44%</span>
+              </div>
+              <div class="shopee-card-info">
+                <span class="shopee-mini-tag">💪 แขน & ไหล่</span>
+                <div class="shopee-card-title">ดัมเบลหกเหลี่ยม ยางเคลือบกันกลิ้ง Upper Body</div>
+                <div class="shopee-card-rating">⭐ 4.9 (850+ ชิ้น)</div>
+                <div class="shopee-price-row">
+                  <span class="shopee-price">฿249</span>
+                  <span class="shopee-price-original">฿450</span>
+                </div>
+                <span class="shopee-btn">สั่งซื้อบน Shopee ↗</span>
+              </div>
+            </a>
+
+            <!-- 3. เสื่อโยคะ TPE -->
+            <a href="https://shopee.co.th/search?keyword=yoga%20mat%20tpe" target="_blank" rel="noopener noreferrer" class="shopee-sidebar-card">
+              <div class="shopee-card-img-wrap">
+                <img src="assets/products/yoga_mat.jpg" alt="เสื่อโยคะ TPE กันลื่นหนา 8mm" class="shopee-real-img" loading="lazy" />
+                <span class="shopee-badge-sale">-49%</span>
+              </div>
+              <div class="shopee-card-info">
+                <span class="shopee-mini-tag">🧘 กันลื่น ซับเข่า</span>
+                <div class="shopee-card-title">เสื่อโยคะ TPE หนา 8mm ซับแรงกระแทกข้อเข่า</div>
+                <div class="shopee-card-rating">⭐ 4.8 (2.1k+ ชิ้น)</div>
+                <div class="shopee-price-row">
+                  <span class="shopee-price">฿299</span>
+                  <span class="shopee-price-original">฿590</span>
+                </div>
+                <span class="shopee-btn">สั่งซื้อบน Shopee ↗</span>
+              </div>
+            </a>
+
+            <!-- 4. เวย์โปรตีน Isolate -->
+            <a href="https://shopee.co.th/search?keyword=whey%20protein%20isolate" target="_blank" rel="noopener noreferrer" class="shopee-sidebar-card">
+              <div class="shopee-card-img-wrap">
+                <img src="assets/products/whey_protein.jpg" alt="เวย์โปรตีน Isolate 100%" class="shopee-real-img" loading="lazy" />
+                <span class="shopee-badge-sale">-34%</span>
+              </div>
+              <div class="shopee-card-info">
+                <span class="shopee-mini-tag">🥛 ฟื้นฟูกล้ามเนื้อ</span>
+                <div class="shopee-card-title">เวย์โปรตีน Isolate 100% ซ่อมแซมกล้ามเนื้อ</div>
+                <div class="shopee-card-rating">⭐ 5.0 (3.4k+ ชิ้น)</div>
+                <div class="shopee-price-row">
+                  <span class="shopee-price">฿890</span>
+                  <span class="shopee-price-original">฿1,350</span>
+                </div>
+                <span class="shopee-btn">สั่งซื้อบน Shopee ↗</span>
+              </div>
+            </a>
+
+            <!-- 5. เชือกกระโดด Speed Rope -->
+            <a href="https://shopee.co.th/search?keyword=speed%20rope" target="_blank" rel="noopener noreferrer" class="shopee-sidebar-card">
+              <div class="shopee-card-img-wrap">
+                <img src="assets/products/speed_rope.jpg" alt="เชือกกระโดด Speed Rope ลูกปืนเหล็ก" class="shopee-real-img" loading="lazy" />
+                <span class="shopee-badge-sale">-55%</span>
+              </div>
+              <div class="shopee-card-info">
+                <span class="shopee-mini-tag">⚡ เบิร์นไขมันไว</span>
+                <div class="shopee-card-title">เชือกกระโดด Speed Rope ลูกปืนเหล็ก ปรับสายได้</div>
+                <div class="shopee-card-rating">⭐ 4.9 (4.8k+ ชิ้น)</div>
+                <div class="shopee-price-row">
+                  <span class="shopee-price">฿99</span>
+                  <span class="shopee-price-original">฿220</span>
+                </div>
+                <span class="shopee-btn">สั่งซื้อบน Shopee ↗</span>
+              </div>
+            </a>
+          </div>
+
+          <!-- PRO Upsell Footer Card -->
+          <div class="shopee-pro-upsell" id="shopee-sidebar-upsell-box">
+            <div style="font-size:0.85rem; font-weight:700; color:#1e293b; margin-bottom:4px;">
+              👑 สมาชิก PRO ปิดโฆษณา 100%
+            </div>
+            <p style="font-size:0.75rem; color:var(--muted); margin-bottom:8px; line-height:1.4;">
+              อัปเกรดเป็น PRO เพียง 99.- ใช้งานแบบไร้โฆษณากวนใจ พร้อมปลดล็อกคอร์สพิเศษ & AI Voice Coach
+            </p>
+            <button type="button" class="btn btn-upgrade-pro" id="btn-sidebar-upgrade-pro" style="width:100%; padding:6px 10px; font-size:0.8rem; justify-content:center;">
+              👑 อัปเกรดเป็น PRO (99.-)
+            </button>
+          </div>
         </div>
-        <span style="font-size:0.75rem; color:var(--muted);">รับส่วนลดและโค้ดส่งฟรีพิเศษสำหรับผู้ใช้ SMART AI FITNESS</span>
-      </div>
-
-      <div class="shopee-products-grid">
-        <a href="https://shopee.co.th/search?keyword=push%20up%20bar" target="_blank" rel="noopener noreferrer" class="shopee-product-card">
-          <div class="shopee-product-img">🤸</div>
-          <div class="shopee-product-title">บาร์วิดพื้น Push-up Bars ฐานเหล็กแข็งแรง ถนอมข้อมือ</div>
-          <div class="shopee-price-row">
-            <span class="shopee-price">฿159</span>
-            <span class="shopee-price-original">฿290</span>
-          </div>
-          <span class="shopee-btn">สั่งซื้อบน Shopee ↗</span>
-        </a>
-
-        <a href="https://shopee.co.th/search?keyword=dumbbells" target="_blank" rel="noopener noreferrer" class="shopee-product-card">
-          <div class="shopee-product-img">💪</div>
-          <div class="shopee-product-title">ดัมเบลหกเหลี่ยม ยางเคลือบกันกลิ้ง สำหรับ Upper Body</div>
-          <div class="shopee-price-row">
-            <span class="shopee-price">฿249</span>
-            <span class="shopee-price-original">฿450</span>
-          </div>
-          <span class="shopee-btn">สั่งซื้อบน Shopee ↗</span>
-        </a>
-
-        <a href="https://shopee.co.th/search?keyword=yoga%20mat%20tpe" target="_blank" rel="noopener noreferrer" class="shopee-product-card">
-          <div class="shopee-product-img">🧘</div>
-          <div class="shopee-product-title">เสื่อโยคะ TPE กันลื่นหนา 8mm ซับแรงกระแทกข้อเข่า</div>
-          <div class="shopee-price-row">
-            <span class="shopee-price">฿299</span>
-            <span class="shopee-price-original">฿590</span>
-          </div>
-          <span class="shopee-btn">สั่งซื้อบน Shopee ↗</span>
-        </a>
-
-        <a href="https://shopee.co.th/search?keyword=whey%20protein%20isolate" target="_blank" rel="noopener noreferrer" class="shopee-product-card">
-          <div class="shopee-product-img">🥛</div>
-          <div class="shopee-product-title">เวย์โปรตีน Isolate ซ่อมแซมกล้ามเนื้อหลังออกกำลังกาย</div>
-          <div class="shopee-price-row">
-            <span class="shopee-price">฿890</span>
-            <span class="shopee-price-original">฿1,350</span>
-          </div>
-          <span class="shopee-btn">สั่งซื้อบน Shopee ↗</span>
-        </a>
-      </div>
+      </aside>
     </div>
   </div>
 
@@ -536,7 +628,7 @@
 
   <script type="module">
     import { preloadModel } from "./js/pose.js";
-    import { fetchLeaderboards, loginUser, registerUser, updateUserProfile, getSavedSession, saveSession, clearSession, isProUser, simulatePromptPayPayment } from "./js/api.js";
+    import { fetchLeaderboards, loginUser, registerUser, updateUserProfile, getSavedSession, saveSession, clearSession, isProUser, checkDbProStatus, simulatePromptPayPayment } from "./js/api.js";
     import { getUserWeight, setUserWeight, getUserHeight, setUserHeight, calculateBMI } from "./js/calories.js";
 
     const $ = (id) => document.getElementById(id);
@@ -602,8 +694,11 @@
     $("tab-login")?.addEventListener("click", () => setAuthTab("login"));
     $("tab-register")?.addEventListener("click", () => setAuthTab("register"));
     $("link-goto-register")?.addEventListener("click", () => setAuthTab("register"));
-    $("link-goto-login")?.addEventListener("click", () => setAuthTab("login"));
-    $("btn-logout")?.addEventListener("click", () => { clearSession(); updateAuthUI(); });
+    $("btn-logout")?.addEventListener("click", () => { 
+      clearSession(); 
+      updateAuthUI(); 
+      updateProUI();
+    });
 
     // Edit Profile Modal
     $("btn-edit-profile")?.addEventListener("click", () => {
@@ -655,7 +750,9 @@
       $("btn-submit-login").disabled = true;
       try {
         await loginUser(uname, pass);
+        await checkDbProStatus();
         updateAuthUI();
+        updateProUI();
         $("modal-login")?.classList.add("hidden");
         $("form-login")?.reset();
       } catch (err) {
@@ -678,7 +775,9 @@
       $("btn-submit-register").disabled = true;
       try {
         await registerUser(uName.toLowerCase().replace(/\s+/g, ""), pass, dName, email, weight, height);
+        await checkDbProStatus();
         updateAuthUI();
+        updateProUI();
         $("modal-login")?.classList.add("hidden");
         $("form-register")?.reset();
       } catch (err) {
@@ -771,6 +870,7 @@
     }
 
     $("btn-header-upgrade-pro")?.addEventListener("click", () => openPromptPayModal());
+    $("btn-sidebar-upgrade-pro")?.addEventListener("click", () => openPromptPayModal());
     document.querySelectorAll(".btn-close-promptpay").forEach(btn => {
       btn.addEventListener("click", closePromptPayModal);
     });
@@ -815,22 +915,55 @@
     function updateProUI() {
       const isPro = isProUser();
       const body = document.body;
+      const docEl = document.documentElement;
       const upgradeBtn = $("btn-header-upgrade-pro");
       const proBadge = $("header-pro-badge");
       const shopeeBanner = $("index-shopee-banner");
+      const sidebarPerk = $("shopee-sidebar-upsell-box");
+      const bannerTitle = $("shopee-banner-title");
+      const bannerSubtitle = $("shopee-banner-subtitle");
+      const tagSponsor = $("shopee-tag-sponsor");
+
+      if (shopeeBanner) {
+        shopeeBanner.classList.remove("hidden");
+        shopeeBanner.style.display = "block";
+      }
 
       if (isPro) {
         body.classList.add("is-pro-member");
-        if (upgradeBtn) upgradeBtn.classList.add("hidden");
-        if (proBadge) proBadge.classList.remove("hidden");
-        if (shopeeBanner) shopeeBanner.classList.add("hidden");
+        docEl.classList.add("is-pro-member");
+        if (upgradeBtn) {
+          upgradeBtn.classList.add("hidden");
+          upgradeBtn.style.display = "none";
+        }
+        if (proBadge) {
+          proBadge.classList.remove("hidden");
+          proBadge.style.display = "inline-flex";
+        }
 
-        // ปลดล็อกปุ่มสำหรับคอร์ส Pro ทั้ง 3 คอร์ส
+        // 🛍️ จัดหน้าสำหรับ PRO: สินค้าย้ายไปอยู่ล่างสุดของหน้าหลัก พร้อมสิทธิพิเศษ
+        if (bannerTitle) {
+          bannerTitle.innerHTML = "🛍️ ร้านค้าอุปกรณ์ฟิตเนส Shopee Mall (สำหรับสมาชิก PRO)";
+        }
+        if (bannerSubtitle) {
+          bannerSubtitle.textContent = "ของแท้ 100% สิทธิพิเศษส่วนลดอุปกรณ์ฝึกซ้อมสำหรับสมาชิก PRO ช้อปสะดวกพร้อมส่งตรงถึงบ้าน";
+        }
+        if (tagSponsor) {
+          tagSponsor.innerHTML = `<span style="background:rgba(16,185,129,0.15); color:#059669; padding:2px 8px; border-radius:999px; font-weight:700; font-size:0.7rem;">PRO EXCLUSIVE DEALS</span>`;
+        }
+
+        // ซ่อนกล่องและปุ่มเชิญชวนให้อัปเกรดทั้งหมด
+        if (sidebarPerk) {
+          sidebarPerk.classList.add("hidden");
+          sidebarPerk.style.display = "none";
+        }
+
+        // ปลดล็อกปุ่มสำหรับคอร์ส Pro ทั้งหมด
         document.querySelectorAll(".course-action-container").forEach(el => {
           const cKey = el.dataset.course;
           if (cKey && cKey.startsWith("pro_")) {
             el.innerHTML = `
-              <a class="btn btn-primary" href="pages/play.html?course=${cKey}" style="width:100%; text-align:center; padding:10px; background:linear-gradient(135deg, #10b981, #059669); border-color:#10b981;">
+              <a class="btn btn-primary" href="pages/play.html?course=${cKey}" style="width:100%; text-align:center; padding:10px; background:linear-gradient(135deg, #10b981, #059669); border-color:#10b981; text-decoration:none; display:inline-flex; align-items:center; justify-content:center;">
                 เริ่มคอร์สนี้
               </a>
             `;
@@ -838,9 +971,48 @@
         });
       } else {
         body.classList.remove("is-pro-member");
-        if (upgradeBtn) upgradeBtn.classList.remove("hidden");
-        if (proBadge) proBadge.classList.add("hidden");
-        if (shopeeBanner) shopeeBanner.classList.remove("hidden");
+        docEl.classList.remove("is-pro-member");
+        if (upgradeBtn) {
+          upgradeBtn.classList.remove("hidden");
+          upgradeBtn.style.display = "";
+        }
+        if (proBadge) {
+          proBadge.classList.add("hidden");
+          proBadge.style.display = "none";
+        }
+
+        // 🛍️ จัดหน้าสำหรับ FREE: โฆษณาปกติแถบข้าง (Sidebar)
+        if (bannerTitle) {
+          bannerTitle.innerHTML = "🛍️ อุปกรณ์ฟิตเนสแนะนำ";
+        }
+        if (bannerSubtitle) {
+          bannerSubtitle.textContent = "ของแท้ 100% คัดสรรเพื่อการฝึกที่บ้าน สั่งซื้อพร้อมรับส่วนลดพิเศษ";
+        }
+        if (tagSponsor) {
+          tagSponsor.textContent = "Sponsored";
+        }
+
+        // ผู้ใช้ Free แสดงกล่องและปุ่มให้อัปเกรด
+        if (sidebarPerk) {
+          sidebarPerk.classList.remove("hidden");
+          sidebarPerk.style.display = "block";
+          sidebarPerk.innerHTML = `
+            <div style="font-size:0.85rem; font-weight:700; color:#1e293b; margin-bottom:4px;">
+              👑 สมาชิก PRO ปิดโฆษณาระหว่างเล่น 100%
+            </div>
+            <p style="font-size:0.75rem; color:var(--muted); margin-bottom:8px; line-height:1.4;">
+              อัปเกรดเป็น PRO เพียง 99.- เล่นแบบไร้โฆษณาระหว่างฝึก พร้อมปลดล็อกคอร์สพิเศษ & AI Voice Coach
+            </p>
+            <button type="button" class="btn btn-upgrade-pro" id="btn-sidebar-upgrade-pro" style="width:100%; padding:6px 10px; font-size:0.8rem; justify-content:center;">
+              👑 อัปเกรดเป็น PRO (99.-)
+            </button>
+          `;
+          sidebarPerk.style.background = "linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%)";
+          sidebarPerk.style.borderColor = "#f59e0b";
+          $("btn-sidebar-upgrade-pro")?.addEventListener("click", () => {
+            openPromptPayModal("all_access");
+          });
+        }
 
         // ล็อกคอร์ส Pro สำหรับผู้ใช้ Free
         document.querySelectorAll(".course-action-container").forEach(el => {
@@ -863,63 +1035,34 @@
 
     updateAuthUI();
     updateProUI();
+    // ตรวจสอบสถานะ is_pro แบบสดๆ จาก Database
+    checkDbProStatus().then(() => {
+      updateAuthUI();
+      updateProUI();
+    });
     preloadModel().catch(() => {});
 
-    // เติมการ์ด Shadow Loading ให้แถวคอร์สออกกำลังกายเต็มแถวละ 4 การ์ดเสมอ
-    function ensureFullRowCourseSkeletons() {
-      const catalog = document.getElementById("course-catalog");
-      if (!catalog) return;
-      catalog.querySelectorAll(".course-card-skeleton").forEach(el => el.remove());
-      const realCards = catalog.querySelectorAll(".course-card:not(.course-card-skeleton)");
-      const remainder = realCards.length % 4;
-      if (remainder !== 0) {
-        const needed = 4 - remainder;
-        for (let i = 0; i < needed; i++) {
-          const skel = document.createElement("div");
-          skel.className = "course-card course-card-skeleton";
-          skel.setAttribute("aria-hidden", "true");
-          skel.innerHTML = `
-            <div>
-              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-                <span class="course-card-skeleton-badge">✨ เร็วๆ นี้</span>
-                <div class="skeleton-box" style="width: 58px; height: 16px; border-radius: 6px;"></div>
-              </div>
-              <div class="skeleton-box" style="width: 78%; height: 22px; border-radius: 6px; margin-bottom: 12px;"></div>
-              <div class="skeleton-box" style="width: 100%; height: 13px; border-radius: 4px; margin-bottom: 8px;"></div>
-              <div class="skeleton-box" style="width: 90%; height: 13px; border-radius: 4px; margin-bottom: 8px;"></div>
-              <div class="skeleton-box" style="width: 65%; height: 13px; border-radius: 4px; margin-bottom: 16px;"></div>
-              <div style="display:flex; gap:6px; flex-wrap:wrap;">
-                <div class="skeleton-box" style="width: 75px; height: 20px; border-radius: 6px;"></div>
-                <div class="skeleton-box" style="width: 68px; height: 20px; border-radius: 6px;"></div>
-              </div>
-            </div>
-            <div style="margin-top:auto;">
-              <div class="skeleton-box skeleton-btn" style="width: 100%; height: 38px; border-radius: 12px;"></div>
-            </div>
-          `;
-          catalog.appendChild(skel);
-        }
-      }
-    }
-    ensureFullRowCourseSkeletons();
-
-    // Render Top Leaderboard Tables
+    // Render Top Leaderboard Table (Fitting Column)
     const grid = document.getElementById("index-leaderboards-grid");
 
     function renderTable(list, type = "score") {
       if (!list || list.length === 0) {
-        return `<p class="notice" style="font-size:0.85rem; padding: 8px 0;">ยังไม่มีสถิติ — มาร่วมฝึกคนแรกเลย! 💪</p>`;
+        return `<p class="notice" style="font-size:0.85rem; padding: 12px 0; text-align:center;">ยังไม่มีสถิติในหมวดนี้ — มาร่วมฝึกคนแรกเลย! 💪</p>`;
       }
-      return `<table class="board" style="font-size:0.9rem;">
-        <tr><th>#</th><th>ชื่อผู้ออกกำลังกาย</th><th style="text-align:right">${type === "score" ? "คะแนน" : "ครั้ง"}</th></tr>
+      return `<table class="board" style="font-size:0.9rem; width:100%;">
+        <tr>
+          <th style="width:50px;">#</th>
+          <th>ชื่อผู้ออกกำลังกาย</th>
+          <th style="text-align:right;">${type === "score" ? "คะแนนสะสม" : "จำนวนครั้ง"}</th>
+        </tr>
         ${list.slice(0, 5).map((s, i) => {
           const isAthletePro = i < 2 || (s.nickname || "").toLowerCase().includes("pro") || (s.nickname || "").includes("โค้ช") || (s.nickname || "").includes("แชมป์");
           const proBadgeTag = isAthletePro ? `<span class="badge-pro" style="font-size:0.65rem; padding:1px 5px; margin-left:4px;">👑 PRO</span>` : '';
           return `
           <tr>
-            <td>${["🥇","🥈","🥉"][i] ?? (i + 1)}</td>
+            <td style="font-weight:700;">${["🥇","🥈","🥉"][i] ?? (i + 1)}</td>
             <td><strong>${s.nickname}</strong>${proBadgeTag}</td>
-            <td style="text-align:right; font-weight:700; color:var(--accent)">
+            <td style="text-align:right; font-weight:700; color:var(--accent);">
               ${type === "score" ? Number(s.score).toFixed(0) : `${s.count ?? 0} ครั้ง`}
             </td>
           </tr>`;
@@ -930,46 +1073,87 @@
     try {
       const data = await fetchLeaderboards(5);
       grid.innerHTML = `
-        <div class="card leaderboard-preview-card" onclick="window.location.href='pages/leaderboard.html'" style="text-align:left;" title="คลิกเพื่อดูอันดับทั้งหมด">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-            <h4 style="margin:0; color:var(--accent); font-size:1.05rem; display:flex; align-items:center; gap:6px;">
-              <span>🏆</span> คะแนนรวมสูงสุด
-            </h4>
-            <span class="view-all-link">ดูทั้งหมด →</span>
+        <div class="card leaderboard-preview-card" style="width: 100%; text-align: left; padding: 18px 22px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
+            <div>
+              <h4 style="margin:0; color:var(--accent); font-size:1.1rem; display:flex; align-items:center; gap:6px;">
+                <span>🏆</span> กระดานผู้นำคะแนนรวมสูงสุด (Overall Top 5)
+              </h4>
+              <span style="font-size:0.8rem; color:var(--muted);">สถิติรวมคะแนนความถูกต้องของฟอร์มและแคลอรี่ที่ทำได้</span>
+            </div>
+            <a href="pages/leaderboard.html" class="view-all-link" style="font-size:0.88rem; font-weight:700;">
+              ดูกระดานเต็มทุกท่า →
+            </a>
           </div>
-          ${renderTable(data.overall, "score")}
-        </div>
 
-        <div class="card leaderboard-preview-card" onclick="window.location.href='pages/leaderboard.html'" style="text-align:left;" title="คลิกเพื่อดูอันดับทั้งหมด">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-            <h4 style="margin:0; color:var(--accent2); font-size:1.05rem; display:flex; align-items:center; gap:6px;">
-              <span>🦵</span> Bodyweight Squats
-            </h4>
-            <span class="view-all-link">ดูทั้งหมด →</span>
+          <!-- Quick Exercise Tabs within the column card -->
+          <div style="display:flex; gap:8px; margin-bottom:12px; flex-wrap:wrap;" id="leaderboard-tab-buttons">
+            <button type="button" class="btn btn-secondary active-lb-tab" data-tab="overall" style="padding:4px 12px; font-size:0.8rem; background:var(--accent-light); color:var(--accent); border-color:var(--accent); font-weight:700;">
+              🏆 คะแนนรวม
+            </button>
+            <button type="button" class="btn btn-secondary" data-tab="pushups" style="padding:4px 12px; font-size:0.8rem;">
+              🤸 Push-ups
+            </button>
+            <button type="button" class="btn btn-secondary" data-tab="squats" style="padding:4px 12px; font-size:0.8rem;">
+              🦵 Squats
+            </button>
+            <button type="button" class="btn btn-secondary" data-tab="jumping_jacks" style="padding:4px 12px; font-size:0.8rem;">
+              ⭐ Jumping Jacks
+            </button>
+            <button type="button" class="btn btn-secondary" data-tab="high_knees" style="padding:4px 12px; font-size:0.8rem;">
+              🏃 High Knees
+            </button>
           </div>
-          ${renderTable(data.squats || data.dab, "count")}
-        </div>
 
-        <div class="card leaderboard-preview-card" onclick="window.location.href='pages/leaderboard.html'" style="text-align:left;" title="คลิกเพื่อดูอันดับทั้งหมด">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-            <h4 style="margin:0; color:#a78bfa; font-size:1.05rem; display:flex; align-items:center; gap:6px;">
-              <span>⭐</span> Jumping Jacks
-            </h4>
-            <span class="view-all-link">ดูทั้งหมด →</span>
+          <!-- Table Container -->
+          <div id="index-leaderboard-table-container">
+            ${renderTable(data.overall, "score")}
           </div>
-          ${renderTable(data.jumping_jacks, "count")}
-        </div>
 
-        <div class="card leaderboard-preview-card" onclick="window.location.href='pages/leaderboard.html'" style="text-align:left;" title="คลิกเพื่อดูอันดับทั้งหมด">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-            <h4 style="margin:0; color:#f472b6; font-size:1.05rem; display:flex; align-items:center; gap:6px;">
-              <span>🏃</span> High Knees
-            </h4>
-            <span class="view-all-link">ดูทั้งหมด →</span>
+          <!-- Footer note with full leaderboard link -->
+          <div style="margin-top:14px; padding-top:12px; border-top:1px solid #f1f5f9; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+            <span style="font-size:0.8rem; color:var(--muted);">
+              💡 ต้องการดูอันดับแยกทุกท่าและ 10 อันดับแรกทั้งหมด?
+            </span>
+            <a href="pages/leaderboard.html" class="btn btn-secondary" style="padding:6px 14px; font-size:0.82rem; font-weight:700; text-decoration:none; border-color:var(--accent2); color:var(--accent2);">
+              📊 ดูอันดับทั้งหมดทุกท่า →
+            </a>
           </div>
-          ${renderTable(data.high_knees, "count")}
         </div>
       `;
+
+      // Quick tab switching logic
+      const tabBtns = grid.querySelectorAll("#leaderboard-tab-buttons button");
+      const tableContainer = document.getElementById("index-leaderboard-table-container");
+      tabBtns.forEach(btn => {
+        btn.addEventListener("click", () => {
+          tabBtns.forEach(b => {
+            b.classList.remove("active-lb-tab");
+            b.style.background = "";
+            b.style.color = "";
+            b.style.borderColor = "";
+            b.style.fontWeight = "";
+          });
+          btn.classList.add("active-lb-tab");
+          btn.style.background = "var(--accent-light)";
+          btn.style.color = "var(--accent)";
+          btn.style.borderColor = "var(--accent)";
+          btn.style.fontWeight = "700";
+
+          const tabKey = btn.dataset.tab;
+          if (tabKey === "overall") {
+            tableContainer.innerHTML = renderTable(data.overall, "score");
+          } else if (tabKey === "pushups") {
+            tableContainer.innerHTML = renderTable(data.pushups, "count");
+          } else if (tabKey === "squats") {
+            tableContainer.innerHTML = renderTable(data.squats || data.dab, "count");
+          } else if (tabKey === "jumping_jacks") {
+            tableContainer.innerHTML = renderTable(data.jumping_jacks, "count");
+          } else if (tabKey === "high_knees") {
+            tableContainer.innerHTML = renderTable(data.high_knees, "count");
+          }
+        });
+      });
     } catch {
       grid.innerHTML = `<div class="card"><p class="notice">โหลดกระดานอันดับไม่สำเร็จ</p></div>`;
     }

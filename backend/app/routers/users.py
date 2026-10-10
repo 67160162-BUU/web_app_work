@@ -110,6 +110,8 @@ def get_user_by_id(
         "is_guest": user.is_guest,
         "weight": getattr(user, 'weight', 65.0),
         "height": getattr(user, 'height', 170.0),
+        "is_pro": bool(user.is_pro),
+        "pro_expires_at": user.pro_expires_at.strftime("%Y-%m-%d %H:%M:%S") if getattr(user, 'pro_expires_at', None) else None,
         "created_at": user.created_at.strftime("%Y-%m-%d %H:%M:%S") if user.created_at else ""
     }
 
@@ -170,7 +172,9 @@ def update_user(
             "role": str(user.role.value if hasattr(user.role, 'value') else user.role),
             "is_guest": user.is_guest,
             "weight": user.weight,
-            "height": user.height
+            "height": user.height,
+            "is_pro": bool(user.is_pro),
+            "pro_expires_at": user.pro_expires_at.strftime("%Y-%m-%d %H:%M:%S") if getattr(user, 'pro_expires_at', None) else None
         }
     }
 

@@ -5,6 +5,26 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ฝึกซ้อม — SMART AI FITNESS</title>
   <link rel="stylesheet" href="../css/style.css" />
+  <script>
+    (function() {
+      try {
+        var isProUrl = window.location.search.indexOf("pro=1") !== -1;
+        var isProFlag = localStorage.getItem("dd_is_pro") === "true";
+        var sess = JSON.parse(localStorage.getItem("dd_user_session") || "null");
+        var isProSess = sess && sess.user && Boolean(sess.user.is_pro);
+        if (isProUrl || isProFlag || isProSess) {
+          document.documentElement.classList.add("is-pro-member");
+          if (document.body) {
+            document.body.classList.add("is-pro-member");
+          } else {
+            document.addEventListener("DOMContentLoaded", function() {
+              document.body.classList.add("is-pro-member");
+            });
+          }
+        }
+      } catch(e) {}
+    })();
+  </script>
 </head>
 <body>
   <div class="container container-wide">
@@ -262,6 +282,65 @@
         </div>
       </div>
 
+      <!-- 🛍️ Free Tier Equipment Recommendations (แสดงเฉพาะผู้ใช้ Free, สมาชิก PRO ปิด 100%) -->
+      <div id="play-free-ad-banner" class="shopee-affiliate-section" style="margin-bottom:18px; text-align:left;">
+        <div class="shopee-header-row">
+          <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+            <span class="shopee-tag">Shopee Partner</span>
+            <span class="shopee-sponsor-badge">Sponsored</span>
+            <strong style="font-size:0.86rem; color:#1e293b; margin-left:4px;">🛍️ อุปกรณ์แนะนำสำหรับโปรแกรมฝึกซ้อมวันนี้:</strong>
+          </div>
+          <span style="font-size:0.75rem; color:#f59e0b; font-weight:700;">👑 สมาชิก PRO ไร้โฆษณา 100%</span>
+        </div>
+        <div class="shopee-products-grid" id="play-free-products-grid">
+          <a href="https://shopee.co.th/search?keyword=push%20up%20bar" target="_blank" rel="noopener noreferrer" class="shopee-product-card" title="คลิกเพื่อสั่งซื้อผ่าน Shopee">
+            <div class="shopee-product-img" style="height:230px; background:#ffffff; padding:12px; display:flex; align-items:center; justify-content:center; border-radius:12px; border:1px solid #f1f5f9; box-sizing:border-box;">
+              <img src="../assets/products/pushup_bars.jpg" alt="บาร์วิดพื้น Push-up Bars" style="max-width:100%; max-height:100%; width:auto; height:auto; object-fit:contain; display:block;" />
+            </div>
+            <div class="shopee-product-info">
+              <div class="shopee-product-title" style="font-weight:700; font-size:0.88rem;">บาร์วิดพื้น Push-up Bars ฐานเหล็ก ถนอมข้อมือ</div>
+              <div class="shopee-price-row">
+                <div>
+                  <span class="shopee-price" style="font-size:1.05rem;">฿159</span>
+                  <span class="shopee-price-original">฿290</span>
+                </div>
+                <span class="shopee-btn" style="padding:6px 12px; font-size:0.8rem;">ซื้อบน Shopee ↗</span>
+              </div>
+            </div>
+          </a>
+          <a href="https://shopee.co.th/search?keyword=dumbbells" target="_blank" rel="noopener noreferrer" class="shopee-product-card" title="คลิกเพื่อสั่งซื้อผ่าน Shopee">
+            <div class="shopee-product-img" style="height:230px; background:#ffffff; padding:12px; display:flex; align-items:center; justify-content:center; border-radius:12px; border:1px solid #f1f5f9; box-sizing:border-box;">
+              <img src="../assets/products/dumbbells.jpg" alt="ดัมเบลหกเหลี่ยม ยางเคลือบกันกลิ้ง" style="max-width:100%; max-height:100%; width:auto; height:auto; object-fit:contain; display:block;" />
+            </div>
+            <div class="shopee-product-info">
+              <div class="shopee-product-title" style="font-weight:700; font-size:0.88rem;">ดัมเบลหกเหลี่ยม ยางเคลือบกันกลิ้ง Upper Body</div>
+              <div class="shopee-price-row">
+                <div>
+                  <span class="shopee-price" style="font-size:1.05rem;">฿249</span>
+                  <span class="shopee-price-original">฿450</span>
+                </div>
+                <span class="shopee-btn" style="padding:6px 12px; font-size:0.8rem;">ซื้อบน Shopee ↗</span>
+              </div>
+            </div>
+          </a>
+          <a href="https://shopee.co.th/search?keyword=yoga%20mat%20tpe" target="_blank" rel="noopener noreferrer" class="shopee-product-card" title="คลิกเพื่อสั่งซื้อผ่าน Shopee">
+            <div class="shopee-product-img" style="height:230px; background:#ffffff; padding:12px; display:flex; align-items:center; justify-content:center; border-radius:12px; border:1px solid #f1f5f9; box-sizing:border-box;">
+              <img src="../assets/products/yoga_mat.jpg" alt="เสื่อโยคะ TPE กันลื่นหนา 8mm" style="max-width:100%; max-height:100%; width:auto; height:auto; object-fit:contain; display:block;" />
+            </div>
+            <div class="shopee-product-info">
+              <div class="shopee-product-title" style="font-weight:700; font-size:0.88rem;">เสื่อโยคะ TPE หนา 8mm ซับแรงกระแทกข้อเข่า</div>
+              <div class="shopee-price-row">
+                <div>
+                  <span class="shopee-price" style="font-size:1.05rem;">฿299</span>
+                  <span class="shopee-price-original">฿590</span>
+                </div>
+                <span class="shopee-btn" style="padding:6px 12px; font-size:0.8rem;">ซื้อบน Shopee ↗</span>
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+
       <p class="notice" id="mobile-hint" style="display:none">
         📱 วางมือถือพิงสิ่งของ แล้วถอยห่างประมาณ 2 เมตร เพื่อให้กล้องจับได้เต็มตัว
       </p>
@@ -362,6 +441,71 @@
             <!-- Real-time Form Feedback Toast -->
             <div id="form-feedback-toast" class="form-feedback-pill hidden">
               ย่อตัวลงไปอีก!
+            </div>
+          </div>
+
+          <!-- 🛍️ โฆษณา Shopee Partner ใต้จอกล้อง (แสดงเฉพาะผู้ใช้ Free, สมาชิก PRO ซ่อน 100%) -->
+          <div id="play-active-ad-banner" class="shopee-affiliate-section" style="margin-top:2px; text-align:left; background:#fffaf5; border:1.5px solid #fed7aa; border-radius:18px; padding:12px 16px; box-shadow:0 4px 16px rgba(238,77,45,0.06);">
+            <div class="shopee-header-row" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; flex-wrap:wrap; gap:8px;">
+              <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                <span class="shopee-tag" style="background:#ee4d2d; color:#ffffff; font-size:0.75rem; font-weight:800; padding:2px 7px; border-radius:6px;">Shopee Partner</span>
+                <span class="shopee-sponsor-badge" style="font-size:0.68rem; color:#94a3b8; font-weight:700;">SPONSORED</span>
+                <strong style="font-size:0.86rem; color:#1e293b; margin-left:4px;">🛍️ อุปกรณ์แนะนำสำหรับโปรแกรมฝึกซ้อมวันนี้:</strong>
+              </div>
+              <span style="font-size:0.75rem; color:#f59e0b; font-weight:700;">👑 สมาชิก PRO ไร้โฆษณา 100%</span>
+            </div>
+
+            <div class="shopee-products-grid" id="play-active-products-grid" style="display:grid; grid-template-columns:repeat(3, 1fr); gap:12px;">
+              <a href="https://shopee.co.th/search?keyword=push%20up%20bar" target="_blank" rel="noopener noreferrer" class="shopee-product-card" style="background:#ffffff; border:1px solid #ffedd5; border-radius:12px; padding:10px; display:flex; flex-direction:column; justify-content:space-between; text-decoration:none; color:inherit; transition:transform 0.2s, box-shadow 0.2s;" title="คลิกเพื่อสั่งซื้อผ่าน Shopee">
+                <div class="shopee-product-img" style="height:150px; background:#ffffff; padding:8px; display:flex; align-items:center; justify-content:center; border-radius:10px; border:1px solid #f1f5f9; box-sizing:border-box; margin-bottom:8px;">
+                  <img src="../assets/products/pushup_bars.jpg" alt="บาร์วิดพื้น Push-up Bars" style="max-width:100%; max-height:100%; width:auto; height:auto; object-fit:contain; display:block;" />
+                </div>
+                <div class="shopee-product-info">
+                  <span style="font-size:0.68rem; color:#ea580c; font-weight:700; display:block; margin-bottom:2px;">🔥 ถนอมข้อมือ</span>
+                  <div class="shopee-product-title" style="font-weight:700; font-size:0.82rem; line-height:1.3; margin-bottom:4px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">บาร์วิดพื้น Push-up Bars ฐานเหล็ก</div>
+                  <div class="shopee-price-row" style="display:flex; align-items:baseline; justify-content:space-between; margin-top:2px;">
+                    <div>
+                      <span class="shopee-price" style="font-size:0.98rem; font-weight:800; color:#ee4d2d;">฿159</span>
+                      <span class="shopee-price-original" style="font-size:0.72rem; color:#94a3b8; text-decoration:line-through; margin-left:4px;">฿290</span>
+                    </div>
+                    <span class="shopee-btn" style="background:linear-gradient(135deg, #ee4d2d 0%, #ff5722 100%); color:#ffffff; font-size:0.72rem; font-weight:700; padding:4px 8px; border-radius:6px; text-align:center;">ซื้อ ↗</span>
+                  </div>
+                </div>
+              </a>
+
+              <a href="https://shopee.co.th/search?keyword=dumbbells" target="_blank" rel="noopener noreferrer" class="shopee-product-card" style="background:#ffffff; border:1px solid #ffedd5; border-radius:12px; padding:10px; display:flex; flex-direction:column; justify-content:space-between; text-decoration:none; color:inherit; transition:transform 0.2s, box-shadow 0.2s;" title="คลิกเพื่อสั่งซื้อผ่าน Shopee">
+                <div class="shopee-product-img" style="height:150px; background:#ffffff; padding:8px; display:flex; align-items:center; justify-content:center; border-radius:10px; border:1px solid #f1f5f9; box-sizing:border-box; margin-bottom:8px;">
+                  <img src="../assets/products/dumbbells.jpg" alt="ดัมเบลหกเหลี่ยม ยางเคลือบกันกลิ้ง" style="max-width:100%; max-height:100%; width:auto; height:auto; object-fit:contain; display:block;" />
+                </div>
+                <div class="shopee-product-info">
+                  <span style="font-size:0.68rem; color:#ea580c; font-weight:700; display:block; margin-bottom:2px;">⭐ ยอดนิยม</span>
+                  <div class="shopee-product-title" style="font-weight:700; font-size:0.82rem; line-height:1.3; margin-bottom:4px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">ดัมเบลหกเหลี่ยม ยางเคลือบกันกลิ้ง</div>
+                  <div class="shopee-price-row" style="display:flex; align-items:baseline; justify-content:space-between; margin-top:2px;">
+                    <div>
+                      <span class="shopee-price" style="font-size:0.98rem; font-weight:800; color:#ee4d2d;">฿249</span>
+                      <span class="shopee-price-original" style="font-size:0.72rem; color:#94a3b8; text-decoration:line-through; margin-left:4px;">฿450</span>
+                    </div>
+                    <span class="shopee-btn" style="background:linear-gradient(135deg, #ee4d2d 0%, #ff5722 100%); color:#ffffff; font-size:0.72rem; font-weight:700; padding:4px 8px; border-radius:6px; text-align:center;">ซื้อ ↗</span>
+                  </div>
+                </div>
+              </a>
+
+              <a href="https://shopee.co.th/search?keyword=yoga%20mat%20tpe" target="_blank" rel="noopener noreferrer" class="shopee-product-card" style="background:#ffffff; border:1px solid #ffedd5; border-radius:12px; padding:10px; display:flex; flex-direction:column; justify-content:space-between; text-decoration:none; color:inherit; transition:transform 0.2s, box-shadow 0.2s;" title="คลิกเพื่อสั่งซื้อผ่าน Shopee">
+                <div class="shopee-product-img" style="height:150px; background:#ffffff; padding:8px; display:flex; align-items:center; justify-content:center; border-radius:10px; border:1px solid #f1f5f9; box-sizing:border-box; margin-bottom:8px;">
+                  <img src="../assets/products/yoga_mat.jpg" alt="เสื่อโยคะ TPE กันลื่นหนา 8mm" style="max-width:100%; max-height:100%; width:auto; height:auto; object-fit:contain; display:block;" />
+                </div>
+                <div class="shopee-product-info">
+                  <span style="font-size:0.68rem; color:#ea580c; font-weight:700; display:block; margin-bottom:2px;">🛡️ ซับแรงกระแทก</span>
+                  <div class="shopee-product-title" style="font-weight:700; font-size:0.82rem; line-height:1.3; margin-bottom:4px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">เสื่อโยคะ TPE หนา 8mm ซับข้อเข่า</div>
+                  <div class="shopee-price-row" style="display:flex; align-items:baseline; justify-content:space-between; margin-top:2px;">
+                    <div>
+                      <span class="shopee-price" style="font-size:0.98rem; font-weight:800; color:#ee4d2d;">฿299</span>
+                      <span class="shopee-price-original" style="font-size:0.72rem; color:#94a3b8; text-decoration:line-through; margin-left:4px;">฿590</span>
+                    </div>
+                    <span class="shopee-btn" style="background:linear-gradient(135deg, #ee4d2d 0%, #ff5722 100%); color:#ffffff; font-size:0.72rem; font-weight:700; padding:4px 8px; border-radius:6px; text-align:center;">ซื้อ ↗</span>
+                  </div>
+                </div>
+              </a>
             </div>
           </div>
         </div>
@@ -800,7 +944,7 @@
     import { evaluatePose, LM } from "../js/poses.js?v=2.1";
     import { WorkoutRoutineManager } from "../js/workout_manager.js?v=2.1";
     import { getUserWeight, setUserWeight, getUserHeight, setUserHeight, calculateBMI } from "../js/calories.js?v=2.1";
-    import { submitScore, registerUser, loginUser, updateUserProfile, getSavedSession, saveSession, clearSession, isProUser, simulatePromptPayPayment } from "../js/api.js?v=2.1";
+    import { submitScore, registerUser, loginUser, updateUserProfile, getSavedSession, saveSession, clearSession, isProUser, checkDbProStatus, simulatePromptPayPayment } from "../js/api.js?v=2.1";
 
     // ฟังก์ชันสร้าง Custom Course สำหรับ Sandbox (ดึงจาก CFG หรือใช้ Fallback ป้องกัน Cache)
     const createCustomCourse = CFG?.createCustomCourse || function({
@@ -850,6 +994,10 @@
     const initialCourseParam = urlParams.get("course");
     if (initialCourseParam && WORKOUT_COURSES[initialCourseParam] && $("course-select")) {
       $("course-select").value = initialCourseParam;
+    }
+    const demoParam = urlParams.get("demo");
+    if (demoParam && EXERCISES[demoParam]) {
+      setTimeout(() => openExerciseDemoModal(demoParam), 350);
     }
 
     // น้ำหนักตัวและส่วนสูงผู้ใช้ + คำนวณ BMI (ดึงจากบัญชีอัตโนมัติ)
@@ -965,12 +1113,22 @@
     function updateProUI() {
       const isPro = isProUser();
       document.body.classList.toggle("is-pro-member", isPro);
+      document.documentElement.classList.toggle("is-pro-member", isPro);
 
       const btnUpgrade = $("btn-header-upgrade-pro");
       const badgePro = $("header-pro-badge");
       if (btnUpgrade) btnUpgrade.style.display = isPro ? "none" : "inline-flex";
       if (badgePro) badgePro.style.display = isPro ? "inline-flex" : "none";
 
+      // 🛍️ จัดการโฆษณาในหน้าฝึกซ้อม: Free แสดงโฆษณา, PRO ปิดโฆษณาทั้งหมด 100% (Ad-Free)
+      const freeAdBanner = $("play-free-ad-banner");
+      if (freeAdBanner) {
+        freeAdBanner.style.display = isPro ? "none" : "block";
+      }
+      const activeAdBanner = $("play-active-ad-banner");
+      if (activeAdBanner) {
+        activeAdBanner.style.display = isPro ? "none" : "block";
+      }
       const shopeeWidget = $("shopee-summary-widget");
       if (shopeeWidget) {
         shopeeWidget.style.display = isPro ? "none" : "block";
@@ -1039,6 +1197,7 @@
     });
 
     updateProUI();
+    checkDbProStatus().then(() => updateProUI());
 
     function updateModalBMI() {
       const w = parseFloat($("edit-weight")?.value) || getUserWeight();
@@ -1076,6 +1235,10 @@
       if (gifEl) {
         gifEl.src = gifSrc;
         gifEl.alt = ex.name;
+        gifEl.onerror = () => {
+          console.warn("Failed to load demo GIF:", gifSrc);
+          gifEl.alt = `${ex.name} (ภาพตัวอย่างกำลังโหลด)`;
+        };
       }
 
       // Steps
@@ -1822,6 +1985,7 @@
         canvas.width = video.videoWidth;
         canvas.height = video.videoHeight;
         show("s-play");
+        updateProUI();
 
         initWorkoutSession(activeCourse);
         startMediaPipeLoop();
@@ -2071,10 +2235,14 @@
       const shopeeWidget = $("shopee-summary-widget");
       const shopeeGrid = $("shopee-summary-products");
 
-      if (isPro) {
-        if (shopeeWidget) shopeeWidget.style.display = "none";
-      } else if (shopeeWidget && shopeeGrid) {
-        shopeeWidget.style.display = "block";
+      if (shopeeWidget) {
+        if (isPro) {
+          shopeeWidget.style.display = "none";
+          shopeeWidget.classList.add("hidden");
+        } else {
+          shopeeWidget.style.display = "block";
+          shopeeWidget.classList.remove("hidden");
+          if (shopeeGrid) {
         const courseId = summary.courseId || "";
         const exercises = workout?.course?.exercises || [];
         const usedPoses = exercises.map(e => e.pose_key || "");
@@ -2090,7 +2258,7 @@
             desc: "ช่วยให้โฟกัสกล้ามอกลึกขึ้น ลดแรงกดทับข้อมือขณะวิดพื้น",
             price: "฿189",
             originalPrice: "฿350",
-            icon: "💪",
+            image: "../assets/products/pushup_bars.jpg",
             link: "https://shopee.co.th/search?keyword=push%20up%20bar&utm_source=smart_ai_fitness&utm_medium=affiliate"
           });
         }
@@ -2102,7 +2270,7 @@
             desc: "เกาะพื้นแน่น กันลื่น ซับแรงกระแทกได้ดีเยี่ยม เหมาะกับกระโดดและสควอท",
             price: "฿249",
             originalPrice: "฿490",
-            icon: "🧘",
+            image: "../assets/products/yoga_mat.jpg",
             link: "https://shopee.co.th/search?keyword=yoga%20mat%2010mm&utm_source=smart_ai_fitness&utm_medium=affiliate"
           });
         }
@@ -2113,7 +2281,7 @@
           desc: "โปรตีน 27g/สกู๊ป ลีนไขมัน ดูดซึมเร็ว ช่วยฟื้นฟูหลังการฝึกหนัก",
           price: "฿890",
           originalPrice: "฿1,290",
-          icon: "🥛",
+          image: "../assets/products/whey_protein.jpg",
           link: "https://shopee.co.th/search?keyword=whey%20protein%20isolate&utm_source=smart_ai_fitness&utm_medium=affiliate"
         });
 
@@ -2123,14 +2291,14 @@
           desc: "หมุนลื่นพิเศษ ไม่พันกัน เบิร์นแคลอรี่สะใจเพิ่มขึ้น x2",
           price: "฿99",
           originalPrice: "฿220",
-          icon: "⚡",
+          image: "../assets/products/speed_rope.jpg",
           link: "https://shopee.co.th/search?keyword=speed%20rope&utm_source=smart_ai_fitness&utm_medium=affiliate"
         });
 
         shopeeGrid.innerHTML = products.slice(0, 3).map(p => `
           <a href="${p.link}" target="_blank" rel="noopener noreferrer" class="shopee-product-card" title="คลิกเพื่อสั่งซื้อผ่าน Shopee">
-            <div class="shopee-product-img">
-              <span style="font-size:2.3rem;">${p.icon}</span>
+            <div class="shopee-product-img" style="overflow:hidden; padding:0; background:#f8fafc;">
+              <img src="${p.image}" alt="${p.name}" style="width:100%; height:100%; object-fit:cover; display:block;" />
             </div>
             <div style="flex:1;">
               <span class="meta-tag" style="background:#fff7ed; color:#ea580c; font-size:0.7rem; font-weight:700; margin-bottom:4px; display:inline-block;">${p.tag}</span>
@@ -2146,6 +2314,8 @@
             </div>
           </a>
         `).join("");
+          }
+        }
       }
 
       // ปรับเปลี่ยนข้อความและสถานะปุ่มย้อนกลับตามโหมดที่เล่นมา (Sandbox vs Preset Course)
@@ -2173,6 +2343,7 @@
 
       // 3. สลับหน้าจอไปยังหน้าเริ่มต้น (s-consent)
       show("s-consent");
+      updateProUI();
 
       // 4. สลับแท็บและพาเนลให้ตรงกับโหมดเดิมที่มาจากตอนแรก
       if (currentWorkoutMode === "sandbox") {

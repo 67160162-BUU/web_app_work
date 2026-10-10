@@ -3,567 +3,1343 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>DANCE DETECTOR — Interactive Motion Gaming Experience</title>
+  <title>Progress Presentation — SMART AI FITNESS</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Prompt:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #0a0914;
-      --bg-gradient: radial-gradient(circle at 50% 20%, #1e1838 0%, #0a0914 85%);
-      --card-bg: rgba(22, 19, 40, 0.75);
-      --card-border: rgba(255, 255, 255, 0.1);
-      --accent: #ffd60a;
-      --accent-glow: rgba(255, 214, 10, 0.35);
-      --accent2: #00f5d4;
-      --accent2-glow: rgba(0, 245, 212, 0.35);
-      --danger: #ff4d6d;
-      --text: #f8f9fa;
-      --muted: #a09eb5;
-      --font-heading: 'Outfit', 'Prompt', sans-serif;
-      --font-body: 'Prompt', 'Outfit', sans-serif;
+      --bg: #f8fafc;
+      --bg-gradient: radial-gradient(circle at 50% 10%, #ffffff 0%, #f1f5f9 100%);
+      --card-bg: #ffffff;
+      --card-border: #e2e8f0;
+      --accent-gold: #d97706;
+      --accent-emerald: #059669;
+      --accent-cyan: #0891b2;
+      --accent-rose: #e11d48;
+      --text: #0f172a;
+      --muted: #64748b;
+      --font-heading: "Outfit", "Prompt", sans-serif;
+      --font-body: "Prompt", "Outfit", sans-serif;
+      --font-mono: "JetBrains Mono", monospace;
+      --slide-scale: 1;
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
-    body {
+    html, body {
+      width: 100%;
+      height: 100%;
       background: var(--bg);
       background-image: var(--bg-gradient);
       color: var(--text);
       font-family: var(--font-body);
-      min-height: 100vh;
-      overflow-x: hidden;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: space-between;
+      overflow: hidden;
+      user-select: none;
     }
 
-    /* Header Bar */
-    .deck-header {
+    code {
+      font-family: var(--font-mono);
+      background: #f1f5f9;
+      color: #0f172a;
+      padding: 1px 5px;
+      border-radius: 4px;
+      border: 1px solid #e2e8f0;
+      font-size: 0.88em;
+    }
+
+    /* Master Top Bar */
+    .master-header {
+      position: absolute;
+      top: 0;
+      left: 0;
       width: 100%;
-      max-width: 1200px;
-      padding: 20px 30px;
+      height: 54px;
+      padding: 6px 20px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      z-index: 10;
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--card-border);
+      z-index: 100;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
     }
 
-    .brand-logo {
+    .brand-section {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-title {
       font-family: var(--font-heading);
       font-weight: 900;
-      font-size: 1.3rem;
-      letter-spacing: 2px;
+      font-size: 1.15rem;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      color: #0f172a;
+    }
+
+    .brand-title span {
+      background: linear-gradient(135deg, var(--accent-emerald), var(--accent-cyan));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .report-badge {
+      background: #f1f5f9;
+      border: 1px solid #cbd5e1;
+      color: #475569;
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 6px;
       text-transform: uppercase;
     }
 
-    .brand-logo span { color: var(--accent); }
-
-    .slide-counter {
-      font-size: 0.9rem;
-      color: var(--muted);
-      background: rgba(255, 255, 255, 0.05);
-      padding: 6px 16px;
-      border-radius: 20px;
-      border: 1px solid var(--card-border);
+    /* Controls: Navigation, Scale, & PDF Generator */
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
 
-    /* Presentation Deck Viewport (Clean Square 16:9 Frame for Screenshot) */
-    .deck-viewport {
-      width: 100%;
-      max-width: 1360px;
-      aspect-ratio: 16 / 9;
-      height: auto;
-      min-height: 680px;
-      position: relative;
+    .btn-tool {
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      color: #334155;
+      padding: 5px 12px;
+      border-radius: 6px;
+      font-size: 0.76rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+      text-decoration: none;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+    }
+
+    .btn-tool:hover {
+      background: #f8fafc;
+      border-color: #94a3b8;
+      color: #0f172a;
+    }
+
+    .btn-tool-accent {
+      background: linear-gradient(135deg, var(--accent-emerald), #047857);
+      color: #ffffff;
+      border-color: var(--accent-emerald);
+      box-shadow: 0 2px 8px rgba(5, 150, 105, 0.25);
+    }
+
+    .btn-tool-accent:hover {
+      background: linear-gradient(135deg, #047857, #065f46);
+      color: #ffffff;
+    }
+
+    .scale-selector {
+      display: flex;
+      align-items: center;
+      background: #f1f5f9;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      padding: 2px 4px;
+      gap: 2px;
+    }
+
+    .scale-btn {
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 3px 6px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .scale-btn:hover {
+      color: #0f172a;
+      background: #e2e8f0;
+    }
+
+    .scale-btn.active {
+      background: #0f172a;
+      color: #ffffff;
+      font-weight: 700;
+    }
+
+    .scale-step-btn {
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      color: #0f172a;
+      font-size: 0.8rem;
+      font-weight: 700;
+      width: 22px;
+      height: 22px;
       display: flex;
       align-items: center;
       justify-content: center;
-      background: #0d0a1a;
-      border: 2px solid rgba(255, 255, 255, 0.4);
-      border-radius: 0px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .scale-step-btn:hover {
+      background: #f1f5f9;
+      border-color: #94a3b8;
+    }
+
+    .slide-counter-badge {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--accent-emerald);
+      background: rgba(5, 150, 105, 0.08);
+      border: 1px solid rgba(5, 150, 105, 0.25);
+      padding: 4px 10px;
+      border-radius: 8px;
+    }
+
+    /* Main Deck Stage */
+    .deck-stage {
+      width: 100%;
+      height: 100vh;
+      height: 100dvh;
+      padding: 60px 20px 56px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
       overflow: hidden;
-      margin: 15px 0;
+    }
+
+    .slide-wrapper {
+      width: 100%;
+      max-width: 1360px;
+      height: 100%;
+      max-height: 800px;
+      position: relative;
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 16px;
+      box-shadow: 0 20px 45px -15px rgba(0, 0, 0, 0.08), 0 0 1px rgba(0, 0, 0, 0.08);
+      overflow: hidden;
+      transform: scale(var(--slide-scale));
+      transform-origin: center center;
+      transition: transform 0.25s ease;
     }
 
     .slide {
       position: absolute;
       inset: 0;
+      width: 100%;
+      height: 100%;
+      padding: clamp(16px, 2.2vh, 26px) clamp(20px, 2.8vw, 36px);
       display: flex;
       flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      padding: 40px 60px;
-      box-sizing: border-box;
+      justify-content: space-between;
       opacity: 0;
       visibility: hidden;
-      transform: scale(0.96) translateY(15px);
-      transition: opacity 0.35s ease, transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.35s;
+      transform: scale(0.98) translateY(8px);
+      transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
+      box-sizing: border-box;
+      overflow: hidden;
+      background: #ffffff;
     }
 
     .slide.active {
       opacity: 1;
       visibility: visible;
       transform: scale(1) translateY(0);
+      z-index: 5;
     }
 
-    /* Badges & Headers */
-    .badge {
+    /* Typographic Elements */
+    .tag-label {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      background: rgba(0, 245, 212, 0.1);
-      border: 1px solid var(--accent2);
-      color: var(--accent2);
-      padding: 6px 18px;
-      border-radius: 30px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      margin-bottom: 18px;
-      box-shadow: 0 0 20px var(--accent2-glow);
-    }
-
-    h1.slide-title {
-      font-family: var(--font-heading);
-      font-size: clamp(2rem, 3.8vw, 3.4rem);
-      font-weight: 900;
-      line-height: 1.2;
-      margin-bottom: 14px;
-      text-transform: uppercase;
-      background: linear-gradient(135deg, #ffffff 40%, #c4c1e0 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .accent-text {
-      background: linear-gradient(135deg, var(--accent) 0%, #ff9e00 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .accent2-text {
-      background: linear-gradient(135deg, var(--accent2) 0%, #00bbf9 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    p.slide-desc {
-      font-size: clamp(0.95rem, 1.3vw, 1.2rem);
-      color: var(--muted);
-      max-width: 800px;
-      line-height: 1.6;
-      margin-bottom: 24px;
-    }
-
-    /* Grids & Cards */
-    .grid-3 {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 20px;
-      width: 100%;
-      text-align: left;
-    }
-
-    .grid-2 {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 24px;
-      width: 100%;
-      text-align: left;
-    }
-
-    .card {
-      background: var(--card-bg);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 1px solid var(--card-border);
-      border-radius: 20px;
-      padding: 24px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-      transition: transform 0.3s ease, border-color 0.3s ease;
-      position: relative;
-    }
-
-    .card:hover {
-      transform: translateY(-4px);
-      border-color: rgba(255, 255, 255, 0.25);
-    }
-
-    .card.border-cyan {
-      border: 1.5px solid #00f5d4;
-      background: rgba(0, 245, 212, 0.05);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), inset 0 0 15px rgba(0, 245, 212, 0.05);
-    }
-
-    .card.border-yellow {
-      border: 1.5px solid #ffd60a;
-      background: rgba(255, 214, 10, 0.05);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), inset 0 0 15px rgba(255, 214, 10, 0.05);
-    }
-
-    .card.border-pink {
-      border: 1.5px solid #ff4d6d;
-      background: rgba(255, 77, 109, 0.05);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), inset 0 0 15px rgba(255, 77, 109, 0.05);
-    }
-
-    .card.border-purple {
-      border: 1.5px solid #b5179e;
-      background: rgba(181, 23, 158, 0.05);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), inset 0 0 15px rgba(181, 23, 158, 0.05);
-    }
-
-    .card.border-blue {
-      border: 1.5px solid #4cc9f0;
-      background: rgba(76, 201, 240, 0.05);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), inset 0 0 15px rgba(76, 201, 240, 0.05);
-    }
-
-    .card.border-green {
-      border: 1.5px solid #52b788;
-      background: rgba(82, 183, 136, 0.05);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), inset 0 0 15px rgba(82, 183, 136, 0.05);
-    }
-
-    .card-icon {
-      font-size: 2rem;
-      margin-bottom: 12px;
-      display: inline-block;
-    }
-
-    .card h3 {
-      font-size: 1.25rem;
-      color: #fff;
-      margin-bottom: 8px;
-    }
-
-    .card p {
-      font-size: 0.92rem;
-      color: var(--muted);
-      line-height: 1.55;
-    }
-
-    .pill-container {
-      display: flex;
-      flex-wrap: wrap;
       gap: 6px;
-      margin-top: 12px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      padding: 2px 8px;
+      border-radius: 4px;
+      margin-bottom: 4px;
+      border: 1px solid transparent;
     }
 
-    .tech-pill {
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      padding: 4px 10px;
-      border-radius: 10px;
-      font-size: 0.78rem;
-      color: var(--accent2);
-      font-weight: 500;
-    }
+    .tag-emerald { background: #ecfdf5; color: #047857; border-color: #a7f3d0; }
+    .tag-gold { background: #fffbeb; color: #b45309; border-color: #fde68a; }
+    .tag-cyan { background: #ecfeff; color: #0e7490; border-color: #a5f3fc; }
 
-    .metric-val {
+    h1.slide-headline {
       font-family: var(--font-heading);
-      font-size: 2.8rem;
-      font-weight: 900;
-      color: var(--accent);
-      line-height: 1;
+      font-size: clamp(1.35rem, 2.2vw, 2rem);
+      font-weight: 800;
+      line-height: 1.15;
+      text-transform: uppercase;
+      letter-spacing: -0.5px;
+      margin-bottom: 2px;
+      color: #0f172a;
+    }
+
+    p.slide-subheadline {
+      font-size: clamp(0.78rem, 0.95vw, 0.9rem);
+      color: #475569;
+      line-height: 1.35;
       margin-bottom: 8px;
     }
 
-    /* Navigation Footer */
-    .deck-footer {
+    /* Layout Grids */
+    .slide-content-area {
+      flex: 1 1 0%;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
       width: 100%;
-      max-width: 1200px;
-      padding: 20px 30px;
+    }
+
+    .grid-split {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 16px;
+      width: 100%;
+      height: 100%;
+      align-items: stretch;
+    }
+
+    /* Content Cards */
+    .card-panel {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: clamp(10px, 1.3vh, 14px);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    }
+
+    /* Browser Mockup Frame */
+    .browser-mockup {
+      width: 100%;
+      height: 100%;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid #cbd5e1;
+      background: #ffffff;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.07);
+    }
+
+    .browser-bar {
+      height: 24px;
+      background: #f1f5f9;
+      border-bottom: 1px solid #e2e8f0;
+      display: flex;
+      align-items: center;
+      padding: 0 8px;
+      gap: 5px;
+      flex-shrink: 0;
+    }
+
+    .browser-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+    }
+
+    .browser-url {
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      color: #475569;
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      padding: 1px 8px;
+      border-radius: 4px;
+      margin-left: 4px;
+      flex: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .browser-body {
+      flex: 1 1 0%;
+      min-height: 0;
+      position: relative;
+      overflow: hidden;
+      background: #f8fafc;
+    }
+
+    .browser-body img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top left;
+      display: block;
+    }
+
+    .media-caption-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      padding: 6px 10px;
+      background: linear-gradient(0deg, rgba(255, 255, 255, 0.96) 0%, rgba(255, 255, 255, 0) 100%);
+      font-size: 0.7rem;
+      color: #0f172a;
+      font-weight: 700;
       display: flex;
       justify-content: space-between;
       align-items: center;
+    }
+
+    /* Mobile Phone Mockup */
+    .phone-container {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .phone-frame {
+      height: 100%;
+      max-height: 380px;
+      width: 210px;
+      border: 6px solid #0f172a;
+      border-radius: 28px;
+      overflow: hidden;
+      box-shadow: 0 16px 36px rgba(15, 23, 42, 0.15), 0 0 0 1px #cbd5e1;
+      position: relative;
+      background: #000;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .phone-notch {
+      width: 70px;
+      height: 14px;
+      background: #0f172a;
+      border-bottom-left-radius: 8px;
+      border-bottom-right-radius: 8px;
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
       z-index: 10;
     }
 
-    .nav-controls {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      background: rgba(22, 19, 40, 0.85);
-      border: 1px solid var(--card-border);
-      padding: 8px 18px;
-      border-radius: 40px;
-      backdrop-filter: blur(12px);
+    .phone-screen {
+      flex: 1 1 0%;
+      width: 100%;
+      overflow: hidden;
+      position: relative;
     }
 
-    .btn-nav {
-      background: none;
-      border: none;
-      color: var(--text);
-      font-size: 1.2rem;
+    .phone-screen img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top center;
+      display: block;
+    }
+
+    /* Product Showcase Grid */
+    .product-media-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      width: 100%;
+      height: 100%;
+    }
+
+    .product-card-rich {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .product-img-box {
+      width: 100%;
+      height: 150px;
+      background: #ffffff;
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4px;
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    .product-img-box img {
+      max-width: 100%;
+      max-height: 100%;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      display: block;
+    }
+
+    .product-discount-pill {
+      position: absolute;
+      top: 4px;
+      left: 4px;
+      background: #ef4444;
+      color: #fff;
+      font-size: 0.6rem;
+      font-weight: 800;
+      padding: 1px 5px;
+      border-radius: 3px;
+    }
+
+    .product-badge-partner {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      background: #ea580c;
+      color: #fff;
+      font-size: 0.55rem;
+      font-weight: 700;
+      padding: 1px 5px;
+      border-radius: 3px;
+    }
+
+    .product-details {
+      padding: 6px 8px 8px 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      flex: 1;
+      justify-content: space-between;
+    }
+
+    .product-title {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: #0f172a;
+      line-height: 1.2;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .product-spec-tag {
+      font-size: 0.6rem;
+      color: #64748b;
+      background: #f1f5f9;
+      padding: 1px 4px;
+      border-radius: 3px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .product-price-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+
+    .product-price {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      font-weight: 800;
+      color: #ea580c;
+    }
+
+    .product-affiliate-btn {
+      background: #fff7ed;
+      border: 1px solid #fdba74;
+      color: #c2410c;
+      font-size: 0.6rem;
+      font-weight: 700;
+      text-align: center;
+      padding: 3px 4px;
+      border-radius: 4px;
+      text-transform: uppercase;
+    }
+
+    /* Clean Check / Cross Indicators (Zero Emoji) */
+    .status-bullet {
+      display: flex;
+      align-items: flex-start;
+      gap: 6px;
+      font-size: clamp(0.72rem, 0.88vw, 0.82rem);
+      line-height: 1.35;
+      margin-bottom: 4px;
+    }
+
+    .glyph-mark {
+      font-family: var(--font-mono);
+      font-weight: 800;
+      font-size: 0.8rem;
+      line-height: 1;
+      padding-top: 2px;
+      flex-shrink: 0;
+    }
+
+    .glyph-mark.pass { color: var(--accent-emerald); }
+
+    /* Metric Callouts */
+    .metric-num {
+      font-family: var(--font-heading);
+      font-size: clamp(1.5rem, 2.5vw, 2.2rem);
+      font-weight: 900;
+      line-height: 1;
+      margin-bottom: 2px;
+    }
+
+    .metric-desc {
+      font-size: clamp(0.68rem, 0.8vw, 0.78rem);
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    /* Master Footer Controls */
+    .master-footer {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 48px;
+      padding: 4px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(16px);
+      border-top: 1px solid var(--card-border);
+      z-index: 100;
+      box-shadow: 0 -1px 4px rgba(0, 0, 0, 0.04);
+    }
+
+    .nav-arrow-btn {
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      color: #0f172a;
+      padding: 5px 12px;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      font-weight: 600;
       cursor: pointer;
-      padding: 6px 12px;
-      border-radius: 20px;
+      transition: all 0.2s ease;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+    }
+
+    .nav-arrow-btn:hover:not(:disabled) {
+      background: #f1f5f9;
+      border-color: #94a3b8;
+      color: #0f172a;
+    }
+
+    .nav-arrow-btn:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+
+    .dots-indicator-list {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .dot-pill {
+      width: 8px;
+      height: 8px;
+      border-radius: 4px;
+      background: #cbd5e1;
+      cursor: pointer;
       transition: all 0.2s ease;
     }
 
-    .btn-nav:hover {
-      background: rgba(255, 255, 255, 0.1);
-      color: var(--accent);
+    .dot-pill.active {
+      width: 24px;
+      background: var(--accent-emerald);
     }
 
-    .dots-list {
-      display: flex;
-      gap: 8px;
-      align-items: center;
+    .footer-hint {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      color: var(--muted);
     }
 
-    .dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.2);
-      cursor: pointer;
-      transition: all 0.3s ease;
+    /* ═══════════════════════════════════════════════════════
+       PRINT & PDF GENERATOR OPTIMIZATION (A4 LANDSCAPE 16:9)
+       ═══════════════════════════════════════════════════════ */
+    @page {
+      size: A4 landscape;
+      margin: 6mm 8mm;
     }
 
-    .dot.active {
-      background: var(--accent);
-      width: 26px;
-      border-radius: 12px;
-      box-shadow: 0 0 12px var(--accent-glow);
-    }
+    @media print {
+      .master-header,
+      .master-footer {
+        display: none !important;
+      }
 
-    .btn-play-now {
-      background: linear-gradient(135deg, var(--accent) 0%, #ff9e00 100%);
-      color: #000;
-      font-weight: 700;
-      padding: 10px 22px;
-      border-radius: 12px;
-      text-decoration: none;
-      font-size: 0.95rem;
-      box-shadow: 0 4px 15px var(--accent-glow);
-      transition: transform 0.2s ease;
-    }
+      html, body {
+        background: #ffffff !important;
+        color: #0f172a !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        overflow: visible !important;
+        height: auto !important;
+        margin: 0 !important;
+        padding: 0 !important;
+      }
 
-    .btn-play-now:hover { transform: translateY(-2px); }
+      .deck-stage {
+        padding: 0 !important;
+        margin: 0 !important;
+        height: auto !important;
+        display: block !important;
+        overflow: visible !important;
+      }
 
-    @media (max-width: 900px) {
-      .grid-3 { grid-template-columns: 1fr; }
-      .grid-2 { grid-template-columns: 1fr; }
-      .deck-viewport { height: auto; min-height: 600px; }
-      .slide { position: relative; display: none; }
-      .slide.active { display: flex; }
+      .slide-wrapper {
+        max-width: 100% !important;
+        max-height: none !important;
+        border: none !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        background: #ffffff !important;
+        transform: none !important;
+      }
+
+      .slide {
+        position: relative !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: space-between !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        transform: none !important;
+        page-break-after: always !important;
+        break-after: page !important;
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+        width: 100% !important;
+        height: 100vh !important;
+        max-height: 100vh !important;
+        padding: 16px 24px !important;
+        box-sizing: border-box !important;
+        overflow: hidden !important;
+        background: #ffffff !important;
+        zoom: var(--slide-scale, 1);
+      }
     }
   </style>
 </head>
 <body>
 
-  <!-- TOP HEADER -->
-  <header class="deck-header">
-    <div class="brand-logo">SMART AI <span>FITNESS</span></div>
-    <div style="display:flex; align-items:center; gap:10px;">
-      <a href="architecture.html" style="color:var(--accent2); text-decoration:none; font-size:0.85rem; background:rgba(0, 245, 212, 0.1); border:1px solid var(--accent2); padding:5px 12px; border-radius:12px; transition:all 0.2s ease;">🏛️ ดู Architecture Diagram</a>
-      <div class="slide-counter" id="slide-indicator">Slide 1 / 5</div>
+  <!-- MASTER TOP HEADER -->
+  <header class="master-header">
+    <div class="brand-section">
+      <div class="brand-title">SMART AI <span>FITNESS</span></div>
+      <span class="report-badge">Project Progress Presentation</span>
+    </div>
+
+    <div class="header-actions">
+      <!-- Scale Adjuster for PDF -->
+      <div class="scale-selector" title="ปรับขนาดสเกลสไลด์เพื่อเตรียมพิมพ์ PDF (PDF Export Scaling)">
+        <span style="font-size: 0.66rem; color: var(--muted); padding: 0 4px; font-weight: 600;">Scale:</span>
+        <button class="scale-step-btn" onclick="adjustScale(-0.05)" title="ลดขนาดสเกล 5%">-</button>
+        <button class="scale-btn active" id="btn-scale-100" onclick="setScale(1.0, this)">100%</button>
+        <button class="scale-btn" id="btn-scale-90" onclick="setScale(0.90, this)">90%</button>
+        <button class="scale-btn" id="btn-scale-80" onclick="setScale(0.80, this)">80%</button>
+        <button class="scale-btn" id="btn-scale-70" onclick="setScale(0.70, this)">70%</button>
+        <button class="scale-step-btn" onclick="adjustScale(0.05)" title="เพิ่มขนาดสเกล 5%">+</button>
+      </div>
+
+      <!-- Action Buttons -->
+      <button class="btn-tool btn-tool-accent" onclick="prepareAndPrintPDF()" title="ส่งออกสไลด์ทั้งหมดเป็นไฟล์ PDF (A4 Landscape)">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V2h12v7"></path><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><path d="M6 14h12v8H6z"></path></svg>
+        <span>Print to PDF</span>
+      </button>
+
+      <a href="../index.html" class="btn-tool" target="_blank">Live App</a>
+
+      <div class="slide-counter-badge" id="slide-num-badge">01 / 04</div>
     </div>
   </header>
 
-  <!-- MAIN SLIDES VIEWPORT -->
-  <main class="deck-viewport">
+  <!-- MAIN STAGE -->
+  <main class="deck-stage">
+    <div class="slide-wrapper" id="slide-wrapper">
 
-    <!-- SLIDE 1: INTRODUCTION & OVERVIEW -->
-    <section class="slide active" id="slide-1">
-      <div class="badge">อุตสาหกรรมสื่อบันเทิงดิจิทัล (DIGITAL ENTERTAINMENT MEDIA)</div>
-      <h1 class="slide-title">DANCE <span class="accent-text">DETECTOR</span></h1>
-      <p class="slide-desc">
-        นวัตกรรมเว็บเกมใน<strong>อุตสาหกรรมสื่อบันเทิงดิจิทัล</strong> ที่ใช้ AI ตรวจจับท่าทางแบบเรียลไทม์ผ่านกล้อง<br />
-        <!-- เปิดประสบการณ์ความบันเทิงยุคใหม่ เล่นง่ายผ่านเว็บเบราว์เซอร์ 100% ไม่ต้องติดตั้งแอป -->
-      </p>
-      <div class="pill-container" style="justify-content: center; margin-top: 10px;">
-        <span class="tech-pill">🌐 Browser-Native AI</span>
-        <span class="tech-pill">🔒 Zero-Server Privacy</span>
-        <span class="tech-pill">⚡ 60 FPS Real-time</span>
-        <span class="tech-pill">⏱️ 20s Arcade Mode</span>
-      </div>
-    </section>
+      <!-- ═══════════════════════════════════════════════════════
+           SLIDE 1: APP OVERVIEW & CURRENT MILESTONE
+           ═══════════════════════════════════════════════════════ -->
+      <section class="slide active" id="slide-1">
+        <div>
+          <span class="tag-label tag-emerald">[STEP 01: APP OVERVIEW &amp; STATUS]</span>
+          <h1 class="slide-headline">SMART AI FITNESS — ON-DEVICE AI WORKOUT PLATFORM</h1>
+          <p class="slide-subheadline">
+            แอปพลิเคชันโค้ชออกกำลังกาย AI ประมวลผลบนเครื่องผู้ใช้: ภาพรวมระบบและสถานะการพัฒนาล่าสุด
+          </p>
+        </div>
 
-    <!-- SLIDE 2: ENTERTAINMENT & PRIVACY VALUE -->
-    <section class="slide" id="slide-2">
-      <div class="badge">สื่อบันเทิงเพื่อความสนุกและปลอดภัย</div>
-      <h1 class="slide-title">มิติใหม่ของ <span class="accent2-text">สื่อบันเทิงที่ปลอดภัย ไร้กังวล</span></h1>
-      <p class="slide-desc">สื่อบันเทิงดิจิทัลที่สร้างขึ้นเพื่อความสนุกสนานโดยเคารพความเป็นส่วนตัวของผู้เล่น 100%</p>
-      
-      <div class="grid-3">
-        <div class="card border-cyan">
-          <div class="card-icon">🔒</div>
-          <h3>ปลอดภัย 100% ไม่เก็บภาพ</h3>
-          <p>เล่นได้อย่างสบายใจ <strong>ไม่มีการบันทึกภาพ อัดวิดีโอ หรือส่งข้อมูลกล้องออกจากเครื่องเด็ดขาด</strong> ทุกอย่างประมวลผลจบในเบราว์เซอร์ของคุณทันที</p>
-        </div>
-        <div class="card border-yellow">
-          <div class="card-icon">⚡</div>
-          <h3>เล่นง่าย จบไวใน 20 วินาที</h3>
-          <p>เข้าเว็บแล้วกดเริ่มเล่นได้เลยทันที ไม่ต้องโหลดแอป ไม่ต้องสมัครสมาชิกก่อน เหมาะสำหรับเล่นคลายเครียด ขยับร่างกาย หรือแข่งชาเลนจ์สนุกๆ กับเพื่อน</p>
-        </div>
-        <div class="card border-pink">
-          <div class="card-icon">🎉</div>
-          <h3>สร้างสีสันและความสนุก</h3>
-          <p>นำท่ามีมฮิตๆ และกระแสไวรัลมาเปลี่ยนเป็นเกมแข่งขันอาร์เคดสุดมันส์ ให้ทุกคนได้หัวเราะ ขยับตัว และท้าดวลอันดับคะแนนกันอย่างสนุกสนาน</p>
-        </div>
-      </div>
-    </section>
+        <div class="slide-content-area">
+          <div class="grid-split">
+            <!-- Left: Description & Milestone Summary -->
+            <div style="display: flex; flex-direction: column; gap: 10px; height: 100%;">
+              <div class="card-panel" style="border-left: 3px solid var(--accent-emerald);">
+                <div style="font-size: 0.85rem; font-weight: 700; color: var(--accent-emerald); margin-bottom: 4px;">
+                  แอปพลิเคชันเราคืออะไร? (What is SMART AI FITNESS?)
+                </div>
+                <div class="status-bullet"><span class="glyph-mark pass">[OK]</span><span><strong>On-Device AI Coach:</strong> ตรวจจับฟอร์มออกกำลังกายผ่านกล้องเว็บแคมแบบเรียลไทม์ 60 FPS</span></div>
+                <div class="status-bullet"><span class="glyph-mark pass">[OK]</span><span><strong>100% Privacy &amp; Zero GPU Cost:</strong> ประมวลผล MediaPipe Pose 33 จุดบนเครื่อง ไร้การส่งภาพออกนอกเครื่อง</span></div>
+                <div class="status-bullet"><span class="glyph-mark pass">[OK]</span><span><strong>Smart Workout Analytics:</strong> นับ Reps, ตรวจฟอร์มโกง, จับเวลาพัก, และคำนวณแคลอรี่ตามสรีระจริง (MET Formula)</span></div>
+              </div>
 
-    <!-- SLIDE 3: TECH STACK ARCHITECTURE -->
-    <section class="slide" id="slide-3">
-      <div class="badge">CORE TECH STACK</div>
-      <h1 class="slide-title">สถาปัตยกรรม <span class="accent-text">เทคโนโลยีระดับโปรดักชัน</span></h1>
-      <p class="slide-desc">ผสมผสาน Computer Vision บนเบราว์เซอร์เข้ากับระบบ Backend ประสิทธิภาพสูง</p>
-      
-      <div class="grid-3">
-        <div class="card border-blue">
-          <div class="card-icon">📱</div>
-          <h3>Frontend Engine</h3>
-          <p>พัฒนาด้วย Pure Web Standards ไร้ Overhead กราฟิกลื่นไหล 60 FPS บนทุกอุปกรณ์</p>
-          <div class="pill-container">
-            <span class="tech-pill">HTML5</span>
-            <span class="tech-pill">JS</span>
-            <span class="tech-pill">CSS</span>
+              <div class="card-panel" style="border-left: 3px solid var(--accent-gold);">
+                <div style="font-size: 0.85rem; font-weight: 700; color: var(--accent-gold); margin-bottom: 4px;">
+                  ปัจจุบันทำถึงไหนแล้ว? (Current Milestone Progress)
+                </div>
+                <div class="status-bullet"><span class="glyph-mark pass">[OK]</span><span><strong>From Prototype to Commercial:</strong> ยกระดับจากมินิเกมเดิม สู่แพลตฟอร์มฟิตเนสเชิงพาณิชย์เต็มรูปแบบ</span></div>
+                <div class="status-bullet"><span class="glyph-mark pass">[OK]</span><span><strong>Complete Fullstack Architecture:</strong> Frontend Vanilla + FastAPI REST Backend + MySQL XAMPP</span></div>
+                <div class="status-bullet"><span class="glyph-mark pass">[OK]</span><span><strong>Catalog &amp; Sandbox:</strong> แคตตาล็อก 7 คอร์ส (4 ฟรี + 3 คอร์ส PRO) พร้อมห้องคอร์สจัดเอง (Sandbox Room)</span></div>
+              </div>
+
+              <!-- Quick Metric Badges -->
+              <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;">
+                <div class="card-panel" style="padding: 8px; text-align: center;">
+                  <div class="metric-num" style="color: var(--accent-emerald); font-size: 1.4rem;">60 FPS</div>
+                  <div class="metric-desc">Edge AI Inference</div>
+                </div>
+                <div class="card-panel" style="padding: 8px; text-align: center;">
+                  <div class="metric-num" style="color: var(--accent-gold); font-size: 1.4rem;">7 Courses</div>
+                  <div class="metric-desc">Workout Catalog</div>
+                </div>
+                <div class="card-panel" style="padding: 8px; text-align: center;">
+                  <div class="metric-num" style="color: var(--accent-cyan); font-size: 1.4rem;">100%</div>
+                  <div class="metric-desc">Privacy Preserved</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right: Browser Mockup of Live Platform -->
+            <div class="browser-mockup">
+              <div class="browser-bar">
+                <span class="browser-dot" style="background: #ef4444;"></span>
+                <span class="browser-dot" style="background: #f59e0b;"></span>
+                <span class="browser-dot" style="background: #10b981;"></span>
+                <span class="browser-url">http://localhost/web_app_dab/frontend/ (Active Commercial Dashboard)</span>
+              </div>
+              <div class="browser-body">
+                <img src="../assets/slides/desktop_pro.png" alt="Desktop Commercial Dashboard" />
+                <div style="position: absolute; bottom: 0; left: 0; width: 100%; padding: 6px 12px; background: rgba(255, 255, 255, 0.94); border-top: 1px solid #e2e8f0; font-size: 0.7rem; color: #0f172a; font-weight: 600; display: flex; justify-content: space-between; align-items: center; box-sizing: border-box;">
+                  <span>SMART AI FITNESS — Live Commercial Platform</span>
+                  <span style="font-size: 0.65rem; color: #047857; font-weight: 700;">FastAPI + MySQL Connected</span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-        <div class="card border-yellow">
-          <div class="card-icon">🧠</div>
-          <h3>AI & Computer Vision</h3>
-          <p>ตรวจจับจุดข้อต่อร่างกาย 33 จุด (Landmarks) แบบ Client-side ประมวลผลบนเครื่องผู้ใช้ 100%</p>
-          <div class="pill-container">
-            <span class="tech-pill">MediaPipe Pose</span>
-            <span class="tech-pill">WebAssembly (WASM)</span>
-            <span class="tech-pill">Mathematical Scoring</span>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--card-border); padding-top: 8px;">
+          <span style="font-size: 0.72rem; color: var(--muted);">Step 1 of 4: Platform Overview &amp; Project Status</span>
+          <button class="btn-tool btn-tool-accent" onclick="goToSlide(1)">Next: UI/UX Enhancements &rarr;</button>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════
+           SLIDE 2: UI/UX ENHANCEMENTS & MOBILE RESPONSIVE
+           ═══════════════════════════════════════════════════════ -->
+      <section class="slide" id="slide-2">
+        <div>
+          <span class="tag-label tag-cyan">[STEP 02: UI/UX ENHANCEMENTS]</span>
+          <h1 class="slide-headline">RESPONSIVE GRID &amp; THAI TYPOGRAPHY ARCHITECTURE</h1>
+          <p class="slide-subheadline">
+            การแก้ปัญหาโครงสร้าง Layout, การกระจายคอลัมน์อัตโนมัติ และการแก้ปัญหาตัดคำภาษาไทย
+          </p>
+        </div>
+
+        <div class="slide-content-area">
+          <div class="grid-split">
+            <!-- Left: Structural Solutions -->
+            <div style="display: flex; flex-direction: column; gap: 8px; height: 100%;">
+              <div class="card-panel" style="padding: 10px 14px; border-left: 3px solid var(--accent-emerald);">
+                <div style="font-size: 0.82rem; font-weight: 700; color: var(--accent-emerald); margin-bottom: 2px;">
+                  1. Dynamic Container Queries (4 / 3 / 1 คอลัมน์)
+                </div>
+                <p style="font-size: 0.76rem; color: var(--muted); line-height: 1.35;">
+                  จัดสัดส่วนอัตโนมัติตามขนาดคอนเทนเนอร์จริง: <strong>จอใหญ่ (&ge;1000px):</strong> 4 คอลัมน์ | <strong>จอกลาง (680-999px):</strong> 3 คอลัมน์ | <strong>จอมือถือ (&lt;680px):</strong> 1 คอลัมน์เต็มความกว้าง 100%
+                </p>
+              </div>
+
+              <div class="card-panel" style="padding: 10px 14px; border-left: 3px solid var(--accent-gold);">
+                <div style="font-size: 0.82rem; font-weight: 700; color: var(--accent-gold); margin-bottom: 2px;">
+                  2. Smart Sandbox Card Layout (ขยายกิน 2 คอลัมน์)
+                </div>
+                <p style="font-size: 0.76rem; color: var(--muted); line-height: 1.35;">
+                  ย้ายการ์ด <strong>Sandbox (คอร์สจัดเอง)</strong> ลงไว้ล่างสุดของรายการคอร์ส และตั้งค่าให้ขยายกินพื้นที่ 2 คอลัมน์บนจอขนาดกลาง เพื่อเติมเต็มพื้นที่ว่าง ไม่ให้เกิดช่องโหว่ใน Grid
+                </p>
+              </div>
+
+              <div class="card-panel" style="padding: 10px 14px; border-left: 3px solid var(--accent-rose);">
+                <div style="font-size: 0.82rem; font-weight: 700; color: var(--accent-rose); margin-bottom: 2px;">
+                  3. Thai Typography Word-Break Fix (แก้สระ/อักษรตกบรรทัดแนวตั้ง)
+                </div>
+                <p style="font-size: 0.76rem; color: var(--muted); line-height: 1.35;">
+                  แทนที่ <code>word-break: break-word</code> ด้วย <code>overflow-wrap: break-word; word-break: normal;</code> ร่วมกับ <code>align-items: stretch</code> ป้องกันการบีบกล่องจนตัวอักษรไทยเรียงเป็นแนวตั้ง
+                </p>
+              </div>
+
+              <div class="card-panel" style="padding: 10px 14px; border-left: 3px solid var(--accent-cyan);">
+                <div style="font-size: 0.82rem; font-weight: 700; color: var(--accent-cyan); margin-bottom: 2px;">
+                  4. PRO UI Suppression (ซ่อนปุ่มอัปเกรดเมื่อเป็น PRO)
+                </div>
+                <p style="font-size: 0.76rem; color: var(--muted); line-height: 1.35;">
+                  ตรวจจับสถานะ <code>is_pro</code> ตรงจาก Database หากเป็น PRO จะสั่งซ่อนปุ่มอัปเกรดทั้งหมดตั้งแต่โหลดใน <code>&lt;head&gt;</code> ป้องกันการกระพริบของหน้าจอ
+                </p>
+              </div>
+            </div>
+
+            <!-- Right: Real Mobile Phone Frame Mockup -->
+            <div class="phone-container">
+              <div class="phone-frame">
+                <div class="phone-notch"></div>
+                <div class="phone-screen">
+                  <img src="../assets/slides/mobile_pro.png" alt="Mobile Pro Screenshot" />
+                </div>
+              </div>
+              <div style="margin-top: 6px; font-size: 0.72rem; color: var(--muted); text-align: center;">
+                <span style="color: var(--accent-cyan); font-weight: 700;">Mobile View (iPhone 390px)</span> — 1-Column Responsive Grid &amp; Clean Thai Flow
+              </div>
+            </div>
           </div>
         </div>
-        <div class="card border-purple">
-          <div class="card-icon">⚙️</div>
-          <h3>Backend & Database</h3>
-          <p>บริการ API Leaderboard, User Auth (Guest/Member) และ Admin Dashboard สำหรับควบคุมระบบ</p>
-          <div class="pill-container">
-            <span class="tech-pill">FastAPI (Python)</span>
-            <span class="tech-pill">MySQL</span>
-            <span class="tech-pill">JWT + Bcrypt</span>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--card-border); padding-top: 8px;">
+          <span style="font-size: 0.72rem; color: var(--muted);">Step 2 of 4: Responsive Architecture &amp; Typography</span>
+          <button class="btn-tool btn-tool-accent" onclick="goToSlide(2)">Next: AI Pose Engine &rarr;</button>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════
+           SLIDE 3: NEW AI POSES (PUSH-UP BIOMECHANICS)
+           ═══════════════════════════════════════════════════════ -->
+      <section class="slide" id="slide-3">
+        <div>
+          <span class="tag-label tag-emerald">[STEP 03: NEW AI POSES]</span>
+          <h1 class="slide-headline">NEW AI POSE: PUSH-UP BIOMECHANICAL ANALYSIS</h1>
+          <p class="slide-subheadline">
+            ขยายขีดความสามารถการตรวจจับจากท่ายืน สู่ระนาบแนวนอนด้วยเวกเตอร์ชีวกลศาสตร์แบบ On-Device 60 FPS
+          </p>
+        </div>
+
+        <div class="slide-content-area">
+          <div class="grid-split">
+            <!-- Left: Algorithmic Logic -->
+            <div style="display: flex; flex-direction: column; gap: 10px; height: 100%;">
+              <div class="card-panel" style="padding: 12px 14px;">
+                <div style="font-size: 0.82rem; font-weight: 700; color: var(--accent-emerald); margin-bottom: 2px;">
+                  1. Elbow Angle Vector Tracking (วัดมุมข้อศอก &le; 90°)
+                </div>
+                <p style="font-size: 0.76rem; color: var(--muted); line-height: 1.4;">
+                  คำนวณมุมสามเหลี่ยม <strong>Shoulder (11) &rarr; Elbow (13) &rarr; Wrist (15)</strong> ต้องลงลึก &le; 90° เพื่อให้นับว่าผ่าน Rep และต้องดันแขนเหยียดสุด &ge; 155° เมื่อขึ้นสุด
+                </p>
+              </div>
+
+              <div class="card-panel" style="padding: 12px 14px;">
+                <div style="font-size: 0.82rem; font-weight: 700; color: var(--accent-cyan); margin-bottom: 2px;">
+                  2. Torso Alignment Verification (ตรวจสอบแนวลำตัวตรง 180°)
+                </div>
+                <p style="font-size: 0.76rem; color: var(--muted); line-height: 1.4;">
+                  ตรวจสอบแกนลำตัว <strong>Shoulder (11) &rarr; Hip (23) &rarr; Ankle (27)</strong> ป้องกันหลังแอ่นหรือสะโพกโด่งเกินมุมที่ถูกต้อง พร้อมส่งเสียงแจ้งเตือนแบบเรียลไทม์
+                </p>
+              </div>
+
+              <div class="card-panel" style="padding: 12px 14px;">
+                <div style="font-size: 0.82rem; font-weight: 700; color: var(--accent-gold); margin-bottom: 2px;">
+                  3. Anti-Cheat Finite State Machine (ป้องกันการนับซ้ำ/โกง)
+                </div>
+                <p style="font-size: 0.76rem; color: var(--muted); line-height: 1.4;">
+                  ควบคุมลำดับการขยับ 5 ขั้น: <code>UP</code> &rarr; <code>GOING_DOWN</code> &rarr; <code>BOTTOM</code> &rarr; <code>ASCENDING</code> &rarr; <code>COUNTED</code> นับรอบเฉพาะเมื่อฟอร์มถูกต้องครบวงจร
+                </p>
+              </div>
+            </div>
+
+            <!-- Right: Biomechanical Vector Diagram -->
+            <div style="width: 100%; height: 100%; border-radius: 12px; overflow: hidden; border: 1px solid #cbd5e1; background: #ffffff; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04); display: flex; flex-direction: column; justify-content: space-between;">
+              <!-- Inspector Header -->
+              <div style="padding: 8px 12px; border-bottom: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center; background: #f8fafc;">
+                <div>
+                  <div style="font-size: 0.74rem; font-weight: 800; color: #0f172a; text-transform: uppercase;">
+                    Kinematic Landmark Tracking: Pushup.js
+                  </div>
+                  <div style="font-size: 0.62rem; color: #64748b;">
+                    Vector Trigonometry: 3-Point Angle Calculation on Video Frame
+                  </div>
+                </div>
+                <div style="display: flex; gap: 4px;">
+                  <span class="tag-label tag-emerald" style="margin: 0; font-size: 0.58rem;">60 FPS WEBCAM</span>
+                  <span class="tag-label tag-cyan" style="margin: 0; font-size: 0.58rem;">MEDIAPIPE 33 LK</span>
+                </div>
+              </div>
+
+              <!-- Vector SVG -->
+              <div style="flex: 1 1 0%; min-height: 0; display: flex; align-items: center; justify-content: center; padding: 4px 10px;">
+                <svg viewBox="0 0 450 240" style="width: 100%; height: 100%;" xmlns="http://www.w3.org/2000/svg">
+                  <!-- Formula Callout Box -->
+                  <rect x="20" y="10" width="200" height="42" rx="6" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1" />
+                  <text x="30" y="26" fill="#0f172a" font-size="8.5" font-family="monospace" font-weight="700">θ = arccos((v1 • v2) / (|v1| |v2|))</text>
+                  <text x="30" y="40" fill="#64748b" font-size="7.5" font-family="monospace">v1 = S(11)-E(13) | v2 = W(15)-E(13)</text>
+
+                  <!-- Status Pill -->
+                  <rect x="320" y="10" width="115" height="38" rx="6" fill="#ecfdf5" stroke="#a7f3d0" stroke-width="1" />
+                  <text x="330" y="25" fill="#047857" font-size="8.5" font-family="sans-serif" font-weight="800">REP STATUS: VALID</text>
+                  <text x="330" y="38" fill="#059669" font-size="8" font-family="monospace">Elbow: 88° ≤ 90°</text>
+
+                  <!-- Ground line -->
+                  <line x1="20" y1="210" x2="430" y2="210" stroke="#cbd5e1" stroke-dasharray="4 4" stroke-width="2" />
+                  <text x="350" y="225" fill="#64748b" font-size="10" font-family="monospace">GROUND PLANE</text>
+
+                  <!-- Torso Segment: Ankle(50,175) -> Hip(170,155) -> Shoulder(320,135) -->
+                  <line x1="50" y1="175" x2="170" y2="155" stroke="#059669" stroke-width="4" stroke-linecap="round" />
+                  <line x1="170" y1="155" x2="320" y2="135" stroke="#059669" stroke-width="4" stroke-linecap="round" />
+                  <text x="120" y="135" fill="#047857" font-size="11" font-weight="700">Torso Alignment (180°)</text>
+
+                  <!-- Arm Segment: Shoulder(320,135) -> Elbow(345,85) -> Wrist(370,185) -->
+                  <line x1="320" y1="135" x2="345" y2="85" stroke="#d97706" stroke-width="4" stroke-linecap="round" />
+                  <line x1="345" y1="85" x2="370" y2="185" stroke="#d97706" stroke-width="4" stroke-linecap="round" />
+
+                  <!-- Angle Arc on Elbow -->
+                  <path d="M 335 105 A 25 25 0 0 1 355 105" fill="none" stroke="#d97706" stroke-width="2" stroke-dasharray="3 3" />
+                  <text x="355" y="72" fill="#b45309" font-size="12" font-weight="800">88° (PASS &lt; 90°)</text>
+
+                  <!-- Keypoint Joints -->
+                  <circle cx="50" cy="175" r="6" fill="#0891b2" />
+                  <circle cx="170" cy="155" r="6" fill="#0891b2" />
+                  <circle cx="320" cy="135" r="6" fill="#0891b2" />
+                  <circle cx="345" cy="85" r="7" fill="#d97706" />
+                  <circle cx="370" cy="185" r="6" fill="#059669" />
+
+                  <!-- Joint Labels -->
+                  <text x="35" y="195" fill="#475569" font-size="9">Ankle (27)</text>
+                  <text x="155" y="175" fill="#475569" font-size="9">Hip (23)</text>
+                  <text x="260" y="120" fill="#475569" font-size="9">Shoulder (11)</text>
+                  <text x="355" y="105" fill="#b45309" font-size="10" font-weight="700">Elbow (13)</text>
+                  <text x="380" y="192" fill="#475569" font-size="9">Wrist (15)</text>
+                </svg>
+              </div>
+
+              <!-- Caption Footer -->
+              <div style="padding: 6px 12px; border-top: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center; background: #f8fafc; font-size: 0.68rem; color: #0f172a; font-weight: 600;">
+                <span>Biomechanical Keypoint Vector Graph (Pushup.js)</span>
+                <span style="font-size: 0.64rem; color: #b45309; font-weight: 700;">On-Device Realtime Inference</span>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-    </section>
 
-    <!-- SLIDE 4: RESULTS & PROJECT OUTCOMES -->
-    <section class="slide" id="slide-4">
-      <div class="badge">RESULTS & OUTCOMES</div>
-      <h1 class="slide-title">ผลลัพธ์ที่ได้จากการสร้าง <span class="accent2-text">DANCE DETECTOR</span></h1>
-      <p class="slide-desc">ความสำเร็จและประโยชน์ที่ได้รับจากการพัฒนาระบบ</p>
-      
-      <div class="grid-2">
-        <div class="card border-cyan">
-          <div class="metric-val" style="color: #00f5d4;">60 FPS</div>
-          <h3>ความแม่นยำและการตรวจจับสด</h3>
-          <p>ระบบตรวจจับท่า Dab ได้อย่างเที่ยงตรงด้วยสูตรคณิตศาสตร์ 5 เกณฑ์ (มุมศอก, ความสูงแขน, ระยะมือ-จมูก) พร้อม State Machine กันโกง</p>
+        <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--card-border); padding-top: 8px;">
+          <span style="font-size: 0.72rem; color: var(--muted);">Step 3 of 4: AI Biomechanical Pose Engine</span>
+          <button class="btn-tool btn-tool-accent" onclick="goToSlide(3)">Next: Monetization &amp; Shopee Affiliate &rarr;</button>
         </div>
-        <div class="card border-yellow">
-          <div class="metric-val" style="color: #ffd60a;">0 Friction</div>
-          <h3>เข้าถึงง่ายที่สุด (Zero Barriers)</h3>
-          <p>ผู้เล่นเปิดเว็บแล้วกดเล่นได้ทันที ไม่ต้องโหลด App ไม่ต้องสมัครสมาชิกก่อนเล่น (Guest Fast-Play) ช่วยสร้าง Conversion สูงสุด</p>
-        </div>
-        <div class="card border-green">
-          <div class="metric-val" style="color: #52b788;">100%</div>
-          <h3>Privacy-First (ปลอดภัยเรื่องข้อมูล)</h3>
-          <p>ผู้เล่นสบายใจไร้กังวลเพราะภาพจากกล้องไม่ถูกส่งหรือบันทึกออกนอกเครื่อง ตอบโจทย์มาตรฐานความเป็นส่วนตัวระดับสากล</p>
-        </div>
-        <div class="card border-purple">
-          <div class="metric-val" style="color: #b5179e;">Full Control</div>
-          <h3>ระบบจัดการหลังบ้าน (Admin System)</h3>
-          <p>มีระบบจัดการผู้ใช้และคะแนน พร้อมรองรับการขยายฐานข้อมูล MySQL และต่อยอดท่าเต้นใหม่ๆ ได้อย่างยืดหยุ่น</p>
-        </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- SLIDE 5: FUTURE ROADMAP -->
-    <section class="slide" id="slide-5">
-      <div class="badge">FUTURE ROADMAP</div>
-      <h1 class="slide-title">ก้าวต่อไปของ <span class="accent-text">DANCE DETECTOR</span></h1>
-      <p class="slide-desc">แผนการขยายขีดความสามารถสู่แพลตฟอร์ม Motion Entertainment เต็มรูปแบบ</p>
-      
-      <div class="grid-3">
-        <div class="card border-pink">
-          <div class="card-icon">🎯</div>
-          <h3>1. Multi-Pose & Modes</h3>
-          <p>เพิ่มคลังท่าเต้นมีมและ Challenge ใหม่ๆ เช่น ท่าฮิตจาก TikTok / K-Pop พร้อมระบบปรับ Parameter ความยากง่าย</p>
+      <!-- ═══════════════════════════════════════════════════════
+           SLIDE 4: MONETIZATION (PRO SUBSCRIPTION & SHOPEE AFFILIATE)
+           ═══════════════════════════════════════════════════════ -->
+      <section class="slide" id="slide-4">
+        <div>
+          <span class="tag-label tag-gold">[STEP 04: MONETIZATION ENGINE]</span>
+          <h1 class="slide-headline">DUAL-REVENUE: PRO SUBSCRIPTION &amp; SHOPEE AFFILIATE</h1>
+          <p class="slide-subheadline">
+            สร้างรายได้ 2 ช่องทาง: สมาชิก PRO Membership 99.- และ ส่วนแบ่งการขายอุปกรณ์ฟิตเนส Shopee
+          </p>
         </div>
-        <div class="card border-yellow">
-          <div class="card-icon">⚔️</div>
-          <h3>2. Multiplayer 1v1 Battle</h3>
-          <p>ระบบแข่งขันออนไลน์ 1 ต่อ 1 แบบสดๆ ดวลความเป๊ะและความเร็วกับเพื่อนหรือผู้เล่นอื่นแบบ Real-time Matchmaking</p>
-        </div>
-        <div class="card border-cyan">
-          <div class="card-icon">☁️</div>
-          <h3>3. Cloud Deployment</h3>
-          <p>เตรียมนำระบบขึ้นรันบน Cloud Server พร้อมระบบฐานข้อมูล MySQL เต็มรูปแบบ เพื่อรองรับผู้เล่นจากทั่วโลกได้ตลอด 24 ชั่วโมง</p>
-        </div>
-      </div>
-    </section>
 
-    <!-- SLIDE 6: THANK YOU -->
-    <section class="slide" id="slide-6">
-      <h1 class="slide-title" style="font-size: clamp(2.5rem, 5vw, 4.5rem); margin-bottom: 20px;">
-        THANK YOU <br /><span class="accent-text">FOR YOUR ATTENTION</span>
-      </h1>
-    </section>
+        <div class="slide-content-area">
+          <div style="display: flex; flex-direction: column; gap: 10px; height: 100%;">
+            <!-- Top: Stream 1 (PRO Subscription) -->
+            <div class="card-panel" style="padding: 10px 16px; border: 1.5px solid var(--accent-gold); background: #fffdf5; flex-shrink: 0;">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                  <div style="font-size: 0.92rem; font-weight: 800; color: #b45309;">
+                    STREAM 1: PRO SUBSCRIPTION TIER (99 THB / MONTH)
+                  </div>
+                  <div style="display: flex; gap: 16px; margin-top: 4px; font-size: 0.76rem; color: #334155;">
+                    <span><strong>1. ปลดล็อก 3 คอร์สพิเศษ:</strong> HIIT ไขมันขั้นสุด, วิดพื้นระดับโปร, แก้ท่าทาง</span>
+                    <span><strong>2. ไร้โฆษณา 100%:</strong> ซ่อนแบนเนอร์ Shopee ทั้งหมด</span>
+                    <span><strong>3. ป้ายเกียรติยศ PRO:</strong> บันทึกสถานะลง MySQL พร้อม PromptPay QR Code</span>
+                  </div>
+                </div>
+                <div style="display: flex; gap: 6px; align-items: center;">
+                  <span class="tag-label tag-gold">PROMPTPAY QR</span>
+                  <span class="tag-label tag-emerald">INSTANT DB SYNC</span>
+                </div>
+              </div>
+            </div>
 
+            <!-- Bottom: Stream 2 (Shopee Affiliate Real Products) -->
+            <div style="flex: 1 1 0%; min-height: 0; display: flex; flex-direction: column;">
+              <div style="font-size: 0.76rem; font-weight: 700; color: #ea580c; margin-bottom: 4px; text-transform: uppercase;">
+                STREAM 2: SHOPEE AFFILIATE PARTNER INTEGRATION (REAL GEAR MEDIA) — COMM: 8-12%
+              </div>
+
+              <div class="product-media-grid">
+                <!-- Product 1 -->
+                <div class="product-card-rich">
+                  <div class="product-img-box">
+                    <img src="../assets/products/pushup_bars.jpg" alt="Pushup Bars" />
+                    <span class="product-discount-pill">-45%</span>
+                    <span class="product-badge-partner">Shopee Mall</span>
+                  </div>
+                  <div class="product-details">
+                    <div>
+                      <div class="product-title">บาร์วิดพื้น Push-up Bars ฐานเหล็ก</div>
+                      <div class="product-spec-tag">รองรับ 150kg | ด้ามจับโฟม EVA</div>
+                      <div style="font-size: 0.62rem; color: #f59e0b; margin-top: 2px;">Rating: 4.9 (ขายแล้ว 2.4k ชิ้น)</div>
+                    </div>
+                    <div>
+                      <div class="product-price-row">
+                        <span class="product-price">฿159</span>
+                        <span style="font-size: 0.65rem; color: var(--muted); text-decoration: line-through;">฿290</span>
+                      </div>
+                      <div class="product-affiliate-btn">Shopee Verified | Comm: 8-12%</div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Product 2 -->
+                <div class="product-card-rich">
+                  <div class="product-img-box">
+                    <img src="../assets/products/dumbbells.jpg" alt="Hex Dumbbells" />
+                    <span class="product-discount-pill">-44%</span>
+                    <span class="product-badge-partner">Shopee Mall</span>
+                  </div>
+                  <div class="product-details">
+                    <div>
+                      <div class="product-title">ดัมเบลหกเหลี่ยม ยางเคลือบกันกลิ้ง</div>
+                      <div class="product-spec-tag">เหล็กหล่อแท้ | ด้ามจับกันลื่น</div>
+                      <div style="font-size: 0.62rem; color: #f59e0b; margin-top: 2px;">Rating: 4.9 (ขายแล้ว 1.8k ชิ้น)</div>
+                    </div>
+                    <div>
+                      <div class="product-price-row">
+                        <span class="product-price">฿249</span>
+                        <span style="font-size: 0.65rem; color: var(--muted); text-decoration: line-through;">฿450</span>
+                      </div>
+                      <div class="product-affiliate-btn">Shopee Verified | Comm: 8-12%</div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Product 3 -->
+                <div class="product-card-rich">
+                  <div class="product-img-box">
+                    <img src="../assets/products/yoga_mat.jpg" alt="Yoga Mat" />
+                    <span class="product-discount-pill">-49%</span>
+                    <span class="product-badge-partner">Shopee Mall</span>
+                  </div>
+                  <div class="product-details">
+                    <div>
+                      <div class="product-title">เสื่อโยคะ TPE หนา 8mm ซับแรง</div>
+                      <div class="product-spec-tag">หนา 8mm | กันลื่น 2 ด้าน ไร้กลิ่น</div>
+                      <div style="font-size: 0.62rem; color: #f59e0b; margin-top: 2px;">Rating: 4.8 (ขายแล้ว 3.1k ชิ้น)</div>
+                    </div>
+                    <div>
+                      <div class="product-price-row">
+                        <span class="product-price">฿299</span>
+                        <span style="font-size: 0.65rem; color: var(--muted); text-decoration: line-through;">฿590</span>
+                      </div>
+                      <div class="product-affiliate-btn">Shopee Verified | Comm: 8-12%</div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Product 4 -->
+                <div class="product-card-rich">
+                  <div class="product-img-box">
+                    <img src="../assets/products/whey_protein.jpg" alt="Whey Protein" />
+                    <span class="product-discount-pill">-34%</span>
+                    <span class="product-badge-partner">Shopee Mall</span>
+                  </div>
+                  <div class="product-details">
+                    <div>
+                      <div class="product-title">เวย์โปรตีน Isolate ซ่อมแซมกล้าม</div>
+                      <div class="product-spec-tag">โปรตีน 28g/Scoop | 0g Sugar</div>
+                      <div style="font-size: 0.62rem; color: #f59e0b; margin-top: 2px;">Rating: 4.9 (ขายแล้ว 5.2k ชิ้น)</div>
+                    </div>
+                    <div>
+                      <div class="product-price-row">
+                        <span class="product-price">฿690</span>
+                        <span style="font-size: 0.65rem; color: var(--muted); text-decoration: line-through;">฿1,050</span>
+                      </div>
+                      <div class="product-affiliate-btn">Shopee Verified | Comm: 8-12%</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--card-border); padding-top: 8px;">
+          <span style="font-size: 0.72rem; color: var(--muted);">Step 4 of 4: Dual-Revenue Model Complete | Unpushed to Remote Repository</span>
+          <button class="btn-tool" onclick="goToSlide(0)">Return to Step 1 &circlearrowleft;</button>
+        </div>
+      </section>
+
+    </div>
   </main>
 
-  <!-- FOOTER NAVIGATION -->
-  <footer class="deck-footer">
-    <a href="../pages/play.html" class="btn-play-now" target="_blank">🎮 ลองเล่นเกมจริง</a>
-    <div class="nav-controls">
-      <button class="btn-nav" id="btn-prev">❮ ก่อนหน้า</button>
-      <div class="dots-list" id="dots-list"></div>
-      <button class="btn-nav" id="btn-next">ถัดไป ❯</button>
+  <!-- MASTER BOTTOM NAVIGATION -->
+  <footer class="master-footer">
+    <div style="display: flex; align-items: center; gap: 8px;">
+      <button class="nav-arrow-btn" id="btn-prev" onclick="prevSlide()">&larr; Previous</button>
+      <button class="nav-arrow-btn" id="btn-next" onclick="nextSlide()">Next &rarr;</button>
     </div>
-    <div style="font-size: 0.85rem; color: var(--muted);">ใช้ลูกศร ◀ / ▶ บนคีย์บอร์ดได้</div>
+
+    <!-- Dots -->
+    <div class="dots-indicator-list" id="dots-container"></div>
+
+    <div class="footer-hint">
+      Keys: &larr; / &rarr; or Space | Press F for Fullscreen | Scale: - / + or buttons | Press P to Print PDF
+    </div>
   </footer>
 
+  <!-- SCRIPT ENGINE -->
   <script>
-    const slides = document.querySelectorAll('.slide');
-    const dotsList = document.getElementById('dots-list');
-    const btnPrev = document.getElementById('btn-prev');
-    const btnNext = document.getElementById('btn-next');
-    const slideIndicator = document.getElementById('slide-indicator');
+    const slides = document.querySelectorAll(".slide");
+    const dotsContainer = document.getElementById("dots-container");
+    const btnPrev = document.getElementById("btn-prev");
+    const btnNext = document.getElementById("btn-next");
+    const slideNumBadge = document.getElementById("slide-num-badge");
     let currentIdx = 0;
+    let currentScale = 1.0;
 
-    // Create Navigation Dots
+    // Generate Navigation Dots
     slides.forEach((_, idx) => {
-      const dot = document.createElement('div');
-      dot.classList.add('dot');
-      if (idx === 0) dot.classList.add('active');
-      dot.addEventListener('click', () => goToSlide(idx));
-      dotsList.appendChild(dot);
+      const dot = document.createElement("div");
+      dot.className = `dot-pill ${idx === 0 ? "active" : ""}`;
+      dot.title = `Step ${idx + 1}`;
+      dot.addEventListener("click", () => goToSlide(idx));
+      dotsContainer.appendChild(dot);
     });
 
-    const dots = document.querySelectorAll('.dot');
+    const dots = document.querySelectorAll(".dot-pill");
 
-    function goToSlide(index) {
-      if (index < 0) index = slides.length - 1;
-      if (index >= slides.length) index = 0;
-
-      slides[currentIdx].classList.remove('active');
-      dots[currentIdx].classList.remove('active');
-
-      currentIdx = index;
-
-      slides[currentIdx].classList.add('active');
-      dots[currentIdx].classList.add('active');
-      slideIndicator.textContent = `Slide ${currentIdx + 1} / ${slides.length}`;
+    function updateNavUI() {
+      slides.forEach((slide, idx) => {
+        slide.classList.toggle("active", idx === currentIdx);
+      });
+      dots.forEach((dot, idx) => {
+        dot.classList.toggle("active", idx === currentIdx);
+      });
+      slideNumBadge.textContent = `${String(currentIdx + 1).padStart(2, "0")} / ${String(slides.length).padStart(2, "0")}`;
+      btnPrev.disabled = (currentIdx === 0);
+      btnNext.disabled = (currentIdx === slides.length - 1);
     }
 
-    btnPrev.addEventListener('click', () => goToSlide(currentIdx - 1));
-    btnNext.addEventListener('click', () => goToSlide(currentIdx + 1));
+    function goToSlide(index) {
+      if (index < 0) index = 0;
+      if (index >= slides.length) index = slides.length - 1;
+      currentIdx = index;
+      updateNavUI();
+    }
 
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'ArrowRight' || e.key === 'Space') goToSlide(currentIdx + 1);
-      if (e.key === 'ArrowLeft') goToSlide(currentIdx - 1);
+    function nextSlide() {
+      if (currentIdx < slides.length - 1) goToSlide(currentIdx + 1);
+    }
+
+    function prevSlide() {
+      if (currentIdx > 0) goToSlide(currentIdx - 1);
+    }
+
+    // Scale function for PDF Generator
+    function setScale(scaleValue, btn) {
+      currentScale = Math.round(scaleValue * 100) / 100;
+      document.documentElement.style.setProperty("--slide-scale", currentScale);
+      document.querySelectorAll(".scale-btn").forEach(b => b.classList.remove("active"));
+      if (btn) {
+        btn.classList.add("active");
+      } else {
+        const matchingBtn = Array.from(document.querySelectorAll(".scale-btn")).find(b => {
+          return Math.abs(parseFloat(b.textContent) / 100 - currentScale) < 0.03;
+        });
+        if (matchingBtn) matchingBtn.classList.add("active");
+      }
+    }
+
+    function adjustScale(delta) {
+      let nextScale = currentScale + delta;
+      if (nextScale < 0.5) nextScale = 0.5;
+      if (nextScale > 1.2) nextScale = 1.2;
+      setScale(nextScale);
+    }
+
+    function prepareAndPrintPDF() {
+      window.print();
+    }
+
+    // Keyboard Shortcuts
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowRight" || e.key === " " || e.key === "PageDown") {
+        e.preventDefault();
+        nextSlide();
+      } else if (e.key === "ArrowLeft" || e.key === "PageUp") {
+        e.preventDefault();
+        prevSlide();
+      } else if (e.key === "Home") {
+        e.preventDefault();
+        goToSlide(0);
+      } else if (e.key === "End") {
+        e.preventDefault();
+        goToSlide(slides.length - 1);
+      } else if (e.key.toLowerCase() === "f") {
+        if (!document.fullscreenElement) {
+          document.documentElement.requestFullscreen().catch(() => {});
+        } else {
+          document.exitFullscreen().catch(() => {});
+        }
+      } else if (e.key.toLowerCase() === "p" && (e.ctrlKey || e.metaKey)) {
+        e.preventDefault();
+        prepareAndPrintPDF();
+      } else if (e.key === "-" || e.key === "_") {
+        adjustScale(-0.05);
+      } else if (e.key === "=" || e.key === "+") {
+        adjustScale(0.05);
+      }
     });
+
+    // URL Query Parameter ?slide=N support
+    try {
+      const urlParams = new URLSearchParams(window.location.search);
+      const startSlide = parseInt(urlParams.get("slide") || "1", 10) - 1;
+      if (!isNaN(startSlide) && startSlide >= 0 && startSlide < slides.length) {
+        currentIdx = startSlide;
+      }
+      const scaleParam = parseFloat(urlParams.get("scale"));
+      if (!isNaN(scaleParam) && scaleParam >= 0.5 && scaleParam <= 1.5) {
+        setScale(scaleParam);
+      }
+    } catch(e) {}
+
+    updateNavUI();
   </script>
 </body>
 </html>

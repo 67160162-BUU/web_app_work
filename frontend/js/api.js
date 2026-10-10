@@ -99,6 +99,13 @@ export function clearSession() {
   setAuthToken(null);
   localStorage.removeItem("dd_user_session");
   localStorage.removeItem("dd_current_user");
+  localStorage.removeItem("dd_is_pro");
+  localStorage.removeItem("dd_pro_expires");
+  if (typeof window !== "undefined") {
+    window.dispatchEvent(new CustomEvent("dd_pro_status_changed", {
+      detail: { isPro: false, expiresAt: null }
+    }));
+  }
 }
 
 function getAuthHeaders() {
@@ -263,6 +270,7 @@ export async function loginUser(username, password) {
     if (res.ok) {
       const data = await res.json();
       saveSession(data.user, data.access_token);
+      setProStatus(Boolean(data.user?.is_pro), data.user?.pro_expires_at);
       return data;
     } else {
       if (res.status === 404) {
@@ -309,6 +317,7 @@ export async function registerUser(username, password, displayName, email = null
     if (res.ok) {
       const data = await res.json();
       saveSession(data.user, data.access_token);
+      setProStatus(Boolean(data.user?.is_pro), data.user?.pro_expires_at);
       return data;
     } else {
       if (res.status === 404) {
@@ -429,26 +438,92 @@ export async function deleteAdminScore(scoreId) {
 
 export function isProUser() {
   if (typeof window === "undefined") return false;
-  // 1. ตรวจสอบจาก LocalStorage Flag
-  if (localStorage.getItem("dd_is_pro") === "true") {
-    const expires = localStorage.getItem("dd_pro_expires");
-    if (expires) {
-      const expDate = new Date(expires);
-      if (!isNaN(expDate.getTime()) && expDate < new Date()) {
-        localStorage.removeItem("dd_is_pro");
-        localStorage.removeItem("dd_pro_expires");
-        return false;
-      }
+
+  // ตรวจสอบจาก URL Query Parameter เช่น ?pro=1
+  try {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("pro") === "1") return true;
+    if (params.get("pro") === "0") return false;
+  } catch (e) {}
+
+  const checkExpired = (expires) => {
+    if (!expires) return false;
+    const cleanExpires = typeof expires === "string" ? expires.replace(" ", "T") : expires;
+    const expDate = new Date(cleanExpires);
+    return !isNaN(expDate.getTime()) && expDate < new Date();
+  };
+
+  // 1. ตรวจสอบจาก Session ของ User ที่ล็อกอิน (ข้อมูลอัปเดตจาก Database)
+  const session = getSavedSession();
+  if (session && session.user && Boolean(session.user.is_pro)) {
+    const expires = session.user.pro_expires_at || localStorage.getItem("dd_pro_expires");
+    if (checkExpired(expires)) {
+      session.user.is_pro = false;
+      saveSession(session.user, session.token);
+      localStorage.removeItem("dd_is_pro");
+      localStorage.removeItem("dd_pro_expires");
+      return false;
     }
     return true;
   }
-  // 2. ตรวจสอบจาก Session ของ User ที่ล็อกอิน
-  const session = getSavedSession();
-  if (session && session.user && session.user.is_pro) {
-    localStorage.setItem("dd_is_pro", "true");
+
+  // 2. ตรวจสอบจาก LocalStorage Flag (สำหรับโหมดทดสอบหรือผู้ใช้ที่อัปเกรดเป็น PRO)
+  if (localStorage.getItem("dd_is_pro") === "true") {
+    const expires = localStorage.getItem("dd_pro_expires");
+    if (checkExpired(expires)) {
+      localStorage.removeItem("dd_is_pro");
+      localStorage.removeItem("dd_pro_expires");
+      return false;
+    }
     return true;
   }
+
   return false;
+}
+
+/**
+ * ดึงสถานะ is_pro ล่าสุดจาก Database จริงผ่าน Backend API
+ * หากเป็น Pro ระบบจะซิงค์เข้า Session และแจ้งเตือน UI อัตโนมัติ
+ */
+export async function checkDbProStatus() {
+  const session = getSavedSession();
+  if (!session || !session.user) {
+    return isProUser();
+  }
+
+  try {
+    let freshUser = null;
+    const token = getAuthToken();
+    if (token && !token.startsWith("offline-token-")) {
+      const res = await fetch(`${BASE}/auth/me`, {
+        headers: getAuthHeaders(),
+      });
+      if (res.ok) {
+        freshUser = await res.json();
+      }
+    }
+
+    if (!freshUser && session.user.id) {
+      const resUser = await fetch(`${BASE}/users/${session.user.id}`, {
+        headers: getAuthHeaders(),
+      });
+      if (resUser.ok) {
+        freshUser = await resUser.json();
+      }
+    }
+
+    if (freshUser) {
+      const isProDb = Boolean(freshUser.is_pro) || localStorage.getItem("dd_is_pro") === "true";
+      session.user = { ...session.user, ...freshUser, is_pro: isProDb };
+      saveSession(session.user, session.token);
+      setProStatus(isProDb, freshUser.pro_expires_at || session.user.pro_expires_at);
+      return isProDb;
+    }
+  } catch (err) {
+    console.warn("⚠️ Could not check is_pro from DB, using cached status:", err);
+  }
+
+  return isProUser();
 }
 
 export function setProStatus(isPro, expiresAt = null) {
